@@ -36,10 +36,23 @@ services:
           - "8741:80"
         volumes:
             - ./docker/php/vhosts:/etc/apache2/sites-enabled
-            - ./:/var/www
+            - ./api/flame_funds:/var/www
         restart: always
         networks:
             - tutorial
+            
+    front:
+        build:
+            context: ./front/flame-funds-front
+            dockerfile: Dockerfile
+        container_name: vue
+        ports:
+            - 8000:80
+        restart: always
+        networks:
+            - tutorial
+        volumes:
+            - ./front/flame-funds-front:/app
             
 networks:
     tutorial:

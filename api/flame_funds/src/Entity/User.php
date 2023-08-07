@@ -20,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'string', length: 180)]
+    #[ORM\Column(type: 'string', length: 180, unique: true)]
     private ?string $username;
     #[ORM\Column]
     private array $roles = [];
@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $isDeleted = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $currentAccount = null;
 
     public function __construct()
     {
@@ -162,6 +165,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsDeleted(bool $isDeleted): static
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getCurrentAccount(): ?int
+    {
+        return $this->currentAccount;
+    }
+
+    public function setCurrentAccount(?int $currentAccount): static
+    {
+        $this->currentAccount = $currentAccount;
 
         return $this;
     }
