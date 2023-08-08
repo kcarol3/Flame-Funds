@@ -5,75 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b8c80c3e-a878-495e-b2f1-3efb495da52b" name="Changes" comment="add jwt token authorization">
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/assets/arrow-return-left.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/components/Header.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/components/ReturnButton.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/router.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/views/Login.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/views/Register.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/views/Start.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../api/flame_funds/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../../api/flame_funds/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker-compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/flame_funds.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/console" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/jwt/private.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/jwt/public.pem" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/cache.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/doctrine.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/doctrine_migrations.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/framework.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/lexik_jwt_authentication.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/routing.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/preload.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes/framework.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.override.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/Version20230804200345.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/Version20230805093241.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/DashboardController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/RegistrationController.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Account.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Expense.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Income.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Kernel.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/AccountRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/ExpenseRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/IncomeRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/UserRepository.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/babel.config.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/jsconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/public/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/public/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/src/App.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/src/assets/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/src/components/HelloWorld.vue" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/src/main.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/flame-funds-front/vue.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../docker/php/vhosts/vhosts.conf" beforeDir="false" afterPath="$PROJECT_DIR$/../../docker/php/vhosts/vhosts.conf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../docker/vue/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/src/assets/logo.png" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/assets/logo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/src/components/HelloWorld.vue" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../front/flame-funds-front/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../front/flame-funds-front/src/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ComposerSettings" synchronizationState="SYNCHRONIZE">
+  <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
   </component>
@@ -85,11 +43,11 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -184,23 +142,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "/Users/macbookpro/flame-funds/flame-funds-api/flame_funds",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/macbookpro/flame-funds/flame-funds-api/flame_funds&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -209,7 +167,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1691174135196</updated>
-      <workItem from="1691174136412" duration="23118000" />
+      <workItem from="1691174136412" duration="23558000" />
+      <workItem from="1691434266495" duration="354000" />
     </task>
     <task id="LOCAL-00001" summary="add jwt token authorization">
       <created>1691189149284</created>
