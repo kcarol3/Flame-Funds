@@ -4,19 +4,29 @@ namespace App\Controller;
 
 use App\Entity\Account;
 use App\Entity\User;
-use App\Repository\AccountRepository;
-use App\Repository\UserRepository;
+use App\Service\TokenService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\NotSupported;
 use Doctrine\ORM\Exception\ORMException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+
 
 class AccountController extends AbstractController
 {
+    private $jwtManager;
+
+    public function __construct(JWTTokenManagerInterface $jwtManager)
+    {
+        $this->jwtManager = $jwtManager;
+    }
+
     #[Route('/account', name: 'app_account')]
     public function index(): JsonResponse
     {
@@ -55,5 +65,22 @@ class AccountController extends AbstractController
         $em->flush();
 
         return new JsonResponse("Success");
+    }
+
+    /**
+     * @throws JWTDecodeFailureException
+     */
+    #[Route('/account/balance', name: 'get_balance')]
+    public function getBalance(Request $request, EntityManagerInterface $em){
+        $tokenExtractor = new AuthorizationHeaderTokenExtractor('Bearer', 'Authorization');
+        $token = $tokenExtractor->extract($request);
+
+        if (!$token) {
+            return $this->json(['message' => 'Token not found'], 401);
+        }
+
+        $tokenService = new TokenService($token);
+        dd($tokenService->getUsername());
+
     }
 }
