@@ -1,6 +1,6 @@
 <template>
-  <router-link :to="link" class = "btn rb" style = "background-color: #bc8ce6; width: 100px">
-    <img src="../assets/arrow-return-left.svg">
+  <router-link :to="link" class = "btn rb tap-buttons border border-black">
+    <i class="bi bi-arrow-return-left"/>
   </router-link>
 </template>
 
@@ -15,12 +15,21 @@ export default {
 </script>
 
 <style scoped>
+.tap-buttons {
+  background: radial-gradient(circle, rgb(255, 255, 255), rgba(219, 183, 255, 0.8));
+  width: 100px
+}
+i {
+  font-size: 32px;
+}
 .rb{
-  box-shadow: 0 7px 14px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 14px 10px  rgba(255, 255, 255, 0.8);
 }
 
 .rb:hover {
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.25);
+  animation: clickAnimation 0.3s;
+  box-shadow: 0 0 20px 15px rgb(255, 255, 255);
+  transform: scale(105%);
 }
 .rb:active {
   animation: clickAnimation 0.3s;
@@ -29,10 +38,10 @@ export default {
 
 @keyframes clickAnimation {
   0% {
-    transform: scale(95%);
+    transform: scale(90%);
   }
   100% {
-    transform: scale(105%);
+    transform: scale(110%);
   }
 }
 </style>

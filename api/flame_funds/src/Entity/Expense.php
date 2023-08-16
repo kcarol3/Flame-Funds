@@ -33,6 +33,10 @@ class Expense
     #[ORM\JoinColumn(nullable: false)]
     private ?Account $account = null;
 
+    #[ORM\ManyToOne(inversedBy: 'expenses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ExpenseCategory $category = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +110,18 @@ class Expense
     public function setAccount(?Account $account): static
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    public function getCategory(): ?ExpenseCategory
+    {
+        return $this->Category;
+    }
+
+    public function setCategory(?ExpenseCategory $Category): static
+    {
+        $this->Category = $Category;
 
         return $this;
     }

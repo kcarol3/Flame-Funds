@@ -1,6 +1,6 @@
 <template>
   <div>
-    <img src="../assets/logo.png" style="width: 24%; height: 24%" class="mb-4 container">
+    <img src="../assets/logo.png"  class="mb-4 container">
     <header-component title = 'Rejestracja' class="mb-4"></header-component>
     <div class="container" style="width: 300px">
       <div class="form-group mb-2">
@@ -21,7 +21,7 @@
       </div>
       <button class="button-primary mt-5 mb-4"><i class="bi bi-person-add me-3"/>Zarejestruj </button>
     </div>
-    <return-button link="/start" class="m-auto"></return-button>
+    <return-button link="/start" class="m-auto mt-3 mb-3"></return-button>
   </div>
 </template>
 
@@ -37,5 +37,10 @@ export default {
 </script>
 
 <style scoped>
-
+img{
+  width: 24%;
+  height: 24%;
+  max-width: 128px;
+  max-height: 128px;
+}
 </style>

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Account;
 use App\Entity\User;
 use App\Service\TokenService;
+use App\Service\UserService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\NotSupported;
@@ -41,14 +42,12 @@ class AccountController extends AbstractController
      * @throws ORMException
      * @throws \Exception
      */
-    #[Route('/account/create', name: 'create_account')]
+    #[Route('/account/add-account', name: 'create_account', methods: 'POST')]
     public function createAccount(Request $request, EntityManagerInterface $em): JsonResponse{
         $content = $request->getContent();
         $jsonData = json_decode($content, true);
 
-        $userRepository = $em->getRepository(User::class);
-        $user = $userRepository->findOneBy(["username" => $jsonData['username']]);
-
+        $user = UserService::getUserFromToken($request, $em);
 
         if(!$user){
             return new JsonResponse("User does not exist", 500);
@@ -72,15 +71,11 @@ class AccountController extends AbstractController
      */
     #[Route('/account/balance', name: 'get_balance')]
     public function getBalance(Request $request, EntityManagerInterface $em){
-        $tokenExtractor = new AuthorizationHeaderTokenExtractor('Bearer', 'Authorization');
-        $token = $tokenExtractor->extract($request);
+        $user = UserService::getUserFromToken($request, $em);
 
-        if (!$token) {
-            return $this->json(['message' => 'Token not found'], 401);
-        }
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->findOneBy(["id" => $user->getCurrentAccount()]);
 
-        $tokenService = new TokenService($token);
-        dd($tokenService->getUsername());
-
+        return new JsonResponse(["balance" =>$account->getBalance()], 200);
     }
 }

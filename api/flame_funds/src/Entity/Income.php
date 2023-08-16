@@ -33,6 +33,10 @@ class Income
     #[ORM\JoinColumn(nullable: false)]
     private ?Account $account = null;
 
+    #[ORM\ManyToOne(inversedBy: 'incomes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?IncomeCategory $category = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +110,18 @@ class Income
     public function setAccount(?Account $account): static
     {
         $this->account = $account;
+
+        return $this;
+    }
+
+    public function getCategory(): ?IncomeCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?IncomeCategory $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

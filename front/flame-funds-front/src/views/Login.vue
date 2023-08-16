@@ -1,18 +1,18 @@
 <template>
   <div>
-    <img src="../assets/logo.png" style="width: 24%; height: 24%" class="mb-4 container">
+    <img src="../assets/logo.png" class="mb-4 container">
     <header-component title='Logowanie' class="mb-4"></header-component>
     <div class="container" style="width: 300px">
       <div class="form-group mb-2">
-        <label for="email">Nazwa użytkownika</label>
-        <input v-model="username" class="form-control" id="username" placeholder="Wprowadź nazwę użytkownika"></div>
+        <label for="email">E-mail</label>
+        <input v-model="email" class="form-control" id="username" placeholder="Wprowadź e-mail"></div>
       <div class="form-group ">
         <label for="password">Hasło</label>
         <input type="password" v-model="password" class="form-control" id="password" placeholder="Wprowadź hasło"/>
       </div>
-      <button @click="loginCheck" class="button-primary mt-5 mb-4"><i class="bi bi-person icon"/>Zaloguj</button>
+      <button @click="loginCheck" class="button-primary mt-5 mb-4 "><i class="bi bi-person icon"/>Zaloguj</button>
     </div>
-    <return-button link="/start" class="m-auto"></return-button>
+    <return-button link="/start" class="m-auto mb-3"></return-button>
   </div>
 </template>
 
@@ -27,16 +27,16 @@ export default {
 
   data(){
     return{
-      username: "",
+      email: "",
       password: ""
     }
   },
 
   methods: {
     loginCheck(){
-      axios.post("http://localhost:8741/api/login_check", {"username":this.username, "password":this.password})
+      axios.post("http://localhost:8741/api/login_check", {"email":this.email, "password":this.password})
           .then((response) => {
-            localStorage.setItem("token", response.data.token)
+            sessionStorage.setItem("token", response.data.token)
             this.$router.push("/home")
           })
           .catch((error)=>{
@@ -48,5 +48,10 @@ export default {
 </script>
 
 <style scoped>
-
+img{
+  width: 24%;
+  height: 24%;
+  max-height: 256px;
+  max-width: 256px;
+}
 </style>

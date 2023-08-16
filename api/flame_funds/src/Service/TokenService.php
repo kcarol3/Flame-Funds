@@ -2,7 +2,12 @@
 
 namespace App\Service;
 
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use PhpParser\Node\Scalar\String_;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class TokenService
 {
@@ -19,13 +24,19 @@ class TokenService
     }
 
     /**
-     * @param String $token
      * @return String
      */
-    public function getUsername(): String
+    public function getEmail(): String
     {
-        $jwtPayload = json_decode($this->tokenPayload);
-dd($jwtPayload);
-        return $jwtPayload->username;
+        $jwtPayload = json_decode($this->tokenPayload, true);
+
+        return $jwtPayload['email'];
     }
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return object|JsonResponse|null
+     */
+
 }

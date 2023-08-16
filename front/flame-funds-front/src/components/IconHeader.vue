@@ -1,15 +1,19 @@
 <template>
+<div>
   <h1 class = "p-3 mx-auto w-75 shadow lilita-one rounded container-sm">
+    <i :class = "icon" />
     {{title}}
   </h1>
+</div>
 </template>
 
 <script>
 export default {
-  name: "HeaderComponent",
+  name: "IconHeader",
 
   props: {
     title: String,
+    icon :String
   }
 }
 </script>
