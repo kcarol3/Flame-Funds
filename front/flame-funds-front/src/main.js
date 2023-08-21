@@ -15,11 +15,14 @@ import AutoComplete from 'primevue/autocomplete';
 import InputText from 'primevue/inputtext';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
+import moshaToast from 'mosha-vue-toastify';
+import 'mosha-vue-toastify/dist/style.css';
 
 createApp(App)
     .use(router)
     .component('VueDatePicker',VueDatePicker)
     .use(PrimeVue)
+    .use(moshaToast)
     .component("InputNumber", InputNumber)
     .component('TextArea', Textarea)
     .component('Calendar', Calendar)
