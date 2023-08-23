@@ -22,6 +22,9 @@
       <button @click="validateForm" class="button-primary mt-5 mb-4"><i class="bi bi-person-add me-3"/>Zarejestruj</button>
     </div>
     <return-button link="/start" class="m-auto mt-3 mb-3"></return-button>
+    <div>
+      <progress-spinner v-if="isLoading" strokeWidth="6"/>
+    </div>
   </div>
 </template>
 
@@ -29,6 +32,10 @@
 import ReturnButton from "@/components/ReturnButton.vue";
 import HeaderComponent from "@/components/Header.vue";
 import axios from "axios";
+import { createToast } from 'mosha-vue-toastify';
+
+import 'mosha-vue-toastify/dist/style.css'
+
 
 export default {
   name: "RegisterView",
@@ -41,6 +48,7 @@ export default {
       email: "",
       password: "",
       confirmPassword: "",
+      isLoading: false,
       errors: {
         username: false,
         email: false,
@@ -53,24 +61,73 @@ export default {
   methods: {
     validateForm() {
       this.errors = {}; // Wyczyść poprzednie błędy
+      this.isLoading = true;
       const usernameRegex = /^[a-zA-Z0-9_-]{3,16}$/;
-      //const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const passwordRegex= /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
 
 
-      if (usernameRegex.test(this.username)) {
+      if (!usernameRegex.test(this.username)) {
         this.errors.username = true;
-        this.$moshaToast("Zła nazwa użytkownika!", "error")
+        createToast({
+              title: 'Zła nazwa użytkownika!',
+              description: 'Możesz użyć liter, cyfr, "_" i "-"'
+            },
+            {
+              position: 'top-center',
+              showIcon: 'true',
+              type: 'danger',
+              transition: 'bounce',
+              showCloseButton: true,
+              swipeClose: true,
+            })
       }
 
-      // if (!emailRegex.test(this.email)) {
-      //   this.errors.email = true;
-      //   this.$moshaToast("Zły email!", "error")
-      // }
-      //
-      // if(!this.password === this.confirmPassword){
-      //   this.errors.confirmPassword = true
-      //   this.$moshaToast("Hasła muszą być identyczne!", "error")
-      // }
+      if (!emailRegex.test(this.email)) {
+        this.errors.email = true;
+        createToast({
+              title: 'Zły email!',
+              description: 'Musisz podać poprawny email.'
+            },
+            {
+              position: 'top-center',
+              showIcon: 'true',
+              type: 'danger',
+              transition: 'bounce',
+              showCloseButton: true,
+            })
+      }
+
+      if (!passwordRegex.test(this.password)) {
+        this.errors.password= true;
+        createToast({
+              title: 'Złe hasło!',
+              description: 'Ma mieć 8 znaków, cyfrę i znak specjalny.'
+            },
+            {
+              position: 'top-center',
+              showIcon: 'true',
+              type: 'danger',
+              transition: 'bounce',
+              showCloseButton: true,
+            })
+      }
+
+      if(!(this.password === this.confirmPassword)) {
+        this.errors.confirmPassword = true
+        createToast({
+              title: 'Złe hasło!',
+              description: 'Ma mieć 8 znaków, cyfrę i znak specjalny.'
+            },
+            {
+              position: 'top-center',
+              showIcon: 'true',
+              type: 'danger',
+              transition: 'zoo',
+              showCloseButton: true,
+            })
+
+      }
 
       if (Object.keys(this.errors).length === 0) {
         this.register()
@@ -84,12 +141,23 @@ export default {
         "password":this.password,
       })
           .then((response) => {
+            this.isLoading=false;
             console.log(response)
-            this.$moshaToast('Pomyślnie zarejestrowano!', "success")
+            createToast({
+                  title: 'Udało Ci się zarejestrować.',
+                  description: 'Możesz się teraz zalogować na twoje konto'
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
             this.$router.push("/login")
           })
           .catch((error)=>{
-            this.$moshaToast('Nie udało się zarejestrować', "error")
+            this.isLoading=false
+
             console.log(error)
           })
     }

@@ -4,6 +4,7 @@ import start from "./views/Start.vue"
 import register from "@/views/Register.vue";
 import home from "@/views/Home.vue";
 import expense from "@/views/Expense.vue";
+import addAccountView from "@/views/AddAccountView.vue";
 
 const routes = [
     {
@@ -11,6 +12,11 @@ const routes = [
         name: 'login',
         component: login,
         meta: { hideNavbar: true },
+    },
+    {
+        path: '/add-account',
+        name: 'addAccount',
+        component: addAccountView,
     },
     {
         path: '/start',

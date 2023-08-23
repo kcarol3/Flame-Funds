@@ -17,7 +17,7 @@ export default {
 <style scoped>
 .tap-buttons {
   background: radial-gradient(circle, rgb(255, 255, 255), rgba(219, 183, 255, 0.8));
-  width: 100px
+  width: 80px
 }
 i {
   font-size: 32px;

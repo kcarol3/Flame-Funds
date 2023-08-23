@@ -28,7 +28,8 @@ export default {
 
   data(){
     return {
-      balance: 0.0
+      balance: 0.0,
+      accountName: "",
     }
   },
 
@@ -41,10 +42,11 @@ export default {
       const config = {
         headers: { Authorization: `Bearer ${token}` }
       };
-      axios.get("http://localhost:8741/account/balance",config)
+      axios.get("http://localhost:8741/api/account/current-account",config)
           .then(response=>{
             console.log(response)
-            this.balance =response.data.balance
+            this.balance = response.data.balance
+            this.accountName = response.data.name
           })
           .catch(error =>{
             console.log(error)

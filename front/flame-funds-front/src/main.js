@@ -15,15 +15,18 @@ import AutoComplete from 'primevue/autocomplete';
 import InputText from 'primevue/inputtext';
 import Dropdown from 'primevue/dropdown';
 import Button from 'primevue/button';
-import moshaToast from 'mosha-vue-toastify';
-import 'mosha-vue-toastify/dist/style.css';
+import ProgressSpinner from 'primevue/progressspinner';
+import Menu from 'primevue/menu';
+import Sidebar from 'primevue/sidebar';
 
 createApp(App)
     .use(router)
     .component('VueDatePicker',VueDatePicker)
     .use(PrimeVue)
-    .use(moshaToast)
+    .component("Sidebar", Sidebar)
+    .component("ProgressSpinner", ProgressSpinner)
     .component("InputNumber", InputNumber)
+    .component("Menu", Menu)
     .component('TextArea', Textarea)
     .component('Calendar', Calendar)
     .component('AutoComplete', AutoComplete)

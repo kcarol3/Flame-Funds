@@ -1,4 +1,5 @@
 <template>
+
   <div :class="{ 'mobile-style': isMobile }">
     <navbar-component v-if="!$route.meta.hideNavbar"></navbar-component>
   <router-view v-slot="{ Component }">
@@ -12,6 +13,7 @@
 <script>
 
 import NavbarComponent from "@/components/Navbar.vue";
+import 'mosha-vue-toastify/dist/style.css'
 
 export default {
   name: 'App',
@@ -20,9 +22,22 @@ export default {
   },
   data() {
     return {
-      isMobile: false
+      isMobile: false,
+      id: 0,
+      animation: {
+        enter: {
+          opacity: [1, 0],
+          translateX: [0, -300],
+          scale: [1, 0.2],
+        },
+        leave: {
+          opacity: 0,
+          height: 0,
+        },
+      },
     };
   },
+
   created() {
     this.isMobile = window.innerWidth <= 768;
   },
@@ -173,4 +188,5 @@ body {
   color: #2c3e50;
   margin-top: 60px;
 }
+
 </style>

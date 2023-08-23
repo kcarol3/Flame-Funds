@@ -18,29 +18,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
-
+/**
+ * @Route("/api", name="api_")
+ */
 class AccountController extends AbstractController
 {
-    private $jwtManager;
-
     public function __construct(JWTTokenManagerInterface $jwtManager)
     {
         $this->jwtManager = $jwtManager;
     }
 
-    #[Route('/account', name: 'app_account')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/AccountController.php',
-        ]);
-    }
-
     /**
-     * @throws NotSupported
-     * @throws ORMException
-     * @throws \Exception
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
      */
     #[Route('/account/add-account', name: 'create_account', methods: 'POST')]
     public function createAccount(Request $request, EntityManagerInterface $em): JsonResponse{
@@ -67,15 +58,19 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @throws JWTDecodeFailureException
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
      */
-    #[Route('/account/balance', name: 'get_balance')]
-    public function getBalance(Request $request, EntityManagerInterface $em){
+
+    #[Route('/account/current-account', name: 'get_current_account')]
+    public function getBalance(Request $request, EntityManagerInterface $em): JsonResponse
+    {
         $user = UserService::getUserFromToken($request, $em);
 
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->findOneBy(["id" => $user->getCurrentAccount()]);
 
-        return new JsonResponse(["balance" =>$account->getBalance()], 200);
+        return new JsonResponse(["balance" =>$account->getBalance(), "name" => $account->getName()], 200);
     }
 }

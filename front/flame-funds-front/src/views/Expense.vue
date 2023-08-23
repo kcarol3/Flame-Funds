@@ -46,8 +46,8 @@
       </div>
       <div class="form-group">
         <label for="describe">Opis (opcjonalny)</label>
-        <textarea  class="w-100" id="describe" v-model="describe" rows="3" cols="33"/>
-    </div>
+        <textarea class="w-100" id="describe" v-model="describe" rows="3" cols="33"/>
+      </div>
       <button @click="addExpense" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-coin me-1"/>Dodaj</button>
     </div>
     <return-button link="/home" class="m-auto mb-3"></return-button>

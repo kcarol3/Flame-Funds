@@ -13,6 +13,9 @@
       <button @click="loginCheck" class="button-primary mt-5 mb-4 "><i class="bi bi-person icon"/>Zaloguj</button>
     </div>
     <return-button link="/start" class="m-auto mb-3"></return-button>
+    <div>
+      <progress-spinner v-if="isLoading" strokeWidth="6"/>
+    </div>
   </div>
 </template>
 
@@ -20,26 +23,41 @@
 import HeaderComponent from "@/components/Header.vue";
 import ReturnButton from "@/components/ReturnButton.vue";
 import axios from 'axios';
+import {createToast} from "mosha-vue-toastify";
 
 export default {
   name: "LoginView",
-  components: {ReturnButton, HeaderComponent},
+  components: {ReturnButton, HeaderComponent,},
 
   data(){
     return{
       email: "",
-      password: ""
+      password: "",
+      isLoading: false,
     }
   },
 
   methods: {
     loginCheck(){
+      this.isLoading = true;
       axios.post("http://localhost:8741/api/login_check", {"email":this.email, "password":this.password})
           .then((response) => {
+            this.isLoading = false;
             sessionStorage.setItem("token", response.data.token)
             this.$router.push("/home")
           })
           .catch((error)=>{
+            this.isLoading = false;
+            createToast({
+                  title: 'Nie udało się zalogować',
+                  description: 'Złe dane logowania'
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'danger',
+                  transition: 'zoom',
+                })
             console.log(error)
           })
     }
