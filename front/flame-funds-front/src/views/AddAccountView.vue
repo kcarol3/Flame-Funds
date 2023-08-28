@@ -1,6 +1,6 @@
 <template>
   <div>
-    <icon-header title="Dodaj konto" icon="bi bi-bank" font-size="48px"></icon-header>
+    <icon-header :two-lines=true title="Dodaj konto" icon="bi bi-bank" font-size="48px"></icon-header>
     <div class="container" style="width: 300px">
     <span class="p-float-label mt-5">
       <InputText id="name" class="w-100" v-model="name"/>
@@ -53,7 +53,7 @@ export default {
                   type: 'success',
                   transition: 'zoom',
                 })
-            this.$router.push("/home")
+            this.$router.push("/accounts")
           })
           .catch(error=>{
             console.log(error)

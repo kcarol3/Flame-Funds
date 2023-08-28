@@ -1,8 +1,14 @@
 <template>
   <div>
-    <h1 class="p-3 mx-auto w-75 shadow lilita-one rounded container-sm">
-      <i :class="icon"/>
-      <div :style="{'font-size': fontSize}">
+    <h1 class="p-3 mx-auto w-75 shadow lilita-one rounded container-sm mt-2">
+      <div v-if="twoLines" :style="{'font-size': fontSize}">
+        <i :class="icon"/>
+        <div>
+          {{ title }}
+        </div>
+      </div>
+      <div v-else>
+        <i :class="icon"/>
         {{ title }}
       </div>
     </h1>
@@ -17,9 +23,13 @@ export default {
   props: {
     title: String,
     icon: String,
+    twoLines:{
+      type: Boolean,
+      default: false
+    },
     fontSize: {
       type: String,
-      default: "48px"
+      default: "44px"
     }
   }
 }

@@ -7,7 +7,7 @@
         </div>
       </template>
     </Sidebar>
-    <i @click="visible = true" class="bi bi-list click-animation" style="font-size: 60px"/>
+    <i @click="visible = true" class="bi bi-list click-animation" style="font-size: 38px"/>
   </div>
 </template>
 

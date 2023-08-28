@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Account;
 use App\Entity\User;
+use App\Service\AccountService;
 use App\Service\TokenService;
 use App\Service\UserService;
 use DateTime;
@@ -23,10 +24,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
  */
 class AccountController extends AbstractController
 {
-    public function __construct(JWTTokenManagerInterface $jwtManager)
-    {
-        $this->jwtManager = $jwtManager;
-    }
 
     /**
      * @param Request $request
@@ -62,8 +59,49 @@ class AccountController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
+    #[Route('/account/all-accounts', name: 'get_all_accounts', methods: "GET")]
+    public function getAllAccounts(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = UserService::getUserFromToken($request, $em);
+        $accounts = $user->getAccounts();
+        $dataToReturn = [];
 
-    #[Route('/account/current-account', name: 'get_current_account')]
+        foreach ($accounts as $account){
+            if(!$account->isIsDeleted()){
+                $dataToReturn[] = [
+                    "id" => $account->getId(),
+                  "name" => $account->getName(),
+                  "balance" => $account->getBalance()
+                ];
+            }
+        }
+
+        return new JsonResponse($dataToReturn, 200);
+    }
+
+    #[Route("/account/change-account", name: 'change_account', methods: "PUT")]
+    public function changeCurrentAccount(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+
+        $user = UserService::getUserFromToken($request, $em);
+
+        $success = AccountService::changeAccount($data["id"], $user, $em);
+
+        if($success){
+            return new JsonResponse("Success Update", 200);
+        } else {
+            return new JsonResponse("Server error", 500);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
+    #[Route('/account/current-account', name: 'get_current_account', methods: "GET")]
     public function getBalance(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $user = UserService::getUserFromToken($request, $em);

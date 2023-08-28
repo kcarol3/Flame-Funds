@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid d-flex align-items-center w-100" style="background: #d9c5ed; height: 70px;position: fixed; top: 0;">
     <SidebarMenu/>
-<!--    <i class="bi bi-list mx-auto mt-2 click-animation" style="font-size: 60px"/>-->
     <div style = "width: 70%;">
       <router-link to="/home">
         <img  src="../assets/logo.png" class="mx-auto mt-2 button-primary" style="padding: 0;width: 64px;height: 64px; border-radius: 200px">
@@ -29,6 +28,7 @@ const items = ref([
       {
         label: 'Zmień konto',
         icon: 'bi bi-arrow-repeat',
+        to: "/accounts"
       }
     ]
   },

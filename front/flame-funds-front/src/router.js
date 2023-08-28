@@ -5,6 +5,7 @@ import register from "@/views/Register.vue";
 import home from "@/views/Home.vue";
 import expense from "@/views/Expense.vue";
 import addAccountView from "@/views/AddAccountView.vue";
+import accountsView from "@/views/AccountsView.vue";
 
 const routes = [
     {
@@ -17,6 +18,11 @@ const routes = [
         path: '/add-account',
         name: 'addAccount',
         component: addAccountView,
+    },
+    {
+        path: '/accounts',
+        name: 'accounts',
+        component: accountsView,
     },
     {
         path: '/start',

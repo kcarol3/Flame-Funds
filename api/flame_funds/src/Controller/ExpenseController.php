@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Account;
+use App\Entity\Expense;
+use App\Entity\ExpenseCategory;
+use App\Entity\IncomeCategory;
 use App\Service\ExpenseService;
 use App\Service\TokenService;
 use App\Service\UserService;
@@ -41,7 +45,8 @@ class ExpenseController extends AbstractController
 
         $date = new \DateTime($data['date']);
 
-        if ($expenseService->addExpense($accountId, $data['name'], $data['amount'], $date, $data['describe'], $data['category'])){
+
+        if ($expenseService->addExpense($accountId, $data['name'], $data['amount'], $date, $data['describe'], $data['category']['name'])){
             return new JsonResponse("Success saved expense", 200);
         } else {
             return new JsonResponse("Server Error", 500);

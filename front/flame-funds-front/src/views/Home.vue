@@ -2,7 +2,8 @@
   <div>
     <header-component title="Witaj!" class="mt-3"></header-component>
     <div class="mx-auto mt-4 py-3 lilita-one rounded border border-1 border-black shadow click-animation" style="width: 60%; background: #d9c5ed;color: gray;max-width: 400px">
-      <h3>Saldo</h3>
+      <h3>{{accountName}}</h3>
+      <h5>Saldo</h5>
       <h4>{{balance}}zł</h4>
     </div>
     <div class="container-fluid d-flex align-items-center tap-buttons pt-4 pb-3 align-self-end">

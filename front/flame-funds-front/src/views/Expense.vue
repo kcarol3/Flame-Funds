@@ -1,30 +1,21 @@
 <template>
   <div>
     <icon-header title="Wydatek" icon="bi bi-cash-coin" class="mt-3"></icon-header>
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-         aria-labelledby="staticBackdropLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="staticBackdropLabel">Dodaj Kategorię</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <span class="p-float-label mt-4 mb-4">
+    <div class="card flex justify-content-center">
+      <Dialog v-model:visible="visible" modal header="Dodaj kategorię" :style="{ width: '350px' }">
+          <span class="p-float-label mt-4 mb-4">
               <InputText id="catName" class="w-100" v-model="categoryName"/>
               <label for="catName">Nazwa kategorii</label>
             </span>
-            <span class="p-float-label mt-4 mb-4">
-              <Textarea inputId="catDetails" class="w-100" v-model="categoryDetails" rows="3" cols="33"/>
+        <span class="p-float-label mt-4 mb-4">
+              <textarea inputId="catDetails" class="w-100" v-model="categoryDetails" rows="3" cols="33"/>
               <label for="catDetails">Szczegóły</label>
           </span>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Anuluj</button>
-            <button type="button" class="button-primary" style="font-size: 18px">Zapisz</button>
-          </div>
-        </div>
-      </div>
+        <template #footer>
+          <Button label="anuluj" icon="bi bi-times" @click="visible = false" text />
+          <button type="button" class="button-primary" @click="addCategory" style="font-size: 18px">Zapisz</button>
+        </template>
+      </Dialog>
     </div>
     <div class="container" style="width: 300px">
     <span class="p-float-label mt-4 mb-4">
@@ -32,21 +23,21 @@
       <label for="name">Nazwa wydatku</label>
     </span>
       <span class="p-float-label mb-4">
-      <InputNumber v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" min="0"/>
+      <InputNumber id="amount" v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 />
     </span>
       <div class=" mb-4 ">
         <label for="calendar-24h">Wybierz datę:</label>
-        <Calendar class="w-100" inputId="calendar-24h" v-model="date" showTime hourFormat="24" showButtonBar touchUI/>
+        <Calendar class="w-100" inputId="calendar-24h" id="calendar" v-model="date" showTime hourFormat="24" showButtonBar touchUI/>
       </div>
       <div class="p-float-label mb-4">
-        <Dropdown v-model="category" inputId="dd" :options="categories" optionLabel="name" placeholder="Kategoria"
+        <Dropdown v-model="category" inputId="dd" id="category" :options="categories" optionLabel="name" placeholder="Kategoria"
                   class="w-75"/>
-        <Button data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="bi bi-plus"/></Button>
+        <Button @click="visible = true"><i class="bi bi-plus"/></Button>
         <label for="dd">Wybierz kategorię</label>
       </div>
       <div class="form-group">
         <label for="describe">Opis (opcjonalny)</label>
-        <textarea class="w-100" id="describe" v-model="describe" rows="3" cols="33"/>
+        <textarea class="w-100" id="describe" v-model="describe" rows="2" cols="33"/>
       </div>
       <button @click="addExpense" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-coin me-1"/>Dodaj</button>
     </div>
@@ -58,6 +49,8 @@
 import IconHeader from "@/components/IconHeader.vue";
 import ReturnButton from "@/components/ReturnButton.vue";
 import axios from "axios";
+import {createToast} from "mosha-vue-toastify";
+import Validation from "@/Validation";
 
 
 export default {
@@ -75,7 +68,8 @@ export default {
       category: "",
       categories: null,
       categoryName: "",
-      categoryDetails: ""
+      categoryDetails: "",
+      visible: false,
     };
   },
 
@@ -94,25 +88,81 @@ export default {
             console.log(error)
           })
     },
+    expenseValidation(){
+      const nameValidator = new Validation(this.name, "name", "nazwa");
+      const amountValidator = new Validation(this.amount, "amount", "kwota")
+      const dateValidator = new Validation(this.date, "calendar", "kalendarz")
+      const textValidator = new Validation(this.describe, "describe", "opis")
+      const categoryValidator = new Validation(this.category, "category", "kategoria")
 
-    addExpense() {
+      nameValidator.required().specialChars().check();
+      amountValidator.required().check();
+      dateValidator.required().check();
+      textValidator.specialChars().check();
+      categoryValidator.required().check();
+
+      return nameValidator.isValid() && amountValidator.isValid() && dateValidator.isValid() && textValidator.isValid() && categoryValidator.isValid();
+    },
+
+    addCategory() {
       let token = sessionStorage.getItem("token");
       const config = {
         headers: {Authorization: `Bearer ${token}`}
       };
-      axios.post("http://localhost:8741/expense/add-expense", {
-        "name": this.name,
-        "date": this.date,
-        "amount": this.amount,
-        "describe": this.describe,
-        "category": this.category.name,
+      axios.post("http://localhost:8741/category/add-expense", {
+        "name": this.categoryName,
+        "details": this.categoryDetails,
       }, config)
           .then(response => {
+            this.getCategories()
+            this.visible = false
+            createToast({
+                  title: 'Dodano kategorię wydatku',
+                  description: 'Możesz teraz wybrać nową kategorię przy dodawaniu wydatku.'
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
             console.log(response)
           })
           .catch(error => {
             console.log(error)
           })
+    },
+
+    addExpense() {
+      if (this.expenseValidation()){
+        let token = sessionStorage.getItem("token");
+        const config = {
+          headers: {Authorization: `Bearer ${token}`}
+        };
+        axios.post("http://localhost:8741/expense/add-expense", {
+          "name": this.name,
+          "date": this.date,
+          "amount": this.amount,
+          "describe": this.describe,
+          "category": this.category,
+        }, config)
+            .then(response => {
+              createToast({
+                    title: 'Dodano wydatek',
+                    description: 'Wydatki sprawdzisz w historii wydatków.'
+                  },
+                  {
+                    showIcon: 'true',
+                    position: 'top-center',
+                    type: 'success',
+                    transition: 'zoom',
+                  })
+              console.log(response)
+            })
+            .catch(error => {
+              console.log(error)
+            })
+      }
     }
   },
 };

@@ -15,6 +15,7 @@
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
     "core-js": "^3.8.3",
+    "jquery": "^3.7.0",
     "jsonwebtoken": "^9.0.1",
     "mosha-vue-toastify": "^1.0.23",
     "primeicons": "^6.0.1",

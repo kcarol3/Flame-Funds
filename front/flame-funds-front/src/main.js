@@ -18,11 +18,19 @@ import Button from 'primevue/button';
 import ProgressSpinner from 'primevue/progressspinner';
 import Menu from 'primevue/menu';
 import Sidebar from 'primevue/sidebar';
+import Checkbox from 'primevue/checkbox';
+import SpeedDial from 'primevue/speeddial';
+import ScrollPanel from 'primevue/scrollpanel';
+import Dialog from 'primevue/dialog';
 
 createApp(App)
     .use(router)
     .component('VueDatePicker',VueDatePicker)
     .use(PrimeVue)
+    .component("Dialog", Dialog)
+    .component("ScrollPanel", ScrollPanel)
+    .component("SpeedDial", SpeedDial)
+    .component("Checkbox", Checkbox)
     .component("Sidebar", Sidebar)
     .component("ProgressSpinner", ProgressSpinner)
     .component("InputNumber", InputNumber)

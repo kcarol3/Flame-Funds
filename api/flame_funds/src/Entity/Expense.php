@@ -116,12 +116,12 @@ class Expense
 
     public function getCategory(): ?ExpenseCategory
     {
-        return $this->Category;
+        return $this->category;
     }
 
-    public function setCategory(?ExpenseCategory $Category): static
+    public function setCategory(?ExpenseCategory $category): static
     {
-        $this->Category = $Category;
+        $this->category = $category;
 
         return $this;
     }

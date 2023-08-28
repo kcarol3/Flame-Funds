@@ -40,20 +40,16 @@ class ExpenseService
         $category = $categoryRepository->findOneBy(["name" => $categoryName]);
 
         $expense->setCategory($category);
-
         if($describe != ""){
             $expense->setDetails($describe);
         }
-        dd($expense);
+
         $account->setBalance($account->getBalance() - $amount);
 
-        try {
-            $this->entityManager->persist($expense);
-            $this->entityManager->flush();
+        $this->entityManager->persist($expense);
+        $this->entityManager->flush();
 
-            return true;
-        } catch (\Exception $e){
-            return false;
-        }
+        return true;
+
     }
 }

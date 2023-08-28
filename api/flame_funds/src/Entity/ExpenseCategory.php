@@ -21,10 +21,7 @@ class ExpenseCategory
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $details = null;
 
-    #[ORM\Column]
-    private ?bool $isDeleted = null;
-
-    #[ORM\OneToMany(mappedBy: 'Category', targetEntity: Expense::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Expense::class)]
     private Collection $expenses;
 
     public function __construct()
@@ -54,21 +51,9 @@ class ExpenseCategory
         return $this->details;
     }
 
-    public function setDetails(?string $details): static
+    public function setDetails(string $details): static
     {
         $this->details = $details;
-
-        return $this;
-    }
-
-    public function isIsDeleted(): ?bool
-    {
-        return $this->isDeleted;
-    }
-
-    public function setIsDeleted(bool $isDeleted): static
-    {
-        $this->isDeleted = $isDeleted;
 
         return $this;
     }

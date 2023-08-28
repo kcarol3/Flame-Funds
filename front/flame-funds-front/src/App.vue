@@ -51,7 +51,7 @@ body {
 
 .error {
   border: 1px solid red;
-  background-color: #ffebee;
+  background-color: #f19e9e;
   animation: shake 0.5s ease-in-out;
 }
 

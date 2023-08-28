@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Account::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Account::class, fetch: "EAGER")]
     private Collection $accounts;
 
     #[ORM\Column]

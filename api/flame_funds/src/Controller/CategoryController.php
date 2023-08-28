@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ExpenseCategory;
+use App\Entity\IncomeCategory;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -41,7 +42,7 @@ class CategoryController extends AbstractController
             return new JsonResponse(null, 400);
         }
     }
-    #[Route('/category/add-expense', name: 'app_category')]
+    #[Route('/category/add-expense', name: 'add_expense_category')]
     public function addExpenseCategory(Request $request, EntityManagerInterface $em){
         $content = $request->getContent();
         $data = json_decode($content, true);
@@ -50,7 +51,23 @@ class CategoryController extends AbstractController
 
         $newCategory->setName($data['name']);
         $newCategory->setDetails($data['details']);
-        $newCategory->setIsDeleted(false);
+        //$newCategory->setIsDeleted(false);
+
+        $em->persist($newCategory);
+        $em->flush();
+
+        return new JsonResponse("Success saved category", 200);
+    }
+
+    #[Route('/category/add-income', name: 'add_income_category')]
+    public function addIncomeCategory(Request $request, EntityManagerInterface $em){
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+
+        $newCategory = new IncomeCategory();
+
+        $newCategory->setName($data['name']);
+        $newCategory->setDetails($data['details']);
 
         $em->persist($newCategory);
         $em->flush();
