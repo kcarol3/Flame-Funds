@@ -7,7 +7,6 @@
   <div v-else>
     <h4>Brak kont</h4>
   </div>
-<!--  <one-account class="container align-content-center justify-content-center" name="Konto służbowe" balance="300.00"/>-->
 </div>
 </template>
 

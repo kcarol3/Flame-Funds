@@ -40,9 +40,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $currentAccount = null;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: AccountHistory::class)]
+    private Collection $accountHistories;
+
     public function __construct()
     {
         $this->accounts = new ArrayCollection();
+        $this->accountHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -177,6 +181,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCurrentAccount(?int $currentAccount): static
     {
         $this->currentAccount = $currentAccount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AccountHistory>
+     */
+    public function getAccountHistories(): Collection
+    {
+        return $this->accountHistories;
+    }
+
+    public function addAccountHistory(AccountHistory $accountHistory): static
+    {
+        if (!$this->accountHistories->contains($accountHistory)) {
+            $this->accountHistories->add($accountHistory);
+            $accountHistory->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccountHistory(AccountHistory $accountHistory): static
+    {
+        if ($this->accountHistories->removeElement($accountHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($accountHistory->getUser() === $this) {
+                $accountHistory->setUser(null);
+            }
+        }
 
         return $this;
     }

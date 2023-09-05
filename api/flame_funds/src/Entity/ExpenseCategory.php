@@ -24,6 +24,9 @@ class ExpenseCategory
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Expense::class)]
     private Collection $expenses;
 
+    #[ORM\Column]
+    private ?bool $isDeleted = null;
+
     public function __construct()
     {
         $this->expenses = new ArrayCollection();
@@ -84,6 +87,18 @@ class ExpenseCategory
                 $expense->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isIsDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }

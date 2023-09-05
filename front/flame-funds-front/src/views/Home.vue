@@ -1,14 +1,14 @@
 <template>
   <div>
     <header-component title="Witaj!" class="mt-3"></header-component>
-    <div class="mx-auto mt-4 py-3 lilita-one rounded border border-1 border-black shadow click-animation" style="width: 60%; background: #d9c5ed;color: gray;max-width: 400px">
-      <h3>{{accountName}}</h3>
-      <h5>Saldo</h5>
-      <h4>{{balance}}zł</h4>
+    <div @click="this.$router.push('/history')" class="mx-auto mt-4 py-3 lilita-one rounded border border-1 border-black shadow click-animation" style="width: 60%; background: #d9c5ed;color: gray;max-width: 400px">
+      <div style="color:black; font-size: 26px">{{accountName}}</div>
+      <div style="font-size: 18px">Saldo:</div>
+      <div style="font-size: 24px; color: dimgrey">{{balance}}zł</div>
     </div>
     <div class="container-fluid d-flex align-items-center tap-buttons pt-4 pb-3 align-self-end">
       <div class="mx-auto ">
-        <router-link to="/" class="button-primary" style="padding: 0 13px;border-radius: 200px"><i class="bi bi-plus" style="font-size: 48px"/></router-link>
+        <router-link to="/income" class="button-primary" style="padding: 0 13px;border-radius: 200px"><i class="bi bi-plus" style="font-size: 48px"/></router-link>
         <div class=" mt-1 text">Przychód</div>
       </div>
       <div class="mx-auto">
@@ -16,16 +16,19 @@
         <div class=" mt-1 text">Wydatek</div>
       </div>
     </div>
+    <home-chart class="mt-1 chart" ></home-chart>
   </div>
 </template>
 
 <script>
 import HeaderComponent from "@/components/Header.vue";
 import axios from 'axios';
+import HomeChart from "@/components/HomeComponents/HomeChart.vue";
+
 
 export default {
   name: "HomeView",
-  components: {HeaderComponent},
+  components: {HomeChart, HeaderComponent},
 
   data(){
     return {
@@ -61,6 +64,10 @@ export default {
  .text{
    font-family: 'Open Sans', sans-serif;
    font-size: 26px
+ }
+
+ chart {
+   background: white;
  }
 
 

@@ -1,8 +1,13 @@
 # base image
 FROM node:16.3.0-alpine
 
+RUN apk add --no-cache tzdata
+ENV TZ Europe/Warsaw
+
 # set working directory
 WORKDIR /app
+
+RUN chown -R node.node /app
 
 # add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH

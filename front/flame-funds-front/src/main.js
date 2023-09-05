@@ -22,11 +22,17 @@ import Checkbox from 'primevue/checkbox';
 import SpeedDial from 'primevue/speeddial';
 import ScrollPanel from 'primevue/scrollpanel';
 import Dialog from 'primevue/dialog';
+import VueApexCharts from "vue3-apexcharts";
+import Panel from 'primevue/panel';
+import Divider from 'primevue/divider';
 
 createApp(App)
     .use(router)
-    .component('VueDatePicker',VueDatePicker)
     .use(PrimeVue)
+    .use(VueApexCharts)
+    .component('Divider', Divider)
+    .component('Panel', Panel)
+    .component('VueDatePicker',VueDatePicker)
     .component("Dialog", Dialog)
     .component("ScrollPanel", ScrollPanel)
     .component("SpeedDial", SpeedDial)

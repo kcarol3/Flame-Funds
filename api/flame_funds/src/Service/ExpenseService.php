@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Account;
+use App\Entity\AccountHistory;
 use App\Entity\Expense;
 use App\Entity\ExpenseCategory;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,9 +45,17 @@ class ExpenseService
             $expense->setDetails($describe);
         }
 
+        $this->entityManager->persist($expense);
+
         $account->setBalance($account->getBalance() - $amount);
 
-        $this->entityManager->persist($expense);
+        $history = new AccountHistory();
+        $history->setDate($date);
+        $history->setPreviousBalance($account->getBalance());
+        $history->setUser($account->getUser());
+        $history->setAccount($account);
+        $this->entityManager->persist($history);
+
         $this->entityManager->flush();
 
         return true;

@@ -6,6 +6,8 @@ import home from "@/views/Home.vue";
 import expense from "@/views/Expense.vue";
 import addAccountView from "@/views/AddAccountView.vue";
 import accountsView from "@/views/AccountsView.vue";
+import IncomeViews from "@/views/IncomeViews.vue";
+import history from "@/views/History.vue";
 
 const routes = [
     {
@@ -13,6 +15,11 @@ const routes = [
         name: 'login',
         component: login,
         meta: { hideNavbar: true },
+    },
+    {
+        path: '/history',
+        name: 'history',
+        component: history,
     },
     {
         path: '/add-account',
@@ -23,6 +30,11 @@ const routes = [
         path: '/accounts',
         name: 'accounts',
         component: accountsView,
+    },
+    {
+        path: '/income',
+        name: 'income',
+        component: IncomeViews,
     },
     {
         path: '/start',

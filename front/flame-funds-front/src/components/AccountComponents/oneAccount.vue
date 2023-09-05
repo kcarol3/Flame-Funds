@@ -1,7 +1,7 @@
 <template>
-<div class="d-flex border border-2 rounded-4 my-auto body shadow-sm" style="max-width: 320px">
+<div class="d-flex border border-2 rounded-4 my-auto body" style="max-width: 320px;box-shadow: 0 0 10px 2px rgba(0,0,0,0.66);">
   <div class="mx-auto my-auto">
-    <h2 class="flex-item">
+    <h2 class="flex-item lilita-one" style="color: rebeccapurple">
       {{account.name}}
     </h2>
     <h5>

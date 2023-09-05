@@ -42,6 +42,32 @@ class CategoryController extends AbstractController
             return new JsonResponse(null, 400);
         }
     }
+
+    #[Route('/category/get-income', name: 'get_income_categories', methods: 'GET')]
+    public function getIncomeCategories(EntityManagerInterface $em): JsonResponse
+    {
+        $categoryRepository = $em->getRepository(IncomeCategory::class);
+
+        $categories = $categoryRepository->findAll();
+
+        $dataToReturn = [];
+        foreach ($categories as $key => $category){
+            if(!$category->isIsDeleted()){
+                $oneRow = [];
+                $oneRow["name"] = $category->getName();
+                $oneRow["details"] = $category->getDetails() ?? "";
+                $dataToReturn[] = $oneRow;
+            }
+        }
+
+        if($dataToReturn){
+            return new JsonResponse($dataToReturn, 200);
+        } else {
+            return new JsonResponse(null, 400);
+        }
+    }
+
+
     #[Route('/category/add-expense', name: 'add_expense_category')]
     public function addExpenseCategory(Request $request, EntityManagerInterface $em){
         $content = $request->getContent();
@@ -51,7 +77,7 @@ class CategoryController extends AbstractController
 
         $newCategory->setName($data['name']);
         $newCategory->setDetails($data['details']);
-        //$newCategory->setIsDeleted(false);
+        $newCategory->setIsDeleted(false);
 
         $em->persist($newCategory);
         $em->flush();
@@ -68,6 +94,7 @@ class CategoryController extends AbstractController
 
         $newCategory->setName($data['name']);
         $newCategory->setDetails($data['details']);
+        $newCategory->setIsDeleted(false);
 
         $em->persist($newCategory);
         $em->flush();

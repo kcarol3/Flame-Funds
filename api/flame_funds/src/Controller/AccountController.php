@@ -79,6 +79,11 @@ class AccountController extends AbstractController
         return new JsonResponse($dataToReturn, 200);
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route("/account/change-account", name: 'change_account', methods: "PUT")]
     public function changeCurrentAccount(Request $request, EntityManagerInterface $em): JsonResponse
     {

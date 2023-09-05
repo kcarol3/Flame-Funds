@@ -1,6 +1,6 @@
 <template>
   <div>
-    <icon-header title="Wydatek" icon="bi bi-cash-coin" class="mt-3"></icon-header>
+    <icon-header title="Przychód" icon="bi bi-cash-stack" class="mt-3"></icon-header>
     <div class="card flex justify-content-center">
       <Dialog v-model:visible="visible" modal header="Dodaj kategorię" :style="{ width: '350px' }">
           <span class="p-float-label mt-4 mb-4">
@@ -20,7 +20,7 @@
     <div class="container" style="width: 300px">
     <span class="p-float-label mt-4 mb-4">
       <InputText id="name" class="w-100" v-model="name"/>
-      <label for="name">Nazwa wydatku</label>
+      <label for="name">Nazwa przychodu</label>
     </span>
       <span class="p-float-label mb-4">
       <InputNumber id="amount" v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 />
@@ -39,7 +39,7 @@
         <label for="describe">Opis (opcjonalny)</label>
         <textarea class="w-100" id="describe" v-model="describe" rows="2" cols="33"/>
       </div>
-      <button @click="addExpense" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-coin me-1"/>Dodaj</button>
+      <button @click="addIncome" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-stack me-1"/>Dodaj</button>
     </div>
     <return-button link="/home" class="m-auto mb-3"></return-button>
   </div>
@@ -79,7 +79,7 @@ export default {
 
   methods: {
     getCategories() {
-      axios.get("http://localhost:8741/category/get-expense")
+      axios.get("http://localhost:8741/category/get-income")
           .then(response => {
             console.log(response)
             this.categories = response.data
@@ -99,7 +99,7 @@ export default {
       return nameValidator.isValid() && textValidator.isValid();
     },
 
-    expenseValidation(){
+    incomeValidation(){
       const nameValidator = new Validation(this.name, "name", "nazwa");
       const amountValidator = new Validation(this.amount, "amount", "kwota")
       const dateValidator = new Validation(this.date, "calendar", "kalendarz")
@@ -121,7 +121,7 @@ export default {
         const config = {
           headers: {Authorization: `Bearer ${token}`}
         };
-        axios.post("http://localhost:8741/category/add-expense", {
+        axios.post("http://localhost:8741/category/add-income", {
           "name": this.categoryName,
           "details": this.categoryDetails,
         }, config)
@@ -129,8 +129,8 @@ export default {
               this.getCategories()
               this.visible = false
               createToast({
-                    title: 'Dodano kategorię wydatku',
-                    description: 'Możesz teraz wybrać nową kategorię przy dodawaniu wydatku.'
+                    title: 'Dodano kategorię przychodu',
+                    description: 'Możesz teraz wybrać nową kategorię przy dodawaniu przychodu.'
                   },
                   {
                     showIcon: 'true',
@@ -146,15 +146,14 @@ export default {
       }
     },
 
-    addExpense() {
-      if (this.expenseValidation()){
+    addIncome() {
+      if (this.incomeValidation()){
         let token = sessionStorage.getItem("token");
         const config = {
           headers: {Authorization: `Bearer ${token}`}
         };
         this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
-
-        axios.post("http://localhost:8741/expense/add-expense", {
+        axios.post("http://localhost:8741/income/add-income", {
           "name": this.name,
           "date": this.date,
           "amount": this.amount,
@@ -163,8 +162,8 @@ export default {
         }, config)
             .then(response => {
               createToast({
-                    title: 'Dodano wydatek',
-                    description: 'Wydatki sprawdzisz w historii wydatków.'
+                    title: 'Dodano przychód',
+                    description: 'Przychody sprawdzisz w historii.'
                   },
                   {
                     showIcon: 'true',
@@ -178,6 +177,7 @@ export default {
               console.log(error)
             })
       }
+
     }
   },
 };

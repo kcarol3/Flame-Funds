@@ -65,6 +65,38 @@ body {
   animation: shake 0.5s ease-in-out;
 }
 
+.jump{
+  animation: myAnim 3s linear 0s infinite alternate forwards;
+}
+
+@keyframes myAnim {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70% {
+    transform: translateY(-8px);
+  }
+
+  20%,
+  40%,
+  60% {
+    transform: translateY(8px);
+  }
+
+  80% {
+    transform: translateY(6.4px);
+  }
+
+  90% {
+    transform: translateY(-6.4px);
+  }
+}
+
 @media screen and (max-width: 424px){
   body {
     background-image: url('assets/flame_upscaled-mobile.jpg');
