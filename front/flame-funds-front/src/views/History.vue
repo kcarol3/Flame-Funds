@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <icon-header title="Historia" icon="bi bi-hourglass-split" class="mt-3"></icon-header>
     <div class="jump">
       <i class="bi bi-arrow-up-short icon " style="font-size:34px; color: rebeccapurple"></i>
@@ -11,7 +11,7 @@
             <div class="lilita-one" style="font-size: 24px; color: rebeccapurple">
               {{ transaction.name }}
             </div>
-            <div class="d-flex mx-auto">
+            <div class="d-flex mx-auto mt-1">
               <div class="w-75" style="text-align: left; font-size: 17px; color: grey">
                 {{transaction.details}}
               </div>

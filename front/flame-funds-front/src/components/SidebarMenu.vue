@@ -6,6 +6,9 @@
           <h2>Menu</h2>
         </div>
       </template>
+      <div v-for="(item, index) in menu" :key="index" class="mt-3">
+        <menu-element @click="visible = false" :name=item.name :icon=item.icon :link=item.link></menu-element>
+      </div>
     </Sidebar>
     <i @click="visible = true" class="bi bi-list click-animation" style="font-size: 38px"/>
   </div>
@@ -13,9 +16,38 @@
 
 <script setup>
 import { ref } from "vue";
+import MenuElement from "@/components/MenuElement.vue";
 
 const visible = ref(false);
 </script>
+<script>
+export default {
+name: "SidebarMenu",
+
+  data(){
+  return {
+    menu: [
+      {
+        name: "Strona domowa",
+        icon: "bi bi-house",
+        link: "/home"
+      },
+      {
+        name: "Historia",
+        icon: "bi bi-hourglass-split",
+        link: "/history"
+      },
+      {
+        name: "Konta",
+        icon: "bi bi-wallet2",
+        link: "/accounts"
+      },
+    ],
+  }
+  }
+}
+</script>
 <style scoped>
+
 
 </style>

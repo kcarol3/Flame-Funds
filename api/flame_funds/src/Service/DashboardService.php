@@ -41,6 +41,7 @@ class DashboardService
             }
         }
 
+       krsort($dataToReturn);
 
         return $dataToReturn;
     }
