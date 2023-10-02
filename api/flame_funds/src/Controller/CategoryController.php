@@ -12,14 +12,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CategoryController extends AbstractController
 {
-    #[Route('/category', name: 'app_category')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/CategoryController.php',
-        ]);
-    }
+    /**
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route('/category/get-expense', name: 'get_expense_categories', methods: 'GET')]
     public function getExpenseCategories(EntityManagerInterface $em){
         $categoryRepository = $em->getRepository(ExpenseCategory::class);
@@ -43,6 +39,11 @@ class CategoryController extends AbstractController
         }
     }
 
+
+    /**
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route('/category/get-income', name: 'get_income_categories', methods: 'GET')]
     public function getIncomeCategories(EntityManagerInterface $em): JsonResponse
     {
@@ -67,7 +68,11 @@ class CategoryController extends AbstractController
         }
     }
 
-
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route('/category/add-expense', name: 'add_expense_category')]
     public function addExpenseCategory(Request $request, EntityManagerInterface $em){
         $content = $request->getContent();
@@ -85,6 +90,11 @@ class CategoryController extends AbstractController
         return new JsonResponse("Success saved category", 200);
     }
 
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     */
     #[Route('/category/add-income', name: 'add_income_category')]
     public function addIncomeCategory(Request $request, EntityManagerInterface $em){
         $content = $request->getContent();

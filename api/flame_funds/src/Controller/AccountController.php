@@ -26,6 +26,7 @@ class AccountController extends AbstractController
 {
 
     /**
+     * Dodanie nowego do użytkownika
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse
@@ -80,6 +81,7 @@ class AccountController extends AbstractController
     }
 
     /**
+     * Zmiana aktualnego konta użytkownika na wybrane w formularzu.
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse
@@ -102,6 +104,7 @@ class AccountController extends AbstractController
     }
 
     /**
+     * Pobranie balansu z aktualnego konta użytkownika.
      * @param Request $request
      * @param EntityManagerInterface $em
      * @return JsonResponse

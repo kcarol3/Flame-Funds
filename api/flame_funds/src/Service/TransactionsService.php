@@ -8,7 +8,7 @@ use App\Entity\Expense;
 use App\Entity\ExpenseCategory;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ExpenseService
+class TransactionsService
 {
     private $entityManager;
 

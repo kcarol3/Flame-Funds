@@ -43,6 +43,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: AccountHistory::class)]
     private Collection $accountHistories;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sheetId = null;
+
     public function __construct()
     {
         $this->accounts = new ArrayCollection();
@@ -211,6 +214,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $accountHistory->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSheetId(): ?string
+    {
+        return $this->sheetId;
+    }
+
+    public function setSheetId(string $sheetId): static
+    {
+        $this->sheetId = $sheetId;
 
         return $this;
     }

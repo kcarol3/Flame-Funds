@@ -6,9 +6,10 @@
           <h2>Menu</h2>
         </div>
       </template>
-      <div v-for="(item, index) in menu" :key="index" class="mt-3">
+      <div v-for="(item, index) in menu" :key="index" class="mt-1">
         <menu-element @click="visible = false" :name=item.name :icon=item.icon :link=item.link></menu-element>
       </div>
+      <divider/>
     </Sidebar>
     <i @click="visible = true" class="bi bi-list click-animation" style="font-size: 38px"/>
   </div>
@@ -48,6 +49,8 @@ name: "SidebarMenu",
 }
 </script>
 <style scoped>
-
+.sh:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
 
 </style>

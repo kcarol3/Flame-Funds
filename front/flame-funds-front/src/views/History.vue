@@ -4,7 +4,7 @@
     <div class="jump">
       <i class="bi bi-arrow-up-short icon " style="font-size:34px; color: rebeccapurple"></i>
     </div>
-    <ScrollPanel class="mx-auto sh" style="width: 98%; height: 500px">
+    <ScrollPanel class="mx-auto sh" style="width: 98%; height: 60vh">
       <div v-for="(transactions, date) in transactions" :key="date">
         <Panel :header=date>
           <div v-for="(transaction, index) in transactions" :key="transaction.name">

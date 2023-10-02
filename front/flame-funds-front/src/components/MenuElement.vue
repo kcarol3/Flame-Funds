@@ -1,8 +1,9 @@
 <template>
-<div>
-  <div @click="this.$router.push(link)" class="button-secondary w-100 d-flex mx-auto mb-3" style="font-size: 26px">
+<div >
+  <Divider/>
+  <div @click="this.$router.push(link)" class="w-100 d-flex mx-auto" style="font-size: 22px">
     <div class="mx-auto">{{name}}</div>
-    <i :class=icon style="font-size: 26px"></i>
+    <i :class=icon style="font-size: 22px"></i>
   </div>
 </div>
 </template>

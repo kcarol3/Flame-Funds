@@ -6,7 +6,7 @@ use App\Entity\Account;
 use App\Entity\Expense;
 use App\Entity\ExpenseCategory;
 use App\Entity\IncomeCategory;
-use App\Service\ExpenseService;
+use App\Service\TransactionsService;
 use App\Service\TokenService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,14 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ExpenseController extends AbstractController
 {
-    #[Route('/expense', name: 'app_expense')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ExpenseController.php',
-        ]);
-    }
 
     /**
      * @param Request $request
@@ -35,7 +27,7 @@ class ExpenseController extends AbstractController
      */
     #[Route('/expense/add-expense', name: 'add_expense', methods: 'POST')]
     public function addExpense(Request $request, EntityManagerInterface $em){
-        $expenseService = new ExpenseService($em);
+        $expenseService = new TransactionsService($em);
 
         $user = UserService::getUserFromToken($request, $em);
         $accountId = $user->getCurrentAccount();

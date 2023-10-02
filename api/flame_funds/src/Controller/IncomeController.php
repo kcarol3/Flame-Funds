@@ -6,7 +6,7 @@ use App\Entity\Account;
 use App\Entity\AccountHistory;
 use App\Entity\Income;
 use App\Entity\IncomeCategory;
-use App\Service\ExpenseService;
+use App\Service\TransactionsService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,14 +16,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class IncomeController extends AbstractController
 {
-    #[Route('/income', name: 'app_income')]
-    public function index(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/IncomeController.php',
-        ]);
-    }
 
     /**
      * @param Request $request
