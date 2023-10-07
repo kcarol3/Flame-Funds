@@ -8,11 +8,11 @@ services:
         ports:
             - 3306:3306
         volumes:
-            - db-data:/var/lib/mysql
+            - ./db-data:/var/lib/mysql
         environment:
             MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         networks:
-            - tutorial
+            - app_network
 
     # phpmyadmin container
     phpmyadmin:
@@ -26,7 +26,7 @@ services:
         environment:
             PMA_HOST: db
         networks:
-            - tutorial
+            - app_network
 
     # Symfony apache project container
     www:
@@ -36,10 +36,10 @@ services:
           - "8741:80"
         volumes:
             - ./docker/php/vhosts:/etc/apache2/sites-enabled
-            - ./:/var/www
+            - ./api/:/var/www
         restart: always
         networks:
-            - tutorial
+            - app_network
             
     front:
         build:
@@ -50,13 +50,10 @@ services:
             - 8000:8080
         restart: always
         networks:
-            - tutorial
+            - app_network
         volumes:
             - ./front/flame-funds-front/:/app
             - '/app/node_modules'
             
 networks:
-    tutorial:
-
-volumes:
-    db-data:
+    app_network:
