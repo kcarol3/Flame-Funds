@@ -13,7 +13,6 @@ use App\Entity\User;
 /**
  * @Route("/api", name="api_")
  */
-
 class RegistrationController extends AbstractController
 {
     /**

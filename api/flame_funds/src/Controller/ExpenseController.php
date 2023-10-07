@@ -2,20 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Account;
-use App\Entity\Expense;
-use App\Entity\ExpenseCategory;
-use App\Entity\IncomeCategory;
 use App\Service\TransactionsService;
-use App\Service\TokenService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/api", name="api_")
+ */
 class ExpenseController extends AbstractController
 {
 

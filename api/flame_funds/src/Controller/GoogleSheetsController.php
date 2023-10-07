@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/api", name="api_")
+ */
 class GoogleSheetsController extends AbstractController
 {
     /**
@@ -33,6 +36,14 @@ class GoogleSheetsController extends AbstractController
         $sheetID = $googleSheet->createSheet($user, $data["title"], $data["role"], $email);
 
         return new JsonResponse($sheetID, 200);
+    }
+
+    #[Route('/google/id', name: 'get_sheet_id', methods: 'GET')]
+    public function getSheetId(Request $request, EntityManagerInterface $em):JsonResponse
+    {
+        $user = UserService::getUserFromToken($request, $em);
+
+        return new JsonResponse($user->getSheetId(), 200);
     }
 
     /**
