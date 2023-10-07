@@ -1,7 +1,7 @@
 <template>
-  <div style="max-width: 700px; width: 98%" class="container align-content-center">
+  <div class="container align-content-center">
     <div id="chart">
-      <apexchart type="area" height="270" :options="chartOptions" :series="series"></apexchart>
+      <apexchart type="area" height="250" :options="chartOptions" :series="series"></apexchart>
     </div>
   </div>
 </template>

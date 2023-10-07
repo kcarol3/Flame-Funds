@@ -16,7 +16,7 @@
         <div class=" mt-1 text">Wydatek</div>
       </div>
     </div>
-    <home-chart class="mt-1 chart" ></home-chart>
+    <home-chart class="mt-1 chart sh"></home-chart>
   </div>
 </template>
 
@@ -61,6 +61,11 @@ export default {
 </script>
 
 <style scoped>
+.sh{
+  box-shadow: 0 0 20px 20px rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
  .text{
    font-family: 'Open Sans', sans-serif;
    font-size: 26px

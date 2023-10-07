@@ -65,7 +65,7 @@ class Validation{
                 })
             if (inputElement) {
                 inputElement.classList.add("p-invalid")
-                inputElement.classList.add('error'); // Dodaj klasę CSS w razie błędu
+                inputElement.classList.add('error');
             }
         }
     }

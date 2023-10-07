@@ -25,13 +25,17 @@ import Dialog from 'primevue/dialog';
 import VueApexCharts from "vue3-apexcharts";
 import Panel from 'primevue/panel';
 import Divider from 'primevue/divider';
+import Card from 'primevue/card';
+import RadioButton from 'primevue/radiobutton';
 
 createApp(App)
     .use(router)
     .use(PrimeVue)
     .use(VueApexCharts)
     .component('Divider', Divider)
+    .component('Card', Card)
     .component('Panel', Panel)
+    .component("RadioButton", RadioButton)
     .component('VueDatePicker',VueDatePicker)
     .component("Dialog", Dialog)
     .component("ScrollPanel", ScrollPanel)

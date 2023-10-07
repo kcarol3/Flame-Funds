@@ -8,6 +8,7 @@ import addAccountView from "@/views/AddAccountView.vue";
 import accountsView from "@/views/AccountsView.vue";
 import IncomeViews from "@/views/IncomeViews.vue";
 import history from "@/views/History.vue";
+import sheetView from "@/views/SheetView.vue";
 
 const routes = [
     {
@@ -58,7 +59,11 @@ const routes = [
         name: 'expense',
         component: expense,
     },
-
+    {
+        path: '/sheets',
+        name: 'sheets',
+        component: sheetView
+    }
 ]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
