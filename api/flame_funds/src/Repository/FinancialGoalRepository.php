@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\IncomeCategory;
+use App\Entity\FinancialGoal;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
