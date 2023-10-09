@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\FinancialGoalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -35,6 +37,13 @@ class FinancialGoal
     #[ORM\Column]
     private ?bool $isDeleted = null;
 
+    #[ORM\OneToMany(mappedBy: 'goal', targetEntity: Account::class)]
+    private Collection $accounts;
+
+    public function __construct()
+    {
+        $this->accounts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -115,5 +124,6 @@ class FinancialGoal
     {
         $this->isDeleted = $isDeleted;
     }
+
 
 }
