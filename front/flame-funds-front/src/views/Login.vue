@@ -5,7 +5,7 @@
     <div class="container" style="width: 300px">
       <div class="form-group mb-2">
         <label for="email">E-mail</label>
-        <input v-model="email" class="form-control" id="username" placeholder="Wprowadź e-mail"></div>
+        <input v-model="email" class="form-control" id="email" placeholder="Wprowadź e-mail"></div>
       <div class="form-group ">
         <label for="password">Hasło</label>
         <input type="password" v-model="password" class="form-control" id="password" placeholder="Wprowadź hasło"/>
@@ -24,13 +24,14 @@ import HeaderComponent from "@/components/Header.vue";
 import ReturnButton from "@/components/ReturnButton.vue";
 import axios from 'axios';
 import {createToast} from "mosha-vue-toastify";
+import Validation from "@/Validation";
 
 export default {
   name: "LoginView",
   components: {ReturnButton, HeaderComponent,},
 
-  data(){
-    return{
+  data() {
+    return {
       email: "",
       password: "",
       isLoading: false,
@@ -38,35 +39,47 @@ export default {
   },
 
   methods: {
-    loginCheck(){
-      this.isLoading = true;
-      axios.post("http://localhost:8741/api/login_check", {"email":this.email, "password":this.password})
-          .then((response) => {
-            this.isLoading = false;
-            sessionStorage.setItem("token", response.data.token)
-            this.$router.push("/home")
-          })
-          .catch((error)=>{
-            this.isLoading = false;
-            createToast({
-                  title: 'Nie udało się zalogować',
-                  description: 'Złe dane logowania'
-                },
-                {
-                  showIcon: 'true',
-                  position: 'top-center',
-                  type: 'danger',
-                  transition: 'zoom',
-                })
-            console.log(error)
-          })
+    loginValidation() {
+      const emailValidator = new Validation(this.email, "email", "email");
+      const passwordValidator = new Validation(this.password, "password", "hasło");
+
+      emailValidator.required().isEmail().check();
+      passwordValidator.required().check();
+
+      return emailValidator.isValid() && passwordValidator.isValid();
+    },
+
+    loginCheck() {
+      if (this.loginValidation()) {
+        this.isLoading = true;
+        axios.post("http://localhost:8741/api/login_check", {"email": this.email, "password": this.password})
+            .then((response) => {
+              this.isLoading = false;
+              sessionStorage.setItem("token", response.data.token)
+              this.$router.push("/home")
+            })
+            .catch((error) => {
+              this.isLoading = false;
+              createToast({
+                    title: 'Nie udało się zalogować',
+                    description: 'Złe dane logowania'
+                  },
+                  {
+                    showIcon: 'true',
+                    position: 'top-center',
+                    type: 'danger',
+                    transition: 'zoom',
+                  })
+              console.log(error)
+            })
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-img{
+img {
   width: 24%;
   height: 24%;
   max-height: 256px;

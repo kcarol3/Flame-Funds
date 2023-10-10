@@ -55,6 +55,11 @@ body {
   animation: shake 0.5s ease-in-out;
 }
 
+.success {
+  border: 1px solid #05c900;
+  background-color: #cfffc3;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
