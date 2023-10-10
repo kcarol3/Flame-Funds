@@ -44,7 +44,7 @@ name: "SidebarMenu",
         link: "/accounts"
       },
       {
-        name: "Cele oszczędnościowe",
+        name: "Cele finansowe",
         icon: "bi bi-piggy-bank",
         link: "/financialGoal"
       },
