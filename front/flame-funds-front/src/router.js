@@ -9,6 +9,7 @@ import accountsView from "@/views/AccountsView.vue";
 import IncomeViews from "@/views/IncomeViews.vue";
 import history from "@/views/History.vue";
 import sheetView from "@/views/SheetView.vue";
+import financialGoal from "@/views/FinancialGoal.vue";
 
 const routes = [
     {
@@ -63,6 +64,11 @@ const routes = [
         path: '/sheets',
         name: 'sheets',
         component: sheetView
+    },
+    {
+        path: '/financialGoal',
+        name: 'financialGoal',
+        component: financialGoal
     }
 ]
 const router = createRouter({
