@@ -9,7 +9,7 @@ class Validation{
     }
 
     /**
-     * Sprawdź czy pole nie jest puste.
+     * Sprawdza czy pole nie jest puste.
      * @returns {Validation}
      */
     required() {
@@ -60,7 +60,7 @@ class Validation{
     }
 
     /**
-     * Sprawdź czy w polu jest wpisany poprawny email.
+     * Sprawdza czy w polu jest wpisany poprawny email.
      * @returns {Validation}
      */
     isEmail() {
@@ -72,7 +72,7 @@ class Validation{
     }
 
     /**
-     * Sprawdź czy w polu są wpisane znaki specjalne html.
+     * Sprawdza czy w polu są wpisane znaki specjalne html.
      * @returns {Validation}
      */
     specialChars() {
