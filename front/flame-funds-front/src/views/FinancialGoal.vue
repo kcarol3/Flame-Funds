@@ -2,22 +2,51 @@
   <div>
     <icon-header title="Cel finansowy" icon="bi bi-piggy-bank" class="mt-3"></icon-header>
     <div class="container" style="width: 300px">
-    <span class="p-float-label mt-4 mb-4">
-      <InputText id="name" class="w-100" v-model="name"/>
-      <label for="name">Nazwa celu finansowego</label>
-    </span>
-      <span class="p-float-label mb-4">
-      <InputNumber id="amount" v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 />
-    </span>
+
+      <div class="mb-4">
+        <label for="name">Nazwa celu finansowego:</label>
+        <span class="p-float-label  mb-4">
+          <InputText id="name" class="w-100" v-model="name"/>
+        </span>
+      </div>
+
+      <div class="mb-4">
+        <label for="currentAmount">Kwota początkowa:</label>
+        <span class="p-float-label mb-4">
+          <InputNumber id="currentAmount" v-model="currentAmount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="100" />
+        </span>
+      </div>
+
+      <div class="mb-4">
+        <label for="goalAmount">Kwota końcowa:</label>
+        <span class="p-float-label mb-4">
+          <InputNumber id="goalAmount" v-model="goalAmount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="100" />
+        </span>
+      </div>
+
       <div class=" mb-4 ">
-        <label for="calendar-24h">Wybierz datę końcową:</label>
-        <Calendar class="w-100" inputId="calendar-24h" id="calendar" v-model="date" showTime hourFormat="24" showButtonBar touchUI/>
+        <label for="calendar-24hStart">Data początkowa:</label>
+        <Calendar class="w-100" inputId="dateStart" id="dateStart" v-model="dateStart" showTime hourFormat="24" showButtonBar touchUI/>
       </div>
+
+      <div class=" mb-4 ">
+        <label for="calendar-24hEnd">Data końcowa:</label>
+        <Calendar class="w-100" inputId="dateEnd" id="dateEnd" v-model="dateEnd" showTime hourFormat="24" showButtonBar touchUI/>
+      </div>
+
+
+      <div class=" mb-4">
+        <label for="account">Konto bankowe:</label>
+        <Dropdown v-model="account" inputId="account" id="account" :options="account" optionLabel="name" placeholder="Konto bankowe" class="w-75"/>
+      </div>
+
       <div class="form-group">
-        <label for="describe">Opis (opcjonalny)</label>
-        <textarea class="w-100" id="describe" v-model="describe" rows="2" cols="33"/>
+        <label for="details">Opis (opcjonalny)</label>
+        <textarea class="w-100" id="details" v-model="details" rows="2" cols="33"/>
       </div>
+
       <button @click="addFinancialGoal" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-stack me-1"/>Dodaj</button>
+
     </div>
     <return-button link="/home" class="m-auto mb-3"></return-button>
   </div>
@@ -39,9 +68,11 @@ export default {
   data() {
     return {
       name: "",
-      date: "",
-      amount: 0,
-      describe: "",
+      dateStart: "",
+      dateEnd: "",
+      currentAmount: 0,
+      goalAmount: 0,
+      details: "",
       visible: false,
     };
   },
@@ -51,16 +82,21 @@ export default {
 
     financialGoalValidation(){
       const nameValidator = new Validation(this.name, "name", "nazwa");
-      const amountValidator = new Validation(this.amount, "amount", "kwota")
-      const dateValidator = new Validation(this.date, "calendar", "kalendarz")
-      const textValidator = new Validation(this.describe, "describe", "opis")
+      const amountValidator = new Validation(this.currentAmount, "currentAmount", "kwotaPoczątkowa")
+      const amountValidator2 = new Validation(this.goalAmount, "goalAmount", "kwotaKońcowa")
+      const textValidator = new Validation(this.details, "details", "opis")
+      const dateStartValidator = new Validation(this.dateStart, "dateStart", "dataPoczątkowa")
+      const dateEndValidator = new Validation(this.dateEnd, "dateEnd", "dataKońcowa")
+
 
       nameValidator.required().specialChars().check();
       amountValidator.required().check();
-      dateValidator.required().check();
+      amountValidator2.required().check();
       textValidator.specialChars().check();
+      dateStartValidator.required().check();
+      dateEndValidator.required().check();
 
-      return nameValidator.isValid() && amountValidator.isValid() && dateValidator.isValid() && textValidator.isValid();
+      return nameValidator.isValid() && amountValidator.isValid() && amountValidator2.isValid() && dateStartValidator.isValid() && dateEndValidator.isValid() && textValidator.isValid();
     },
 
     addFinancialGoal() {
@@ -72,9 +108,11 @@ export default {
         this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
         axios.post("http://localhost:8741/income/add-income", {
           "name": this.name,
-          "date": this.date,
-          "amount": this.amount,
-          "describe": this.describe,
+          "dateStart": this.dateStart,
+          "dateEnd": this.dateEnd,
+          "currentAmount": this.currentAmount,
+          "goalAmount": this.goalAmount,
+          "details": this.details,
         }, config)
             .then(response => {
               createToast({
