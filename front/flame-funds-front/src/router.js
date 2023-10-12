@@ -9,6 +9,7 @@ import accountsView from "@/views/AccountsView.vue";
 import IncomeViews from "@/views/IncomeViews.vue";
 import history from "@/views/History.vue";
 import sheetView from "@/views/SheetView.vue";
+import financialGoal from "@/views/FinancialGoal.vue";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
 
@@ -72,7 +73,13 @@ const routes = [
         name: 'sheets',
         component: sheetView,
         beforeEnter: authMiddleware,
-    }
+    },
+    {
+        path: '/financialGoal',
+        name: 'financialGoal',
+        component: financialGoal,
+        beforeEnter: authMiddleware,
+    },
 ]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),

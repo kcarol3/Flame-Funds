@@ -43,6 +43,11 @@ name: "SidebarMenu",
         icon: "bi bi-wallet2",
         link: "/accounts"
       },
+      {
+        name: "Cele finansowe",
+        icon: "bi bi-piggy-bank",
+        link: "/financialGoal"
+      },
     ],
   }
   }

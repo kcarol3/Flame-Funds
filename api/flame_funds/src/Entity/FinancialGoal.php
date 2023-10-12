@@ -37,22 +37,20 @@ class FinancialGoal
     #[ORM\Column]
     private ?bool $isDeleted = null;
 
-    #[ORM\OneToMany(mappedBy: 'goal', targetEntity: Account::class)]
-    private Collection $accounts;
+    #[ORM\ManyToOne(inversedBy: 'financialGoal')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Account $account = null;
 
-    public function __construct()
-    {
-        $this->accounts = new ArrayCollection();
-    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(?int $id): void
+    public function setId(?int $id): static
     {
         $this->id = $id;
+        return $this;
     }
 
     public function getName(): ?string
@@ -60,9 +58,10 @@ class FinancialGoal
         return $this->name;
     }
 
-    public function setName(?string $name): void
+    public function setName(?string $name): static
     {
         $this->name = $name;
+        return $this;
     }
 
     public function getDateStart(): ?\DateTimeInterface
@@ -70,9 +69,10 @@ class FinancialGoal
         return $this->dateStart;
     }
 
-    public function setDateStart(?\DateTimeInterface $dateStart): void
+    public function setDateStart(?\DateTimeInterface $dateStart): static
     {
         $this->dateStart = $dateStart;
+        return $this;
     }
 
     public function getDateEnd(): ?\DateTimeInterface
@@ -85,9 +85,10 @@ class FinancialGoal
         return $this->goalAmount;
     }
 
-    public function setGoalAmount(?string $goalAmount): void
+    public function setGoalAmount(?string $goalAmount): static
     {
         $this->goalAmount = $goalAmount;
+        return $this;
     }
 
     public function getCurrentAmount(): ?string
@@ -95,14 +96,16 @@ class FinancialGoal
         return $this->currentAmount;
     }
 
-    public function setCurrentAmount(?string $currentAmount): void
+    public function setCurrentAmount(?string $currentAmount): static
     {
         $this->currentAmount = $currentAmount;
+        return $this;
     }
 
-    public function setDateEnd(?\DateTimeInterface $dateEnd): void
+    public function setDateEnd(?\DateTimeInterface $dateEnd): static
     {
         $this->dateEnd = $dateEnd;
+        return $this;
     }
 
     public function getDetails(): ?string
@@ -110,9 +113,10 @@ class FinancialGoal
         return $this->details;
     }
 
-    public function setDetails(?string $details): void
+    public function setDetails(?string $details): static
     {
         $this->details = $details;
+        return $this;
     }
 
     public function getIsDeleted(): ?bool
@@ -120,10 +124,21 @@ class FinancialGoal
         return $this->isDeleted;
     }
 
-    public function setIsDeleted(?bool $isDeleted): void
+    public function setIsDeleted(?bool $isDeleted): static
     {
         $this->isDeleted = $isDeleted;
+        return $this;
     }
 
+    public function getAccount(): ?Account
+    {
+        return $this->account;
+    }
+
+    public function setAccount(?Account $account): static
+    {
+        $this->account = $account;
+        return $this;
+    }
 
 }
