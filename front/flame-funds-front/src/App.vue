@@ -165,7 +165,7 @@ body {
   background: radial-gradient(circle, rgba(177, 114, 234, 0.82), #9646e3);
   display: inline-block;
   font-size: 32px;
-  padding: 10px 20px;
+  padding: 8px 18px;
   max-width: 312px;
   max-height: 96px;
   color: #fff;

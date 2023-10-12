@@ -56,6 +56,7 @@ export default {
             .then((response) => {
               this.isLoading = false;
               sessionStorage.setItem("token", response.data.token)
+              sessionStorage.setItem("refresh_token", response.data.refresh_token)
               this.$router.push("/home")
             })
             .catch((error) => {

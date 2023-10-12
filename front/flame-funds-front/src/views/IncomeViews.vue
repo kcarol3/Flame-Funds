@@ -79,7 +79,11 @@ export default {
 
   methods: {
     getCategories() {
-      axios.get("http://localhost:8741/category/get-income")
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      axios.get("http://localhost:8741/api/category/get-income",config)
           .then(response => {
             console.log(response)
             this.categories = response.data
