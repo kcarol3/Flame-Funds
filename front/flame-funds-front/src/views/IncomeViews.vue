@@ -125,7 +125,7 @@ export default {
         const config = {
           headers: {Authorization: `Bearer ${token}`}
         };
-        axios.post("http://localhost:8741/category/add-income", {
+        axios.post("http://localhost:8741/api/category/add-income", {
           "name": this.categoryName,
           "details": this.categoryDetails,
         }, config)
@@ -157,7 +157,7 @@ export default {
           headers: {Authorization: `Bearer ${token}`}
         };
         this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
-        axios.post("http://localhost:8741/income/add-income", {
+        axios.post("http://localhost:8741/api/income/add-income", {
           "name": this.name,
           "date": this.date,
           "amount": this.amount,

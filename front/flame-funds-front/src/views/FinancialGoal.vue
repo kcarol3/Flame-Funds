@@ -106,7 +106,7 @@ export default {
           headers: {Authorization: `Bearer ${token}`}
         };
         this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
-        axios.post("http://localhost:8741/income/add-income", {
+        axios.post("http://localhost:8741/api/income/add-income", {
           "name": this.name,
           "dateStart": this.dateStart,
           "dateEnd": this.dateEnd,

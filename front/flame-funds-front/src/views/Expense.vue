@@ -79,7 +79,7 @@ export default {
 
   methods: {
     getCategories() {
-      axios.get("http://localhost:8741/category/get-expense")
+      axios.get("http://localhost:8741/api/category/get-expense")
           .then(response => {
             console.log(response)
             this.categories = response.data
@@ -121,7 +121,7 @@ export default {
         const config = {
           headers: {Authorization: `Bearer ${token}`}
         };
-        axios.post("http://localhost:8741/category/add-expense", {
+        axios.post("http://localhost:8741/api/category/add-expense", {
           "name": this.categoryName,
           "details": this.categoryDetails,
         }, config)
@@ -154,7 +154,7 @@ export default {
         };
         this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
 
-        axios.post("http://localhost:8741/expense/add-expense", {
+        axios.post("http://localhost:8741/api/expense/add-expense", {
           "name": this.name,
           "date": this.date,
           "amount": this.amount,
