@@ -2,13 +2,14 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/api", name="api_")
@@ -18,7 +19,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="register", methods={"POST"})
      */
-    public function index(ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    public function index(ValidatorInterface $validator,ManagerRegistry $doctrine, Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
 
         $em = $doctrine->getManager();
@@ -36,8 +37,15 @@ class RegistrationController extends AbstractController
         $user->setEmail($email);
         $user->setUsername($username);
         $user->setIsDeleted(false);
-        $em->persist($user);
-        $em->flush();
+
+        $errors = $validator->validate($user);
+        if(count($errors) > 0){
+            $errorsString = (string) $errors;
+            return new Response($errorsString, 422);
+        } else {
+//            $em->persist($user);
+//            $em->flush();
+        }
 
         return $this->json(['message' => 'Registered Successfully']);
     }
