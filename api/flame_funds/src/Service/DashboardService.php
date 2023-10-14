@@ -16,6 +16,7 @@ class DashboardService
 
         $expenses = $account->getExpenses();
         $incomes = $account->getIncomes();
+        $financialGoals  = $account->getFinancialGoal();
 
         $dataToReturn = [];
 
@@ -38,6 +39,17 @@ class DashboardService
                 $oneIncome["details"] = $income->getDetails() ?? "";
                 $oneIncome["type"] = "income";
                 $dataToReturn[$income->getDate()->format("Y-m-d")][] = $oneIncome;
+            }
+        }
+
+        foreach ($financialGoals as $financialGoal){
+            if( !$financialGoal->getIsDeleted()){
+                $oneFinancialGoal = [];
+                $oneFinancialGoal["name"] = $financialGoal->getName();
+                $oneFinancialGoal["currentAmount"] = $financialGoal->getCurrentAmount();
+                $oneFinancialGoal["details"] = $financialGoal->getDetails() ?? "";
+                $oneFinancialGoal["type"] = "financialGoal";
+                $dataToReturn[$financialGoal->getDateStart()->format("Y-m-d")][] = $oneFinancialGoal;
             }
         }
 

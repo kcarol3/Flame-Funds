@@ -10,7 +10,6 @@
         </span>
       </div>
 
-
       <div class="mb-4" style="display: flex; justify-content: center; align-items: center;">
         <div style="flex: 1; margin-right: 10px;">
           <label for="currentAmount">Kwota początkowa:</label>
@@ -26,7 +25,6 @@
         </div>
       </div>
 
-
       <div class="mb-4" style="display: flex; justify-content: space-between;">
         <div style="flex: 1">
           <label for="calendar-24hStart">Data początkowa celu:</label>
@@ -37,9 +35,6 @@
           <Calendar class="w-100" inputId="dateEnd" id="dateEnd" v-model="dateEnd" showTime hourFormat="24" showButtonBar touchUI/>
         </div>
       </div>
-
-
-
 
       <div class=" mb-4">
         <label for="account">Konto bankowe:</label>
