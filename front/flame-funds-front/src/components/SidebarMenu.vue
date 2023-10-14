@@ -44,7 +44,12 @@ name: "SidebarMenu",
         link: "/accounts"
       },
       {
-        name: "Cele finansowe",
+        name: "Moje cele finansowe",
+        icon: "bi bi-piggy-bank-fill",
+        link: "/myfinancialGoals"
+      },
+      {
+        name: "Dodaj cel finansowy",
         icon: "bi bi-piggy-bank",
         link: "/financialGoal"
       },
