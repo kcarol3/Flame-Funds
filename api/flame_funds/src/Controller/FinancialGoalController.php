@@ -41,8 +41,8 @@ class FinancialGoalController extends AbstractController
         $account = $accountRepository->findOneBy(["id" => $accountId]);
 
         $financialGoal = new FinancialGoal();
-        $financialGoal->set($dateStart);
-        $financialGoal->setDate($dateEnd);
+        $financialGoal->setDateStart($dateStart);
+        $financialGoal->setDateEnd($dateEnd);
         $financialGoal->setName($data["name"]);
         $financialGoal->setGoalAmount($data["goalAmount"]);
         $financialGoal->setCurrentAmount($data["currentAmount"]);
