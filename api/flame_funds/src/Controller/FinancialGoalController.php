@@ -46,7 +46,7 @@ class FinancialGoalController extends AbstractController
         $financialGoal->setName($data["name"]);
         $financialGoal->setGoalAmount($data["goalAmount"]);
         $financialGoal->setCurrentAmount($data["currentAmount"]);
-        $financialGoal->setDetails($data["describe"]);
+        $financialGoal->setDetails($data["details"]);
         $financialGoal->setAccount($account);
         $financialGoal->setIsDeleted(false);
 
