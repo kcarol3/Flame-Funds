@@ -33,8 +33,8 @@ class DashboardController extends AbstractController
         $dataToReturn = [];
         foreach ($accountHistories as $accountHistory) {
             $oneHistory = [
-              "y" => floatval($accountHistory->getPreviousBalance()),
-              "x" => $accountHistory->getDate()->format("Y-m-d H:i:s"),
+                "y" => floatval($accountHistory->getPreviousBalance()),
+                "x" => $accountHistory->getDate()->format("Y-m-d H:i:s"),
             ];
             $dataToReturn[] = $oneHistory;
         }
@@ -52,6 +52,15 @@ class DashboardController extends AbstractController
         $user = UserService::getUserFromToken($request, $em);
 
         $data = DashboardService::getHistoryByDates($user, $em);
+        return new JsonResponse($data, 200);
+    }
+
+    #[Route('/myfinancialgoals', name: 'get_myfinancialgoals_data', methods: 'GET')]
+    public function getMyFinancialGoals(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = UserService::getUserFromToken($request, $em);
+
+        $data = DashboardService::getMyFinancialGoalsByDates($user, $em);
         return new JsonResponse($data, 200);
     }
 }

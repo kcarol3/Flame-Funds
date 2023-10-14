@@ -53,7 +53,34 @@ class DashboardService
             }
         }
 
-       krsort($dataToReturn);
+        krsort($dataToReturn);
+
+        return $dataToReturn;
+    }
+
+    public static function getMyFinancialGoalsByDates(User $user, EntityManagerInterface $em): array{
+        $accountId = $user->getCurrentAccount();
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $financialGoals  = $account->getFinancialGoal();
+
+        $dataToReturn = [];
+
+
+        foreach ($financialGoals as $financialGoal){
+            if( !$financialGoal->getIsDeleted()){
+                $oneFinancialGoal = [];
+                $oneFinancialGoal["name"] = $financialGoal->getName();
+                $oneFinancialGoal["currentAmount"] = $financialGoal->getCurrentAmount();
+                $oneFinancialGoal["details"] = $financialGoal->getDetails() ?? "";
+                $oneFinancialGoal["type"] = "financialGoal";
+                $dataToReturn[$financialGoal->getDateStart()->format("Y-m-d")][] = $oneFinancialGoal;
+            }
+        }
+
+        krsort($dataToReturn);
 
         return $dataToReturn;
     }

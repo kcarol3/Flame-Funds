@@ -23,33 +23,38 @@ const visible = ref(false);
 </script>
 <script>
 export default {
-name: "SidebarMenu",
+  name: "SidebarMenu",
 
   data(){
-  return {
-    menu: [
-      {
-        name: "Strona domowa",
-        icon: "bi bi-house",
-        link: "/home"
-      },
-      {
-        name: "Historia",
-        icon: "bi bi-hourglass-split",
-        link: "/history"
-      },
-      {
-        name: "Konta",
-        icon: "bi bi-wallet2",
-        link: "/accounts"
-      },
-      {
-        name: "Cele finansowe",
-        icon: "bi bi-piggy-bank",
-        link: "/financialGoal"
-      },
-    ],
-  }
+    return {
+      menu: [
+        {
+          name: "Strona domowa",
+          icon: "bi bi-house",
+          link: "/home"
+        },
+        {
+          name: "Historia",
+          icon: "bi bi-hourglass-split",
+          link: "/history"
+        },
+        {
+          name: "Konta",
+          icon: "bi bi-wallet2",
+          link: "/accounts"
+        },
+        {
+          name: "Moje cele finansowe",
+          icon: "bi bi-piggy-bank-fill",
+          link: "/myfinancialGoals"
+        },
+        {
+          name: "Dodaj cel finansowy",
+          icon: "bi bi-piggy-bank",
+          link: "/financialGoal"
+        },
+      ],
+    }
   }
 }
 </script>
