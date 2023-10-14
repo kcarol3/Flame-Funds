@@ -37,7 +37,7 @@
 
       <div class=" mb-4">
         <label for="account">Konto bankowe:</label>
-        <Dropdown v-model="account" inputId="account" id="account" :options="account" optionLabel="name" placeholder="Konto bankowe" class="w-75"/>
+        <Dropdown v-model="account" inputId="account" id="account" :options="accounts" optionLabel="name" placeholder="Konto bankowe" class="w-75"/>
       </div>
 
       <div class="form-group">
@@ -73,13 +73,31 @@ export default {
       currentAmount: 0,
       goalAmount: 0,
       details: "",
+      account: "",
+      accounts: null,
       visible: false,
     };
   },
 
+  beforeMount() {
+    this.getAccounts()
+  },
 
   methods: {
-
+    getAccounts() {
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      axios.get("http://localhost:8741/api/account/get-accounts",config)
+          .then(response => {
+            console.log(response)
+            this.accounts = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    },
     financialGoalValidation(){
       const nameValidator = new Validation(this.name, "name", "nazwa");
       const amountValidator = new Validation(this.currentAmount, "currentAmount", "kwotaPoczątkowa")
@@ -87,7 +105,7 @@ export default {
       const textValidator = new Validation(this.details, "details", "opis")
       const dateStartValidator = new Validation(this.dateStart, "dateStart", "dataPoczątkowa")
       const dateEndValidator = new Validation(this.dateEnd, "dateEnd", "dataKońcowa")
-
+      const accountValidator = new Validation(this.account, "account", "konto")
 
       nameValidator.required().specialChars().check();
       amountValidator.required().check();
@@ -95,8 +113,9 @@ export default {
       textValidator.specialChars().check();
       dateStartValidator.required().check();
       dateEndValidator.required().check();
+      accountValidator.required().check();
 
-      return nameValidator.isValid() && amountValidator.isValid() && amountValidator2.isValid() && dateStartValidator.isValid() && dateEndValidator.isValid() && textValidator.isValid();
+      return accountValidator.isValid() && nameValidator.isValid() && amountValidator.isValid() && amountValidator2.isValid() && dateStartValidator.isValid() && dateEndValidator.isValid() && textValidator.isValid();
     },
 
     addFinancialGoal() {
@@ -105,19 +124,21 @@ export default {
         const config = {
           headers: {Authorization: `Bearer ${token}`}
         };
-        this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
-        axios.post("http://localhost:8741/api/income/add-income", {
+        this.dateStart = this.dateStart.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
+        this.dateEnd = this.dateEnd.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
+        axios.post("http://localhost:8741/api/financialGoal/add-financialGoal", {
           "name": this.name,
           "dateStart": this.dateStart,
           "dateEnd": this.dateEnd,
           "currentAmount": this.currentAmount,
           "goalAmount": this.goalAmount,
           "details": this.details,
+          "account": this.account,
         }, config)
             .then(response => {
               createToast({
                     title: 'Dodano cel finansowy',
-                    description: 'Przychody sprawdzisz w historii.'
+                    description: 'Cele finansowe sprawdzisz w historii.'
                   },
                   {
                     showIcon: 'true',

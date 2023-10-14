@@ -18,6 +18,30 @@ use Symfony\Component\Routing\Annotation\Route;
 class AccountController extends AbstractController
 {
 
+    #[Route('/account/get-accounts', name: 'get_accounts', methods: 'GET')]
+    public function getAccounts(EntityManagerInterface $em): JsonResponse
+    {
+        $accountRepository = $em->getRepository(Account::class);
+
+        $accounts = $accountRepository->findAll();
+
+        $dataToReturn = [];
+        foreach ($accounts as $key => $acc){
+            if(!$acc->isIsDeleted()){
+                $oneRow = [];
+                $oneRow["name"] = $acc->getName();
+                $dataToReturn[] = $oneRow;
+            }
+        }
+
+        if($dataToReturn){
+            return new JsonResponse($dataToReturn, 200);
+        } else {
+            return new JsonResponse(null, 400);
+        }
+
+    }
+
     /**
      * Dodanie nowego do użytkownika
      * @param Request $request
