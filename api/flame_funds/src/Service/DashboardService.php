@@ -57,5 +57,4 @@ class DashboardService
 
         return $dataToReturn;
     }
-
 }

@@ -54,13 +54,4 @@ class DashboardController extends AbstractController
         $data = DashboardService::getHistoryByDates($user, $em);
         return new JsonResponse($data, 200);
     }
-
-    #[Route('/myfinancialgoals', name: 'get_myfinancialgoals_data', methods: 'GET')]
-    public function getMyFinancialGoals(Request $request, EntityManagerInterface $em): JsonResponse
-    {
-        $user = UserService::getUserFromToken($request, $em);
-
-        $data = DashboardService::getMyFinancialGoalsByDates($user, $em);
-        return new JsonResponse($data, 200);
-    }
 }
