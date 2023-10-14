@@ -16,15 +16,9 @@
                 {{transaction.details}}
               </div>
               <div class="numeric" :class=transaction.type>
-                <div v-if="transaction.type == 'expense'">-{{ transaction.amount }}</div>
-                <div v-else>{{ transaction.amount }}</div>
-              </div>
-
-              <div class="numeric" :class=transaction.type>
                 <div v-if="transaction.type == 'financialGoal'">-{{ transaction.currentAmount }}</div>
                 <div v-else>{{ transaction.currentAmount }}</div>
               </div>
-
             </div>
             <Divider v-if="index < transactions.length - 1"/>
           </div>
@@ -75,20 +69,12 @@ export default {
 .sh{
   box-shadow: 0 0 40px 40px white;
 }
-.expense {
-  color: #ff5a5a;
-  /* Dodaj inne style dla typu 'expense' */
-}
 
 .financialGoal {
   color: #9646e3;
   /* Dodaj inne style dla typu 'financialGoal' */
 }
 
-.income {
-  color: #05c900;
-  /* Dodaj inne style dla typu 'income' */
-}
 .numeric{
   font-size: 18px;
   text-align: right;
