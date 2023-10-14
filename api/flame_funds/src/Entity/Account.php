@@ -42,7 +42,7 @@ class Account
     private Collection $accountHistories;
 
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: FinancialGoal::class)]
-    private Collection $financialGoal;
+    private Collection $financialGoals;
 
     public function __construct()
     {
@@ -152,25 +152,25 @@ class Account
      */
     public function getFinancialGoal(): Collection
     {
-        return $this->financialGoal;
+        return $this->financialGoals;
     }
 
-    public function addFinancialGoal(FinancialGoal $financialGoal): static
+    public function addFinancialGoal(FinancialGoal $financialGoals): static
     {
-        if (!$this->financialGoal->contains($financialGoal)) {
-            $this->financialGoal->add($financialGoal);
-            $financialGoal->setAccount($this);
+        if (!$this->financialGoals->contains($financialGoals)) {
+            $this->financialGoals->add($financialGoals);
+            $financialGoals->setAccount($this);
         }
 
         return $this;
     }
 
-    public function removeFinancialGoal(FinancialGoal $financialGoal): static
+    public function removeFinancialGoal(FinancialGoal $financialGoals): static
     {
-        if ($this->financialGoal->removeElement($financialGoal)) {
+        if ($this->financialGoals->removeElement($financialGoals)) {
             // set the owning side to null (unless already changed)
-            if ($financialGoal->getAccount() === $this) {
-                $financialGoal->setAccount(null);
+            if ($financialGoals->getAccount() === $this) {
+                $financialGoals->setAccount(null);
             }
         }
 
