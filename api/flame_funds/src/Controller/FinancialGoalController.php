@@ -38,9 +38,7 @@ class FinancialGoalController extends AbstractController
         $dateEnd = new \DateTime($data['dateEnd']);
 
         $accountRepository = $em->getRepository(Account::class);
-        $account = $accountRepository->findOneBy(["id" => $accountId]);
-
-        //$account = $accountRepository->findOneBy(["name" => $data["account"]["name"]]);
+        $account = $accountRepository->findOneBy(["name" => $data["account"]["name"]]);
 
         $financialGoal = new FinancialGoal();
         $financialGoal->set($dateStart);
