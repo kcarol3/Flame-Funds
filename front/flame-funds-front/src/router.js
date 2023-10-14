@@ -10,6 +10,7 @@ import IncomeViews from "@/views/IncomeViews.vue";
 import history from "@/views/History.vue";
 import sheetView from "@/views/SheetView.vue";
 import financialGoal from "@/views/FinancialGoal.vue";
+import editFinancialGoal from "@/views/EditFinancialGoal.vue";
 import myFinancialGoals from "@/views/MyFinancialGoals.vue";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
@@ -85,6 +86,12 @@ const routes = [
         path: '/myFinancialGoals',
         name: 'myFinancialGoals',
         component: myFinancialGoals,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/editFinancialGoal',
+        name: 'editFinancialGoal',
+        component: editFinancialGoal,
         beforeEnter: authMiddleware,
     },
 ]

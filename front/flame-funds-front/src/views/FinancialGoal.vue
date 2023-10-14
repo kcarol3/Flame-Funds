@@ -1,6 +1,6 @@
 <template>
   <div>
-    <icon-header title="Cel finansowy" icon="bi bi-piggy-bank" class="mt-3"></icon-header>
+    <icon-header title="Dodaj cel finansowy" icon="bi bi-piggy-bank" class="mt-3"></icon-header>
     <div class="container" style="width: 300px">
 
       <div class="mb-4">
@@ -90,7 +90,7 @@ export default {
       const config = {
         headers: {Authorization: `Bearer ${token}`}
       };
-      axios.get("http://localhost:8741/api/account/get-accounts",config)
+      axios.get("http://localhost:8741/api/financialGoal/edit-financialGoal",config)
           .then(response => {
             console.log(response)
             this.accounts = response.data
