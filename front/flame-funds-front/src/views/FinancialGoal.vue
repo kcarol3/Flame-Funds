@@ -10,29 +10,35 @@
         </span>
       </div>
 
-      <div class="mb-4">
-        <label for="currentAmount">Kwota początkowa:</label>
-        <span class="p-float-label mb-4">
-          <InputNumber id="currentAmount" v-model="currentAmount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="100" />
-        </span>
+
+      <div class="mb-4" style="display: flex; justify-content: center; align-items: center;">
+        <div style="flex: 1; margin-right: 10px;">
+          <label for="currentAmount">Kwota początkowa:</label>
+          <span class="p-float-label mb-4">
+      <InputNumber id="currentAmount" v-model="currentAmount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="100" />
+    </span>
+        </div>
+        <div style="flex: 1; margin-left: 10px;">
+          <label for="goalAmount">Kwota końcowa:</label>
+          <span class="p-float-label mb-4">
+      <InputNumber id="goalAmount" v-model="goalAmount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="100" />
+    </span>
+        </div>
       </div>
 
-      <div class="mb-4">
-        <label for="goalAmount">Kwota końcowa:</label>
-        <span class="p-float-label mb-4">
-          <InputNumber id="goalAmount" v-model="goalAmount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="100" />
-        </span>
+
+      <div class="mb-4" style="display: flex; justify-content: space-between;">
+        <div style="flex: 1">
+          <label for="calendar-24hStart">Data początkowa celu:</label>
+          <Calendar class="w-100" inputId="dateStart" id="dateStart" v-model="dateStart" showTime hourFormat="24" showButtonBar touchUI/>
+        </div>
+        <div style="flex: 1; margin-left: 20px;">
+          <label for="calendar-24hEnd">Data końcowa celu:</label>
+          <Calendar class="w-100" inputId="dateEnd" id="dateEnd" v-model="dateEnd" showTime hourFormat="24" showButtonBar touchUI/>
+        </div>
       </div>
 
-      <div class=" mb-4 ">
-        <label for="calendar-24hStart">Data początkowa:</label>
-        <Calendar class="w-100" inputId="dateStart" id="dateStart" v-model="dateStart" showTime hourFormat="24" showButtonBar touchUI/>
-      </div>
 
-      <div class=" mb-4 ">
-        <label for="calendar-24hEnd">Data końcowa:</label>
-        <Calendar class="w-100" inputId="dateEnd" id="dateEnd" v-model="dateEnd" showTime hourFormat="24" showButtonBar touchUI/>
-      </div>
 
 
       <div class=" mb-4">
