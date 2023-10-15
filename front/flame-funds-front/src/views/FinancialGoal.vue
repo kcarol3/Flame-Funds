@@ -1,6 +1,6 @@
 <template>
   <div>
-    <icon-header title="Cel finansowy" icon="bi bi-piggy-bank" class="mt-3"></icon-header>
+    <icon-header title="Dodaj cel finansowy" icon="bi bi-piggy-bank" class="mt-3"></icon-header>
     <div class="container" style="width: 300px">
 
       <div class="mb-4">

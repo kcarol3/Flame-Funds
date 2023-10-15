@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto justify-content-center">
-    <icon-header title="Moje cele finansowe" icon="bi bi-wallet2" font-size="44px"></icon-header>
+    <icon-header title="Moje cele finansowe" icon="bi bi-piggy-bank-fill" font-size="44px"></icon-header>
     <div v-if = "this.financialGoals !== []" class="mx-auto" style="max-width: 600px">
       <table-financialGoals :financialGoals= financialGoals></table-financialGoals>
     </div>

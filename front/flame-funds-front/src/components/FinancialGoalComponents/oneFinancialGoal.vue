@@ -34,7 +34,7 @@ const items = ref([
       {
         label: 'Dodaj kwotę',
         icon: 'bi bi-star',
-        to: "/home"
+        to: "/editFinancialGoal"
       },
       {
         label: 'Usuń',
