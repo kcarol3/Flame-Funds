@@ -53,6 +53,11 @@ export default {
           icon: "bi bi-piggy-bank",
           link: "/financialGoal"
         },
+        {
+          name: "Dodaj płatność cykliczną",
+          icon: "bi bi-repeat",
+          link: "/periodic"
+        },
       ],
     }
   }
