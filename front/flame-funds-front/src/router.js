@@ -12,6 +12,7 @@ import sheetView from "@/views/SheetView.vue";
 import financialGoal from "@/views/FinancialGoal.vue";
 import myFinancialGoals from "@/views/MyFinancialGoals.vue";
 import editFinancialGoal from "@/views/EditFinancialGoal.vue";
+import periodic from "@/views/Periodic";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
 
@@ -94,6 +95,13 @@ const routes = [
         component: editFinancialGoal,
         beforeEnter: authMiddleware,
     },
+    {
+        path: '/periodic',
+        name: 'periodic',
+        component: periodic,
+        beforeEnter: authMiddleware,
+    },
+
 ]
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
