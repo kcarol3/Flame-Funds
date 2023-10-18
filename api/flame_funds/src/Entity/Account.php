@@ -44,12 +44,16 @@ class Account
     #[ORM\OneToMany(mappedBy: 'account', targetEntity: FinancialGoal::class)]
     private Collection $financialGoals;
 
+    #[ORM\OneToMany(mappedBy: 'account', targetEntity: Periodic::class)]
+    private Collection $periodics;
+
     public function __construct()
     {
         $this->expenses = new ArrayCollection();
         $this->incomes = new ArrayCollection();
         $this->accountHistories = new ArrayCollection();
-        $this->financialGoal = new ArrayCollection();
+        $this->financialGoals = new ArrayCollection();
+        $this->periodics = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -141,6 +145,37 @@ class Account
             // set the owning side to null (unless already changed)
             if ($expense->getAccount() === $this) {
                 $expense->setAccount(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Periodic>
+     */
+    public function getPeriodics() : Collection
+    {
+        return $this->periodics;
+    }
+
+    public function addPeriodic(Periodic $periodic): static
+    {
+        if (!$this->periodics->contains($periodic)) {
+            $this->periodics->add($periodic);
+            $periodic->setAccount($this);
+        }
+
+        return $this;
+    }
+
+
+    public function removePeriodic(Periodic $periodic): static
+    {
+        if ($this->periodics->removeElement($periodic)) {
+            // set the owning side to null (unless already changed)
+            if ($periodic->getAccount() === $this) {
+                $periodic->setAccount(null);
             }
         }
 
