@@ -17,6 +17,7 @@ class DashboardService
         $expenses = $account->getExpenses();
         $incomes = $account->getIncomes();
         $financialGoals  = $account->getFinancialGoal();
+        $periodics = $account->getPeriodics();
 
         $dataToReturn = [];
 
@@ -50,6 +51,17 @@ class DashboardService
                 $oneFinancialGoal["details"] = $financialGoal->getDetails() ?? "";
                 $oneFinancialGoal["type"] = "financialGoal";
                 $dataToReturn[$financialGoal->getDateStart()->format("Y-m-d")][] = $oneFinancialGoal;
+            }
+        }
+
+        foreach ($periodics as $periodic){
+            if( !$periodic->getIsDeleted()){
+                $onePeriodic = [];
+                $onePeriodic["name"] = $periodic->getName();
+                $onePeriodic["amount"] = $periodic->getAmount();
+                $onePeriodic["details"] = $periodic->getDetails() ?? "";
+                $onePeriodic["type"] = "periodic";
+                $dataToReturn[$periodic->getDateStart()->format("Y-m-d")][] = $onePeriodic;
             }
         }
 

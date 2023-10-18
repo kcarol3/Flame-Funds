@@ -81,6 +81,11 @@ export default {
   /* Dodaj inne style dla typu 'expense' */
 }
 
+.periodic {
+  color: #f19e9e;
+  /* Dodaj inne style dla typu 'periodic' */
+}
+
 .financialGoal {
   color: #9646e3;
   /* Dodaj inne style dla typu 'financialGoal' */
