@@ -138,4 +138,40 @@ class FinancialGoalController extends AbstractController
 
         return new JsonResponse($dataToReturn, 200);
     }
+
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    #[Route('/financialGoal/delete-financialGoal/{id}', name: 'delete_financialGoal', methods: 'DELETE')]
+    public function deleteFinancialGoal(Request $request, EntityManagerInterface $em, int $id)
+    {
+        $user = UserService::getUserFromToken($request, $em);
+        $accountId = $user->getCurrentAccount();
+
+        // Znajdź cel finansowy na podstawie przekazanego identyfikatora
+        $financialGoalRepository = $em->getRepository(FinancialGoal::class);
+        $financialGoal = $financialGoalRepository->findOneBy(["id" => $id]);
+
+        if (!$financialGoal) {
+            return new JsonResponse("Cel finansowy nie został znaleziony", 404);
+        }
+
+        // Oznacz cel finansowy jako usunięty (ustaw flagę isDeleted na true)
+        $financialGoal->setIsDeleted(true);
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->findOneBy(["id" => $accountId]);
+
+        $account->setBalance($account->getBalance() + $financialGoal->getCurrentAmount());
+
+        // Zapisz zmiany w bazie danych
+        $em->flush();
+
+        return new JsonResponse("Cel finansowy został usunięty", 200);
+    }
+
 }

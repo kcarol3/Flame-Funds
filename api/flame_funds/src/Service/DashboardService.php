@@ -84,6 +84,7 @@ class DashboardService
         foreach ($financialGoals as $financialGoal){
             if( !$financialGoal->getIsDeleted()){
                 $oneFinancialGoal = [];
+                $oneFinancialGoal["id"] = $financialGoal->getId();
                 $oneFinancialGoal["name"] = $financialGoal->getName();
                 $oneFinancialGoal["currentAmount"] = $financialGoal->getCurrentAmount();
                 $oneFinancialGoal["details"] = $financialGoal->getDetails() ?? "";
