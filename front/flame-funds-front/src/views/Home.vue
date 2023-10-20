@@ -46,7 +46,7 @@ export default {
       const config = {
         headers: { Authorization: `Bearer ${token}` }
       };
-      axios.get("http://localhost:8741/api/account/current-account",config)
+      axios.get("http://localhost:8741/api/account-current",config)
           .then(response=>{
             console.log(response)
             this.balance = response.data.balance

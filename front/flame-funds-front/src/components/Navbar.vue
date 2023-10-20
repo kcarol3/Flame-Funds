@@ -1,6 +1,7 @@
 <template>
-  <div class="container-fluid d-flex align-items-center w-100"
-       style="background: #d9c5ed; height: 70px;position: fixed; top: 0;">
+  <div>
+  <div class="container-fluid d-flex align-items-center w-100 "
+       style="background: #d9c5ed; height: 70px;position: fixed; top: 0; box-shadow: 0px 5px 25px 16px rgba(217, 197, 237, 1);">
     <SidebarMenu/>
     <div style="width: 70%;">
       <router-link to="/home">
@@ -12,8 +13,8 @@
        aria-haspopup="true" aria-controls="overlay_menu"/>
     <Menu ref="menu" id="overlay_menu" :model="items" :popup="true"/>
   </div>
-  <div
-      style="background: linear-gradient(to bottom, #d9c5ed, rgba(255,255,255, 0%)); width: 100%; height: 30px; margin-top: 70px;"></div>
+    <div style="height: 30px"></div>
+  </div>
 </template>
 <script setup>
 import {ref} from "vue";

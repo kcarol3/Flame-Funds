@@ -17,14 +17,17 @@
         </template>
       </Dialog>
     </div>
+
     <div class="container" style="width: 300px">
     <span class="p-float-label mt-4 mb-4">
       <InputText id="name" class="w-100" v-model="name"/>
       <label for="name">Nazwa wydatku</label>
     </span>
+
       <span class="p-float-label mb-4">
       <InputNumber id="amount" v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 />
     </span>
+
       <div class=" mb-4 ">
         <label for="calendar-24h">Wybierz datę:</label>
         <Calendar class="w-100" inputId="calendar-24h" id="calendar" v-model="date" showTime hourFormat="24" showButtonBar touchUI/>

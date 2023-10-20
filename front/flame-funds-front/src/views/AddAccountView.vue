@@ -37,7 +37,7 @@ export default {
       const config = {
         headers: {Authorization: `Bearer ${token}`}
       };
-      axios.post("http://localhost:8741/api/account/add-account", {
+      axios.post("http://localhost:8741/api/account", {
         "name":this.name,
         "balance":this.balance
       }, config)
