@@ -18,7 +18,7 @@ import axios from "axios";
 
 export default {
   name: "AccountsView",
-  components: {TableAccounts,IconHeader},
+  components: {TableAccounts, IconHeader},
   data(){
     return{
       accounts: [],
@@ -35,7 +35,7 @@ export default {
       const config = {
         headers: {Authorization: `Bearer ${token}`}
       };
-      axios.get("http://localhost:8741/api/account/all-accounts",config)
+      axios.get("http://localhost:8741/api/account",config)
           .then(response => {
             console.log(response)
             this.accounts = response.data
