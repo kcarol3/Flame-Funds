@@ -41,6 +41,21 @@
         <button type="button" class="button-primary" @click="addCurrentAmount" style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">Zapisz</button>
       </template>
     </Dialog>
+
+    <Dialog v-model:visible="infoModalVisible" modal header="Informacje" :style="{ width: '400px' }">
+      <h2>
+        Cel finansowy: {{ financialGoal.name }}
+      </h2>
+      <h5>Aktualna kwota: {{ financialGoal.currentAmount }}</h5>
+      <h5>Docelowa kwota: {{ financialGoal.goalAmount }}</h5>
+      <h5>Data rozpoczęcia: {{ financialGoal.dateStart.date }}</h5>
+      <h5>Data zakończenia: {{ financialGoal.dateEnd.date }}</h5>
+      <h5>Szczegóły: {{ financialGoal.details }}</h5>
+      <template #footer>
+        <Button label="anuluj" icon="bi bi-times" @click="infoModalVisible = false" text/>
+      </template>
+    </Dialog>
+
   </div>
 </template>
 
@@ -51,8 +66,10 @@ import {createToast} from "mosha-vue-toastify";
 
 let delModalVisible = ref(false);
 let changeModalVisible = ref(false);
+let infoModalVisible = ref(false);
 let currentAmount = ref("");
 const menu = ref();
+
 
 const items = ref([
   {
@@ -71,6 +88,13 @@ const items = ref([
         icon: 'bi bi-trash',
         command: () => {
           delModalVisible.value = true;
+        }
+      },
+      {
+        label: 'Informacje',
+        icon: 'bi bi-info-circle',
+        command: () => {
+          infoModalVisible.value = true;
         }
       },
     ]
