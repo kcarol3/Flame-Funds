@@ -1,9 +1,8 @@
 <template>
-  <div class="d-flex border border-2 rounded-4 my-auto body"
-       style="max-width: 390px;box-shadow: 0 0 10px 2px rgba(0,0,0,0.66);">
+  <div class="d-flex border border-2 rounded-4 my-auto body" :style="maxWidthStyles">
     <div class="mx-auto my-auto">
       <h2 class="flex-item lilita-one" style="color: rebeccapurple">
-        {{ financialGoal.name }}
+        {{ financialGoal.name }}{{ isInactive ? ' - przedawniony' : '' }}
       </h2>
       <h5>
         Aktualna kwota: {{ financialGoal.currentAmount }}zł
@@ -167,6 +166,14 @@ const today = new Date();
 const timeDiff = endDate - today;
 const daysRemaining = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
 financialGoal.value.daysRemaining = daysRemaining;
+
+const maxWidthStyles = {
+  maxWidth: '450px',
+  boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.66)',
+  backgroundColor: financialGoal.value.daysRemaining < 0 ? 'purple' : 'white',
+};
+
+const isInactive = financialGoal.value.daysRemaining < 0;
 
 const toggle = (event) => {
   menu.value.toggle(event);
