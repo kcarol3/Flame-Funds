@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex border border-2 rounded-4 my-auto body"
-       style="max-width: 320px;box-shadow: 0 0 10px 2px rgba(0,0,0,0.66);">
+       style="max-width: 390px;box-shadow: 0 0 10px 2px rgba(0,0,0,0.66);">
     <div class="mx-auto my-auto">
       <h2 class="flex-item lilita-one" style="color: rebeccapurple">
         {{ financialGoal.name }}
@@ -10,6 +10,9 @@
       </h5>
       <h5>
         Kwota docelowa: {{ financialGoal.goalAmount }}zł
+      </h5>
+      <h5>
+        Zostało dni: {{ financialGoal.daysRemaining }} dni
       </h5>
     </div>
     <div class="mx-auto my-auto">
@@ -57,7 +60,7 @@ const items = ref([
     items: [
       {
         label: 'Dodaj kwotę',
-        icon: 'bi bi-pencil-square',
+        icon: 'bi bi-plus-circle',
         command: () => {
           changeModalVisible.value = true;
           currentAmount.value = ""; //financialGoal.value.currentAmount;
@@ -132,7 +135,14 @@ const props = defineProps({
   financialGoal: Object
 })
 
-const {financialGoal} = toRefs(props);
+const { financialGoal } = toRefs(props);
+//Wyliczenie ile dni zostało do zakończenia celu finansowego
+const endDateString = financialGoal.value.dateEnd.date;
+const endDate = new Date(endDateString);
+const today = new Date();
+const timeDiff = endDate - today;
+const daysRemaining = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+financialGoal.value.daysRemaining = daysRemaining;
 
 const toggle = (event) => {
   menu.value.toggle(event);

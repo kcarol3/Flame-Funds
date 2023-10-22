@@ -133,7 +133,8 @@ class FinancialGoalController extends AbstractController
                     "id" => $financialGoal->getId(),
                     "name" => $financialGoal->getName(),
                     "currentAmount" => $financialGoal->getCurrentAmount(),
-                    "goalAmount" => $financialGoal->getGoalAmount()
+                    "goalAmount" => $financialGoal->getGoalAmount(),
+                    "dateEnd" => $financialGoal->getDateEnd()
                 ];
             }
         }
