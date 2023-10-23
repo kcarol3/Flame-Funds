@@ -1,6 +1,6 @@
 <template>
   <div>
-    <icon-header title="Dodaj płatność cykliczną" icon="bi bi-piggy-bank" class="mt-3"></icon-header>
+    <icon-header title="Dodaj płatność cykliczną" icon="bi bi-repeat-1" class="mt-3"></icon-header>
 
     <div class="card flex justify-content-center">
       <Dialog v-model:visible="visible" modal header="Dodaj kategorię" :style="{ width: '350px' }">
@@ -203,7 +203,7 @@ export default {
             .then(response => {
               createToast({
                     title: 'Dodano płatność cykliczną',
-                    description: 'Płatność cykliczną sprawdzisz w historii.'
+                    description: 'Płatność cykliczną sprawdzisz w "Moje płatności cykliczne".'
                   },
                   {
                     showIcon: 'true',

@@ -54,8 +54,13 @@ export default {
           link: "/financialGoal"
         },
         {
-          name: "Dodaj płatność cykliczną",
+          name: "Moje płatności cykliczne",
           icon: "bi bi-repeat",
+          link: "/myPeriodics"
+        },
+        {
+          name: "Dodaj płatność cykliczną",
+          icon: "bi bi-repeat-1",
           link: "/periodic"
         },
       ],
