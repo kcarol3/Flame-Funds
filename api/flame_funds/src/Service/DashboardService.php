@@ -97,4 +97,35 @@ class DashboardService
 
         return $dataToReturn;
     }
+
+    public static function getMyPeriodicsByDates(User $user, EntityManagerInterface $em): array{
+        $accountId = $user->getCurrentAccount();
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $periodics  = $account->getPeriodics();
+
+        $dataToReturn = [];
+
+
+        foreach ($periodics as $periodic){
+            if( !$periodic->getIsDeleted()){
+                $onePeriodic = [];
+                $onePeriodic["id"] = $periodic->getId();
+                $onePeriodic["name"] = $periodic->getName();
+                $onePeriodic["amount"] = $periodic->getAmount();
+                $onePeriodic["details"] = $periodic->getDetails() ?? "";
+                $onePeriodic["days"] = $periodic->getDays();
+                $onePeriodic["type"] = "periodic";
+                $dataToReturn[$periodic->getDateStart()->format("Y-m-d")][] = $onePeriodic;
+            }
+        }
+
+        krsort($dataToReturn);
+
+        return $dataToReturn;
+    }
+
+
 }

@@ -36,6 +36,7 @@
       <i class="bi bi-arrow-down-short icon " style="font-size:34px; color: rebeccapurple"></i>
     </div>  </div>
 </template>
+
 <script>
 import IconHeader from "@/components/IconHeader.vue";
 import axios from "axios";
@@ -106,12 +107,12 @@ export default {
   box-shadow: 0 0 40px 40px white;
 }
 .expense {
-  color: #ff5a5a;
+  color: #ff0000;
   /* Dodaj inne style dla typu 'expense' */
 }
 
 .periodic {
-  color: #f19e9e;
+  color: #0000ff;
   /* Dodaj inne style dla typu 'periodic' */
 }
 
