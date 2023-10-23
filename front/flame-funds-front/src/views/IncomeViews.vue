@@ -1,7 +1,7 @@
 <template>
   <div>
     <icon-header title="Przychód" icon="bi bi-cash-stack" class="mt-3"></icon-header>
-    <div class="card flex justify-content-center">
+    <div class="flex justify-content-center">
       <Dialog v-model:visible="visible" modal header="Dodaj kategorię" :style="{ width: '350px' }">
           <span class="p-float-label mt-4 mb-4">
               <InputText id="catName" class="w-100" v-model="categoryName"/>

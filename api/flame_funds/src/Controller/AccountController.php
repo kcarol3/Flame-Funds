@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -48,7 +49,7 @@ class AccountController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    #[Route('/account/add-account', name: 'create_account', methods: 'POST')]
+    #[Route('/account', name: 'create_account', methods: 'POST')]
     public function createAccount(Request $request, EntityManagerInterface $em): JsonResponse{
         $content = $request->getContent();
         $jsonData = json_decode($content, true);
@@ -58,16 +59,9 @@ class AccountController extends AbstractController
         if(!$user){
             return new JsonResponse("User does not exist", 500);
         }
-        $newAccount = new Account();
-        $newAccount->setUser($user);
-        $newAccount->setBalance($jsonData['balance']);
-        $currentDateTime = new DateTime();
-        $newAccount->setCreatedDate($currentDateTime);
-        $newAccount->setName($jsonData['name']);
-        $newAccount->setIsDeleted(false);
 
-        $em->persist($newAccount);
-        $em->flush();
+        $accountService = new AccountService($em, $user);
+        $accountService->addAccount($jsonData);
 
         return new JsonResponse("Success");
     }
@@ -77,22 +71,14 @@ class AccountController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    #[Route('/account/all-accounts', name: 'get_all_accounts', methods: "GET")]
+    #[Route('/account', name: 'get_all_accounts', methods: "GET")]
     public function getAllAccounts(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $user = UserService::getUserFromToken($request, $em);
         $accounts = $user->getAccounts();
-        $dataToReturn = [];
 
-        foreach ($accounts as $account){
-            if(!$account->isIsDeleted()){
-                $dataToReturn[] = [
-                    "id" => $account->getId(),
-                  "name" => $account->getName(),
-                  "balance" => $account->getBalance()
-                ];
-            }
-        }
+        $accountService = new AccountService($em, $user);
+        $dataToReturn = $accountService->getAllAccounts();
 
         return new JsonResponse($dataToReturn, 200);
     }
@@ -103,15 +89,13 @@ class AccountController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    #[Route("/account/change-account", name: 'change_account', methods: "PUT")]
-    public function changeCurrentAccount(Request $request, EntityManagerInterface $em): JsonResponse
+    #[Route("/account-change/{id}", name: 'change_account', methods: "PUT")]
+    public function changeCurrentAccount(Request $request, EntityManagerInterface $em, $id): JsonResponse
     {
-        $content = $request->getContent();
-        $data = json_decode($content, true);
-
         $user = UserService::getUserFromToken($request, $em);
 
-        $success = AccountService::changeAccount($data["id"], $user, $em);
+        $accountService = new AccountService($em, $user);
+        $success = $accountService->changeAccount($id);
 
         if($success){
             return new JsonResponse("Success Update", 200);
@@ -126,14 +110,36 @@ class AccountController extends AbstractController
      * @param EntityManagerInterface $em
      * @return JsonResponse
      */
-    #[Route('/account/current-account', name: 'get_current_account', methods: "GET")]
-    public function getBalance(Request $request, EntityManagerInterface $em): JsonResponse
+    #[Route('/account-current', name: 'get_current_account', methods: "GET")]
+    public function getCurrentBalance(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $user = UserService::getUserFromToken($request, $em);
 
-        $accountRepository = $em->getRepository(Account::class);
-        $account = $accountRepository->findOneBy(["id" => $user->getCurrentAccount()]);
+        $accountService = new AccountService($em, $user);
+        $dataToReturn = $accountService->getBalance();
 
-        return new JsonResponse(["balance" =>$account->getBalance(), "name" => $account->getName()], 200);
+        return new JsonResponse($dataToReturn, 200);
+    }
+
+    #[Route('/account/{id}', name: 'delete_account', methods: "DELETE")]
+    public function deleteAccount(Request $request, EntityManagerInterface $em, $id){
+        $user = UserService::getUserFromToken($request, $em);
+
+        $accountService = new AccountService($em, $user);
+        $accountService->deleteAccount($id);
+
+        return new Response("Success delete", 200);
+    }
+
+    #[Route('/account/{id}', name: 'change_account_name', methods: "PUT")]
+    public function changeAccountName(Request $request, EntityManagerInterface $em, $id){
+        $user = UserService::getUserFromToken($request, $em);
+        $content = $request->getContent();
+        $jsonData = json_decode($content, true);
+
+        $accountService = new AccountService($em, $user);
+        $accountService->changeAccountName($id, $jsonData["name"]);
+
+        return new Response("Success change", 200);
     }
 }

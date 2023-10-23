@@ -6,12 +6,14 @@ use App\Entity\FinancialGoal;
 use App\Entity\Account;
 use App\Entity\AccountHistory;
 use App\Entity\User;
+use App\Service\AccountService;
 use App\Service\TransactionsService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -131,11 +133,78 @@ class FinancialGoalController extends AbstractController
                     "id" => $financialGoal->getId(),
                     "name" => $financialGoal->getName(),
                     "currentAmount" => $financialGoal->getCurrentAmount(),
-                    "goalAmount" => $financialGoal->getGoalAmount()
+                    "goalAmount" => $financialGoal->getGoalAmount(),
+                    "dateEnd" => $financialGoal->getDateEnd(),
+                    "dateStart" => $financialGoal->getDateStart(),
+                    "details" => $financialGoal->getDetails()
                 ];
             }
         }
 
         return new JsonResponse($dataToReturn, 200);
     }
+
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $em
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    #[Route('/financialGoal/delete-financialGoal/{id}', name: 'delete_financialGoal', methods: 'DELETE')]
+    public function deleteFinancialGoal(Request $request, EntityManagerInterface $em, int $id)
+    {
+        $user = UserService::getUserFromToken($request, $em);
+        $accountId = $user->getCurrentAccount();
+
+        // Znajdź cel finansowy na podstawie przekazanego identyfikatora
+        $financialGoalRepository = $em->getRepository(FinancialGoal::class);
+        $financialGoal = $financialGoalRepository->findOneBy(["id" => $id]);
+
+        if (!$financialGoal) {
+            return new JsonResponse("Cel finansowy nie został znaleziony", 404);
+        }
+
+        // Oznacz cel finansowy jako usunięty (ustaw flagę isDeleted na true)
+        $financialGoal->setIsDeleted(true);
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->findOneBy(["id" => $accountId]);
+
+        $account->setBalance($account->getBalance() + $financialGoal->getCurrentAmount());
+
+        // Zapisz zmiany w bazie danych
+        $em->flush();
+
+        return new JsonResponse("Cel finansowy został usunięty", 200);
+    }
+
+    #[Route('/financialGoal/addCurrentAmount/{id}', name: 'add_current_amount', methods: "PUT")]
+    public function addCurrentAmount(Request $request, EntityManagerInterface $em, $id)
+    {
+        $user = UserService::getUserFromToken($request, $em);
+        $accountId = $user->getCurrentAccount();
+        $content = $request->getContent();
+        $jsonData = json_decode($content, true);
+
+        $financialGoalRepository = $em->getRepository(FinancialGoal::class);
+        $financialGoal = $financialGoalRepository->find($id);
+
+        if (!$financialGoal) {
+            return new JsonResponse("Cel finansowy nie został znaleziony", 404);
+        }
+
+        $beforeAddAmount = $financialGoal->getCurrentAmount();
+        $financialGoal->setCurrentAmount($beforeAddAmount + $jsonData["currentAmount"]);
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->findOneBy(["id" => $accountId]);
+
+        $account->setBalance($account->getBalance() - $jsonData["currentAmount"]);
+
+        $em->flush();
+
+        return new Response("Success add", 200);
+    }
+
 }

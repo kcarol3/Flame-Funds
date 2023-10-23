@@ -23,6 +23,7 @@
               <div class="numeric" :class=transaction.type>
                 <div v-if="transaction.type == 'financialGoal'">-{{ transaction.currentAmount }}</div>
                 <div v-else>{{ transaction.currentAmount }}</div>
+
               </div>
 
             </div>
@@ -67,7 +68,35 @@ export default {
           .catch(error => {
             console.log(error)
           })
-    }
+    },
+
+    // deleteFinancialGoal(id) {
+    //   const token = sessionStorage.getItem("token");
+    //   const config = {
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   };
+    //
+    //   // Make an HTTP DELETE request to your PHP endpoint using the provided `id`
+    //   axios
+    //       .delete(`http://localhost:8741/api/financialGoal/delete-financialGoal/${id}`, config)
+    //       .then((response) => {
+    //         if (response.status === 200) {
+    //           // Handle the successful deletion here
+    //           const indexToDelete = this.transactions.findIndex((transaction) => transaction.id === id);
+    //           if (indexToDelete !== -1) {
+    //             this.transactions.splice(indexToDelete, 1);
+    //           }
+    //         } else {
+    //           console.error("Deletion was not successful.");
+    //         }
+    //       })
+    //       .catch((error) => {
+    //         console.error(error);
+    //         // Handle any errors or show an error message to the user
+    //       });
+    // },
+
+
   },
 
 }
