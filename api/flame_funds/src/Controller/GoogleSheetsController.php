@@ -31,19 +31,25 @@ class GoogleSheetsController extends AbstractController
 
         $googleSheet = new GoogleSheetsService($em);
 
-        $email = $data["email"] ?? $user->getEmail();
+        $email = $data["defaultEmail"] ? $user->getEmail() : $data['email'];
 
         $sheetID = $googleSheet->createSheet($user, $data["title"], $data["role"], $email);
 
-        return new JsonResponse($sheetID, 200);
+        return new JsonResponse(['sheetId' => $sheetID], 200);
     }
 
     #[Route('/google/id', name: 'get_sheet_id', methods: 'GET')]
     public function getSheetId(Request $request, EntityManagerInterface $em):JsonResponse
     {
         $user = UserService::getUserFromToken($request, $em);
+        $sheetId = $user->getSheetId();
 
-        return new JsonResponse($user->getSheetId(), 200);
+        if($sheetId){
+            return new JsonResponse(["sheetId" => $user->getSheetId() ], 200);
+        } else {
+            return new JsonResponse(["sheetId" => null], 200);
+        }
+
     }
 
     /**
