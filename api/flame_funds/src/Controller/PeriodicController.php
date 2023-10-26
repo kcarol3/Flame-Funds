@@ -7,6 +7,7 @@ use App\Entity\AccountHistory;
 use App\Entity\Periodic;
 use App\Entity\ExpenseCategory;
 use App\Service\AccountService;
+use App\Service\DashboardService;
 use App\Service\TransactionsService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -88,12 +89,12 @@ class PeriodicController extends AbstractController
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->find($accountId);
 
-        $periodics  = $account->getPeriodics();
+        $periodics = $account->getPeriodics();
 
         $dataToReturn = [];
 
-        foreach ($periodics as $periodic){
-            if( !$periodic->getIsDeleted()){
+        foreach ($periodics as $periodic) {
+            if (!$periodic->getIsDeleted()) {
                 $dataToReturn[] = [
                     "id" => $periodic->getId(),
                     "name" => $periodic->getName(),
@@ -103,10 +104,44 @@ class PeriodicController extends AbstractController
                     "days" => $periodic->getDays(),
                     "details" => $periodic->getDetails()
                 ];
+
+                // Sprawdź, czy data płatności przypada dzisiaj lub wcześniej
+                $currentDate = new \DateTime();
+
+                // Jeśli pole "days" jest ustawione, to przetwarzaj tylko w dniach zdefiniowanych w "days"
+                if ($periodic->getDays()) {
+                    $currentDay = $currentDate->format('j');
+                    $paymentDays = explode(",", $periodic->getDays());
+                    if (in_array((string) $currentDay, $paymentDays)) {
+                        $this->processPayment($em, $account, $currentDate);
+                    }
+                } else {
+                    $this->processPayment($em, $account, $currentDate);
+                }
             }
         }
 
+        $em->flush();
+
         return new JsonResponse($dataToReturn, 200);
+    }
+
+// Metoda do przetwarzania płatności i dodawania rekordu do bazy danych
+    private function processPayment(EntityManagerInterface $em, Account $account, \DateTime $currentDate)
+    {
+        // Tutaj dodaj logikę przetwarzania płatności i dodawania rekordu do bazy danych
+        $history = new AccountHistory();
+        $history->setDate($currentDate);
+        $history->setPreviousBalance($account->getBalance());
+        $history->setUser($account->getUser());
+        $history->setAccount($account);
+
+        $em->persist($history);
+
+        // Tutaj możesz dodać więcej logiki lub operacji na płatnościach
+
+        // Oznacz płatność cykliczną jako przetworzoną, aby uniknąć wielokrotnego przetwarzania
+        //$periodic->setIsProcessed(true);
     }
 
     /**
@@ -141,4 +176,13 @@ class PeriodicController extends AbstractController
         return new JsonResponse("Płatność cykliczna została usunięta", 200);
     }
 
+
+    #[Route('/myPeriodics', name: 'get_myperiodics_data', methods: 'GET')]
+    public function getMyPeriodics(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = UserService::getUserFromToken($request, $em);
+
+        $data = DashboardService::getMyPeriodicsByDates($user, $em);
+        return new JsonResponse($data, 200);
+    }
 }
