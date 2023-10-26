@@ -83,7 +83,7 @@ export default {
       const config = {
         headers: {Authorization: `Bearer ${token}`}
       };
-      axios.get("http://localhost:8741/api/category/get-income",config)
+      axios.get("http://localhost:8741/api/category/income",config)
           .then(response => {
             console.log(response)
             this.categories = response.data
@@ -125,7 +125,7 @@ export default {
         const config = {
           headers: {Authorization: `Bearer ${token}`}
         };
-        axios.post("http://localhost:8741/api/category/add-income", {
+        axios.post("http://localhost:8741/api/category/income", {
           "name": this.categoryName,
           "details": this.categoryDetails,
         }, config)

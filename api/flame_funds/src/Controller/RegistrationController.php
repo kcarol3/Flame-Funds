@@ -43,8 +43,8 @@ class RegistrationController extends AbstractController
             $errorsString = (string) $errors;
             return new Response($errorsString, 422);
         } else {
-//            $em->persist($user);
-//            $em->flush();
+            $em->persist($user);
+            $em->flush();
         }
 
         return $this->json(['message' => 'Registered Successfully']);
