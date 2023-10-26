@@ -19,6 +19,8 @@
 <script setup>
 import {ref} from "vue";
 import SidebarMenu from "@/components/SidebarMenu.vue";
+import { useRouter } from 'vue-router';
+const router = useRouter()
 
 const menu = ref();
 const items = ref([
@@ -43,9 +45,13 @@ const items = ref([
     to: '/sheets'
   },
   {
-    label: 'Router',
-    icon: 'pi pi-upload',
-    to: '/fileupload'
+    label: 'Wyloguj',
+    icon: 'bi bi-box-arrow-right',
+    command: () => {
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("refresh_token");
+      router.push('/login')
+    },
   }
 ]);
 
