@@ -76,14 +76,6 @@ const items = ref([
   {
     label: 'Właściwości',
     items: [
-      // {
-      //   label: 'Zmień nazwę',
-      //   icon: 'bi bi-pencil-square',
-      //   command: () => {
-      //     changeModalVisible.value = true;
-      //     name.value = periodic.value.name;
-      //   },
-      // },
       {
         label: 'Usuń',
         icon: 'bi bi-trash',
@@ -101,32 +93,6 @@ const items = ref([
     ]
   }
 ]);
-// const changePeriodicName = () => {
-//   let token = sessionStorage.getItem("token");
-//   const config = {
-//     headers: {Authorization: `Bearer ${token}`}
-//   };
-//   axios.put(`http://localhost:8741/api/periodic/${periodic.value.id}`,{
-//     "name":name.value,
-//   }, config)
-//       .then(response => {
-//         console.log(response)
-//         changeModalVisible.value = false;
-//         periodic.value.name = name.value;
-//         createToast({
-//               title: `Nazwa płatności została zmieniona.`,
-//             },
-//             {
-//               showIcon: 'true',
-//               position: 'top-center',
-//               type: 'success',
-//               transition: 'zoom',
-//             })
-//       })
-//       .catch(error => {
-//         console.log(error.response.data)
-//       })
-// }
 
 const deletePeriodic = () => {
   let token = sessionStorage.getItem("token");

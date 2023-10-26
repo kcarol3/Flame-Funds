@@ -207,4 +207,13 @@ class FinancialGoalController extends AbstractController
         return new Response("Success add", 200);
     }
 
+    #[Route('/myfinancialgoals', name: 'get_myfinancialgoals_data', methods: 'GET')]
+    public function getMyFinancialGoals(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = UserService::getUserFromToken($request, $em);
+
+        $data = DashboardService::getMyFinancialGoalsByDates($user, $em);
+        return new JsonResponse($data, 200);
+    }
+
 }
