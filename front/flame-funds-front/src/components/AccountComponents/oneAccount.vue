@@ -3,16 +3,17 @@
        style="max-width: 320px;box-shadow: 0 0 10px 2px rgba(0,0,0,0.66);">
     <div class="mx-auto my-auto">
       <h2 class="flex-item lilita-one" style="color: rebeccapurple">
-        {{ account.name }}
+        {{ localAccount.name }}
       </h2>
       <h5>
-        Saldo: {{ account.balance }}zł
+        Saldo: {{ localAccount.balance }}zł
       </h5>
     </div>
-    <div class="mx-auto my-auto">
-      <button class="button-primary" style="scale: 70%; border-radius: 200px" @click="toggle"><i class="bi bi-gear"/>
-      </button>
-      <Menu ref="menu" id="overlay_menu" :model="items" :popup="true"/>
+    <div class="my-auto">
+      <Button label="Toggle" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" style="scale: 70%; background-color: #9646e3; border-color: rebeccapurple;">
+        <i class="bi bi-gear" style="font-size: 23px"/>
+      </Button>
+      <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
     </div>
     <Dialog v-model:visible="delModalVisible" modal header="Potwierdzenie" :style="{ width: '350px' }">
       <h2>
@@ -31,135 +32,148 @@
               <label for="catName">Nazwa konta</label>
       </span>
       <template #footer>
-        <Button label="anuluj" icon="bi bi-times" @click="delModalVisible = false" text/>
+        <Button label="anuluj" icon="bi bi-times" @click="this.delModalVisible = false" text/>
         <button type="button" class="button-primary" @click="changeAccountName" style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">Zapisz</button>
       </template>
     </Dialog>
   </div>
 </template>
 
-<script setup>
+<script>
 import axios from "axios";
-import {defineProps, ref, toRefs} from "vue";
 import {createToast} from "mosha-vue-toastify";
+export default {
+  props:{
+   account: Object,
+  },
 
-let delModalVisible = ref(false);
-let changeModalVisible = ref(false);
-let name = ref("");
-const menu = ref();
+  created() {
+    this.localAccount = { ...this.account };
+  },
 
-const items = ref([
-  {
-    label: 'Właściwości',
-    items: [
-      {
-        label: 'Zmień nazwę',
-        icon: 'bi bi-pencil-square',
-        command: () => {
-          changeModalVisible.value = true;
-          name.value = account.value.name;
-        },
-      },
-      {
-        label: 'Wybierz konto',
-        icon: 'bi bi-star',
-        command: () => {
-          let token = sessionStorage.getItem("token");
-          const config = {
-            headers: {Authorization: `Bearer ${token}`}
-          };
+  data() {
+    return {
+      items:
+        [{
+          label: 'Właściwości',
+          items: [
+            {
+              label: 'Zmień nazwę',
+              icon: 'bi bi-pencil-square',
+              command: () => {
+                this.changeModalVisible = true;
+              },
+            },
+            {
+              label: 'Wybierz konto',
+              icon: 'bi bi-star',
+              command: () => {
+                let token = sessionStorage.getItem("token");
+                const config = {
+                  headers: {Authorization: `Bearer ${token}`}
+                };
 
-          axios.put(`http://localhost:8741/api/account-change/${account.value.id}`, {}, config)
-              .then(response => {
-                console.log(response)
-                createToast({
-                      title: `Zmieniono konto na ${account.value.name}`,
-                      description: 'Teraz to konto jest twoim kontem głównym.'
-                    },
-                    {
-                      showIcon: 'true',
-                      position: 'top-center',
-                      type: 'success',
-                      transition: 'zoom',
+                axios.put(`http://localhost:8741/api/account-change/${this.account.id}`, {}, config)
+                    .then(response => {
+                      console.log(response)
+                      createToast({
+                            title: `Zmieniono konto na ${this.account.name}`,
+                            description: 'Teraz to konto jest twoim kontem głównym.'
+                          },
+                          {
+                            showIcon: 'true',
+                            position: 'top-center',
+                            type: 'success',
+                            transition: 'zoom',
+                          })
                     })
-              })
-              .catch(error => {
-                console.log(error.response.data)
-              })
+                    .catch(error => {
+                      console.log(error.response.data)
+                    })
+              }
+            },
+            {
+              label: 'Usuń',
+              icon: 'bi bi-trash',
+              command: () => {
+                this.delModalVisible = true;
+              }
+            },
+          ]
         }
+      ],
+      localAccount: {},
+      delModalVisible: false,
+      changeModalVisible: false,
+      show: false,
+      name:this.account.name,
+      options: {
+        zIndex: 3,
+        minWidth: 230,
+        x: 500,
+        y: 200
       },
-      {
-        label: 'Usuń',
-        icon: 'bi bi-trash',
-        command: () => {
-          delModalVisible.value = true;
-        }
-      },
-    ]
+    }
+  },
+  methods: {
+    changeAccountName() {
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      axios.put(`http://localhost:8741/api/account/${this.account.id}`,{
+        "name":this.name,
+      }, config)
+          .then(response => {
+            console.log(response)
+            this.changeModalVisible = false;
+            this.localAccount.name = this.name;
+            createToast({
+                  title: `Nazwa konta została zmieniona.`,
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
+          })
+          .catch(error => {
+            console.log(error.response.data)
+          })
+    },
+
+    deleteAccount(){
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      axios.delete(`http://localhost:8741/api/account/${this.account.id}`, config)
+          .then(response => {
+            console.log(response)
+            this.delModalVisible = false;
+            createToast({
+                  title: `Konto ${this.name} zostało usunięte.`,
+                  description: 'Nie masz już dostępu do tego konta.'
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    },
+
+    toggle(event) {
+      this.$refs.menu.toggle(event);
+    },
   }
-]);
-const changeAccountName = () => {
-  let token = sessionStorage.getItem("token");
-  const config = {
-    headers: {Authorization: `Bearer ${token}`}
-  };
-  axios.put(`http://localhost:8741/api/account/${account.value.id}`,{
-    "name":name.value,
-  }, config)
-      .then(response => {
-        console.log(response)
-        changeModalVisible.value = false;
-        account.value.name = name.value;
-        createToast({
-              title: `Nazwa konta została zmieniona.`,
-            },
-            {
-              showIcon: 'true',
-              position: 'top-center',
-              type: 'success',
-              transition: 'zoom',
-            })
-      })
-      .catch(error => {
-        console.log(error.response.data)
-      })
+
 }
-
-const deleteAccount = () => {
-  let token = sessionStorage.getItem("token");
-  const config = {
-    headers: {Authorization: `Bearer ${token}`}
-  };
-  axios.delete(`http://localhost:8741/api/account/${account.value.id}`, config)
-      .then(response => {
-        console.log(response)
-        delModalVisible.value = false;
-        createToast({
-              title: `Konto ${account.value.name} zostało usunięte.`,
-              description: 'Nie masz już dostępu do tego konta.'
-            },
-            {
-              showIcon: 'true',
-              position: 'top-center',
-              type: 'success',
-              transition: 'zoom',
-            })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-}
-
-const props = defineProps({
-  account: Object
-})
-
-const {account} = toRefs(props);
-
-const toggle = (event) => {
-  menu.value.toggle(event);
-};
-
 </script>
 
 <style scoped>

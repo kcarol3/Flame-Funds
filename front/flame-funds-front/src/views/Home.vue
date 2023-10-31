@@ -61,6 +61,7 @@ export default {
 </script>
 
 <style scoped>
+
 .sh{
   box-shadow: 0 0 20px 20px rgba(255, 255, 255, 0.8);
   background-color: rgba(255, 255, 255, 0.8);
