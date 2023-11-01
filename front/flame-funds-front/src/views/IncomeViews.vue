@@ -1,6 +1,6 @@
 <template>
   <div>
-    <icon-header title="Przychód" icon="bi bi-cash-stack" class="mt-3"></icon-header>
+    <icon-header title="Przychód" icon="bi bi-cash-coin" class="mt-3"></icon-header>
     <div class="flex justify-content-center">
       <Dialog v-model:visible="visible" modal header="Dodaj kategorię" :style="{ width: '350px' }">
           <span class="p-float-label mt-4 mb-4">
@@ -39,7 +39,7 @@
         <label for="describe">Opis (opcjonalny)</label>
         <textarea class="w-100" id="describe" v-model="describe" rows="2" cols="33"/>
       </div>
-      <button @click="addIncome" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-stack me-1"/>Dodaj</button>
+      <button @click="addIncome" class="button-primary mt-3 mb-4 "><i class="bi bi-cash-coin me-1"/>Dodaj</button>
     </div>
     <return-button link="/home" class="m-auto mb-3"></return-button>
   </div>

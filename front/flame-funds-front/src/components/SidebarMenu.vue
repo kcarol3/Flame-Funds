@@ -44,6 +44,11 @@ export default {
           link: "/accounts"
         },
         {
+          name: "Twoje kategorie",
+          icon: "bi bi-tags-fill",
+          link: "/categories"
+        },
+        {
           name: "Moje cele finansowe",
           icon: "bi bi-piggy-bank-fill",
           link: "/myfinancialGoals"

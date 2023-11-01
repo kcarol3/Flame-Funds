@@ -10,9 +10,9 @@
       </h5>
     </div>
     <div class="my-auto">
-      <Button label="Toggle" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" style="scale: 70%; background-color: #9646e3; border-color: rebeccapurple;">
-        <i class="bi bi-gear" style="font-size: 23px"/>
-      </Button>
+      <button label="Toggle" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" class="button-primary but my-auto">
+        <i class="bi bi-gear" style="font-size: 32px"/>
+      </button>
       <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
     </div>
     <Dialog v-model:visible="delModalVisible" modal header="Potwierdzenie" :style="{ width: '350px' }">
@@ -21,8 +21,8 @@
       </h2>
       <template #footer>
         <Button label="anuluj" icon="bi bi-times" @click="delModalVisible = false" text/>
-        <button type="button" class="button-primary" @click="deleteAccount"
-                style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">Usuń
+        <button type="button" class="button-primary" @click="deleteAccount" style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">
+          Usuń
         </button>
       </template>
     </Dialog>
@@ -107,12 +107,6 @@ export default {
       changeModalVisible: false,
       show: false,
       name:this.account.name,
-      options: {
-        zIndex: 3,
-        minWidth: 230,
-        x: 500,
-        y: 200
-      },
     }
   },
   methods: {
@@ -177,5 +171,10 @@ export default {
 </script>
 
 <style scoped>
-
+.but{
+  width:67px;
+  height:67px;
+  border-radius: 40px;
+  scale: 70%;
+}
 </style>

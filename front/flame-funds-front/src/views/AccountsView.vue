@@ -1,13 +1,13 @@
 <template>
 <div class="mx-auto justify-content-center">
   <icon-header title="Konta" icon="bi bi-wallet2" font-size="44px"></icon-header>
-  <div v-if = "this.accounts !== []" class="mx-auto mt-2" style="max-width: 600px; max-height: 50vh">
-    <table-accounts :accounts= accounts></table-accounts>
+  <div v-if = "this.accounts !== []" class="mx-auto mt-2 " >
+    <table-accounts :accounts= accounts class="mx-auto"></table-accounts>
   </div>
   <div v-else>
     <h4>Brak kont</h4>
   </div>
-  <return-button link="/home" class="m-auto mt-5"></return-button>
+  <return-button link="/home" class="mt-5 m-auto"></return-button>
 </div>
 </template>
 
