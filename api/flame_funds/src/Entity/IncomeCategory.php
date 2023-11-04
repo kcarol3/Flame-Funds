@@ -27,6 +27,9 @@ class IncomeCategory
     #[ORM\Column]
     private ?bool $isDeleted = null;
 
+    #[ORM\ManyToOne(inversedBy: 'incomeCategory')]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->incomes = new ArrayCollection();
@@ -99,6 +102,18 @@ class IncomeCategory
     public function setIsDeleted(bool $isDeleted): static
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

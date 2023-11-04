@@ -23,9 +23,9 @@
         </span>
         </div>
       </div>
-      <button  class="button-primary mt-5 mb-4"><i class="bi bi-file-earmark-spreadsheet-fill  me-3"/>Stwórz</button>
+      <button  class="button-primary mt-5 mb-4" @click="createSheet"><i class="bi bi-file-earmark-spreadsheet-fill  me-3"/>Stwórz</button>
     </div>
-    <div v-else-if="sheetsId" class="mt-4 sh">
+    <div v-else class="mt-4 sh">
       <div class="lilita-one container ">
         <div style="font-size: 32px" class="my-auto">
           Twój arkusz
@@ -52,6 +52,7 @@
 import IconHeader from "@/components/IconHeader.vue";
 import axios from "axios";
 import HeaderComponent from "@/components/Header.vue";
+import {createToast} from "mosha-vue-toastify";
 
 export default {
   name: "SheetView",
@@ -71,6 +72,42 @@ export default {
   },
 
   methods: {
+    async createSheet(){
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      let role = '';
+      if(this.isWriter){
+         role = "writer"
+      } else {
+         role = "reader"
+      }
+      await axios.post("http://localhost:8741/api/google/sheets", {
+        "email": this.email,
+        "title": this.title,
+        "defaultEmail": this.defaultEmail,
+        "role": role
+      },config,)
+          .then(response => {
+            console.log(response);
+            createToast({
+                  title: 'Utworzono arkusz',
+                  description: 'Dotychczasowe dane zostały wpisane do arkusza.'
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
+            this.sheetsId = response.data.sheetId
+          })
+          .catch(error => {
+            console.log(error);
+          })
+    },
+
     async getSheetId() {
       let token = sessionStorage.getItem("token");
       const config = {
@@ -78,13 +115,16 @@ export default {
       };
       await axios.get("http://localhost:8741/api/google/id", config)
           .then(response => {
-            console.log(response)
-            this.sheetsId = response.data
+            if(response.data.sheetId  === null){
+              this.sheetsId = null;
+            } else {
+              console.log("")
+              this.sheetsId = response.data.sheetId
+            }
           })
           .catch(error => {
             console.log(error)
           })
-
     },
   },
 }

@@ -64,7 +64,7 @@ class GoogleSheetsService
         $user->setSheetId($spreadsheet->spreadsheetId);
         $this->entityManager->flush();
 
-        $this->addTransactionsToSpreadsheet($spreadsheet->spreadsheetId);
+        $this->addTransactionsToSpreadsheet($user, $spreadsheet->spreadsheetId);
 
         return $spreadsheet->spreadsheetId;
     }
@@ -74,10 +74,10 @@ class GoogleSheetsService
      * @param $spreadsheetId
      * @return Sheets\AppendValuesResponse|void
      */
-    public function addTransactionsToSpreadsheet($spreadsheetId)
+    public function addTransactionsToSpreadsheet($user, $spreadsheetId)
     {
         try{
-            $rows = $this->getTransactionsFromDatabase();
+            $rows = $this->getTransactionsFromDatabase($user);
 
             $valueRange = new \Google_Service_Sheets_ValueRange();
             $valueRange->setValues($rows);
@@ -113,12 +113,15 @@ class GoogleSheetsService
      * Pobiera dane transakcji z bazy danych.
      * @return array
      */
-    public function getTransactionsFromDatabase()
+    public function getTransactionsFromDatabase(User $user)
     {
         $accountRepository = $this->entityManager->getRepository(Account::class);
 
-        $accounts = $accountRepository->findAll();
+        $accounts = $accountRepository->findBy(["user" => $user]);
 
+        if(!$accounts){
+            return [];
+        }
         $dataToReturn = [];
 
         foreach ($accounts as $account) {

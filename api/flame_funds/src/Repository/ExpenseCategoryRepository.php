@@ -22,7 +22,7 @@ class ExpenseCategoryRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return ExpenseCategory[] Returns an array of ExpenseCategory objects
+//     * @return ExpenseCategoryService[] Returns an array of ExpenseCategoryService objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -36,7 +36,7 @@ class ExpenseCategoryRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?ExpenseCategory
+//    public function findOneBySomeField($value): ?ExpenseCategoryService
 //    {
 //        return $this->createQueryBuilder('e')
 //            ->andWhere('e.exampleField = :val')
