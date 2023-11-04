@@ -54,14 +54,18 @@ class DashboardService
             }
         }
 
-        foreach ($periodics as $periodic){
-            if( !$periodic->getIsDeleted()){
-                $onePeriodic = [];
-                $onePeriodic["name"] = $periodic->getName();
-                $onePeriodic["amount"] = $periodic->getAmount();
-                $onePeriodic["details"] = $periodic->getDetails() ?? "";
-                $onePeriodic["type"] = "periodic";
-                $dataToReturn[$periodic->getDateStart()->format("Y-m-d")][] = $onePeriodic;
+        foreach ($periodics as $periodic) {
+            if (!$periodic->getIsDeleted()) {
+                foreach ($periodic->getPeriodicDetails() as $periodicDetail) {
+                    $onePeriodicDetail = [
+                        "name" => $periodic->getName(),
+                        "date" => $periodicDetail->getDate(),
+                        "amount" => $periodicDetail->getAmount(),
+                        "type" => "periodicDetail",
+                    ];
+
+                    $dataToReturn[$periodicDetail->getDate()->format("Y-m-d")][] = $onePeriodicDetail;
+                }
             }
         }
 

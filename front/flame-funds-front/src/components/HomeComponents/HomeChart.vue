@@ -27,10 +27,28 @@ export default {
             console.log(error)
           })
     },
+    preparePeriodics(){
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      axios.post("http://localhost:8741/api/endfinancialgoalcheck", {
+        "date": this.date,
+        "amount": this.amount,
+      }, config)
+          .then(response=>{
+            console.log(response)
+          })
+          .catch(error =>{
+            console.log(error)
+          })
+    }
   },
 
   created() {
+    this.preparePeriodics(),
     this.getData()
+
   },
 
   data(){

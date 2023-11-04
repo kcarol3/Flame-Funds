@@ -61,48 +61,47 @@ class DashboardController extends AbstractController
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->findOneBy(["id" => $accountId]);
 
-        // Pobierz bieżącą datę
-        $today = new \DateTime();
-        $today->setTime(0, 0, 0);
+        $today = new \DateTime('now');
 
         $periodics = $account->getPeriodics();
-
-        dd($periodics);
-
         $periodicDetailsRepository = $em->getRepository(PeriodicDetails::class);
 
         $dataToReturn = [];
 
         foreach ($periodics as $periodic) {
-            $dateDiff = $today->diff($periodic->getDateStart());
-            $daysBetween = $today->diff($periodic->getDateStart())->days;
+            $interval = new \DateInterval("P" . $periodic->getDays() . "D");
+            $missingDate = clone $periodic->getDateStart();
+            $missingDate->setTime(0, 0, 0);
 
-            if ($periodic->getIsDeleted() == 0) {
-                for ($i = $daysBetween - $periodic->getDays(); $i >= 0; $i -= $periodic->getDays()) {
-                    $missingDate = clone $periodic->getDateStart();
-                    $missingDate->modify("+$i days");
+            while ($missingDate <= $today && $missingDate <= $periodic->getDateEnd()) {
+                $existingDetails = $periodicDetailsRepository->findOneBy([
+                    "date" => $missingDate,
+                    "periodic" => $periodic->getId(),
+                ]);
 
-                    // Dodaj warunek, żeby pomijać datę startową
-                    if ($missingDate != $periodic->getDateStart()) {
-                        $existingDetails = $periodicDetailsRepository->findOneBy([
-                            "date" => $missingDate,
-                            "periodic" => $periodic->getId(),
-                        ]);
+                if (!$existingDetails) {
+                    $em->beginTransaction();
+                    try {
+                        $periodicDetails = new PeriodicDetails();
+                        $periodicDetails->setDate($missingDate);
+                        $periodicDetails->setAmount($periodic->getAmount());
+                        $periodicDetails->setPeriodic($periodic);
 
-                        if (!$existingDetails) {
-                            $periodicDetails = new PeriodicDetails();
-                            $periodicDetails->setDate($missingDate);
-                            $periodicDetails->setAmount($periodic->getAmount());
-                            $periodicDetails->setPeriodic($periodic);
+                        $em->persist($periodicDetails);
+                        $em->flush();
+                        $em->commit();
+                        $account->setBalance($account->getBalance() - $periodic->getAmount());
 
-                            $em->persist($periodicDetails);
-                            $dataToReturn[] = $periodicDetails;
-                        }
+
+                        $dataToReturn[] = $periodicDetails;
+                    } catch (\Exception $e) {
+                        $em->rollback();
+                        return new JsonResponse(['error' => 'Wystąpił błąd podczas zapisywania danych.'], 500);
                     }
                 }
+                $missingDate->add($interval);
             }
         }
-        $em->flush();
 
         return new JsonResponse($dataToReturn, 200);
     }
