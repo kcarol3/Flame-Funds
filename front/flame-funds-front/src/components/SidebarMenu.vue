@@ -44,6 +44,11 @@ export default {
           link: "/accounts"
         },
         {
+          name: "Raport roczny",
+          icon: "bi bi-repeat-1",
+          link: "/yearlyReport"
+        },
+        {
           name: "Moje cele finansowe",
           icon: "bi bi-piggy-bank-fill",
           link: "/myfinancialGoals"

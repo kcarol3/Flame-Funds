@@ -133,4 +133,13 @@ class DashboardController extends AbstractController
         $data = DashboardService::getMyPeriodicsByDates($user, $em);
         return new JsonResponse($data, 200);
     }
+
+    #[Route('/yearlyReport', name: 'yearlyReport', methods: 'GET')]
+    public function getYearlyReport(Request $request, EntityManagerInterface $em): JsonResponse
+    {
+        $user = UserService::getUserFromToken($request, $em);
+        $currentYear = date('Y');
+        $data = DashboardService::getMonthlyAmountsByYear($user, $em, $currentYear);
+        return new JsonResponse($data, 200);
+    }
 }

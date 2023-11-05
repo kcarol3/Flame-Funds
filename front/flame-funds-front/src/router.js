@@ -14,6 +14,7 @@ import myFinancialGoals from "@/views/MyFinancialGoals.vue";
 import editFinancialGoal from "@/views/EditFinancialGoal.vue";
 import periodic from "@/views/Periodic";
 import myPeriodics from "@/views/MyPeriodics";
+import yearlyReport from "@/views/YearlyReport";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
 
@@ -106,6 +107,12 @@ const routes = [
         path: '/myPeriodics',
         name: 'myPeriodics',
         component: myPeriodics,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/yearlyReport',
+        name: 'yearlyReport',
+        component: yearlyReport,
         beforeEnter: authMiddleware,
     },
 

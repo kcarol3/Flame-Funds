@@ -131,5 +131,48 @@ class DashboardService
         return $dataToReturn;
     }
 
+    public static function getMonthlyAmountsByYear(User $user, EntityManagerInterface $em, $year): array
+    {
+        $accountId = $user->getCurrentAccount();
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $expenses = $account->getExpenses();
+        $financialGoals = $account->getFinancialGoal();
+        $periodics = $account->getPeriodics();
+
+        $dataToReturn = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $dataToReturn[$month] = 0;
+        }
+
+        foreach ($expenses as $expense) {
+            if (!$expense->isIsDeleted() && $expense->getDate()->format('Y') == $year) {
+                $month = $expense->getDate()->format('n');
+                $dataToReturn[$month] += $expense->getAmount();
+            }
+        }
+
+        foreach ($financialGoals as $financialGoal) {
+            if (!$financialGoal->getIsDeleted() && $financialGoal->getDateStart()->format('Y') == $year) {
+                $month = $financialGoal->getDateStart()->format('n');
+                $dataToReturn[$month] += $financialGoal->getCurrentAmount();
+            }
+        }
+
+        foreach ($periodics as $periodic) {
+            if (!$periodic->getIsDeleted() && $periodic->getDateStart()->format('Y') == $year) {
+                foreach ($periodic->getPeriodicDetails() as $periodicDetail) {
+                    $month = $periodicDetail->getDate()->format('n');
+                    $dataToReturn[$month] += $periodicDetail->getAmount();
+                }
+            }
+        }
+
+        return array_values($dataToReturn);
+    }
+
 
 }
