@@ -4,6 +4,7 @@ namespace App;
 
 use App\Service\Interfaces\CategoryInterface;
 use App\Service\Strategy\CategoryCompilerPass;
+use App\Service\Strategy\TransactionCompilerPass;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -15,5 +16,6 @@ class Kernel extends BaseKernel
     protected function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new CategoryCompilerPass());
+        $container->addCompilerPass(new TransactionCompilerPass());
     }
 }
