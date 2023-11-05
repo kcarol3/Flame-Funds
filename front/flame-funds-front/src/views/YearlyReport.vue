@@ -1,10 +1,24 @@
 <template>
-  <div class="mx-auto justify-content-center">
+  <div className="mx-auto justify-content-center">
     <icon-header :title="yearlyReportTitle" icon="bi bi-pie-chart-fill" font-size="44px"></icon-header>
   </div>
-  <br><br>
-  <div id="chart" class="text-center">
-    <apexchart :options="chartOptions" :series="series" type="pie" width="600"/>
+  <div class="row">
+    <div class="col-md-6">
+      <div>
+        <icon-header title="Wydatki"></icon-header>
+      </div>
+      <div id="chart" className="text-center">
+        <apexchart :options="chartOptions1" :series="series1" type="pie" width="80%"/>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div>
+        <icon-header title="Przychody"></icon-header>
+      </div>
+      <div id="chart2" className="text-center">
+        <apexchart :options="chartOptions2" :series="series2" type="pie" width="80%"/>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -20,13 +34,56 @@ export default {
   },
   data() {
     return {
-      series: [],
-      chartOptions: {
-          width: 380,
-          type: 'pie',
-          colors: ["#fee327", "#fdca54", "#f6a570", "#f1969b", "#f08ab1", "#c78dbd", "#927db6", "#5da0d7", "#00b3e1", "#50bcbf", "#65bda5", "#87bf54"],
-        labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień',
-          'Październik', 'Listopad', 'Grudzień'],
+      series1: [],
+      chartOptions1: {
+        width: 380,
+        type: 'pie',
+        colors: [
+          "#00b3e1", // Styczeń
+          "#5da0d7", // Luty
+          "#87bf54", // Marzec
+          "#f1969b", // Kwiecień
+          "#f08ab1", // Maj
+          "#c78dbd", // Czerwiec
+          "#fee327", // Lipiec
+          "#fdca54", // Sierpień
+          "#c0a0a0", // Wrzesień
+          "#f6a570", // Październik
+          "#ffd27f", // Listopad
+          "#65bda5", // Grudzień
+        ],
+        labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200,
+            },
+            legend: {
+              position: 'bottom',
+            },
+          },
+        }],
+      },
+      series2: [],
+      chartOptions2: {
+        width: 380,
+        type: 'pie',
+        colors: [
+          "#00b3e1", // Styczeń
+          "#5da0d7", // Luty
+          "#87bf54", // Marzec
+          "#f1969b", // Kwiecień
+          "#f08ab1", // Maj
+          "#c78dbd", // Czerwiec
+          "#fee327", // Lipiec
+          "#fdca54", // Sierpień
+          "#c0a0a0", // Wrzesień
+          "#f6a570", // Październik
+          "#ffd27f", // Listopad
+          "#65bda5", // Grudzień
+        ],
+        labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
         responsive: [{
           breakpoint: 480,
           options: {
@@ -44,6 +101,7 @@ export default {
   },
   mounted() {
     this.fetchYearlyReport();
+    this.fetchYearlyReport2();
   },
   methods: {
     async fetchYearlyReport() {
@@ -54,13 +112,29 @@ export default {
       try {
         const response = await axios.get("http://localhost:8741/api/yearlyReport", config);
 
-        this.chartOptions.labels = response.data.map(item => item.name);
-        this.series = response.data;
+        this.chartOptions1.labels = response.data.map(item => item.name);
+        this.series1 = response.data;
 
         const currentYear = new Date().getFullYear();
-        this.yearlyReportTitle = `Roczny raport wydatków ${currentYear}`;
+        this.yearlyReportTitle = `Roczny raport finansowy ${currentYear}`;
       } catch (error) {
         console.error("Błąd podczas pobierania danych:", error);
+      }
+    },
+    async fetchYearlyReport2() {
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      try {
+        const response = await axios.get("http://localhost:8741/api/yearlyIncomeReport", config);
+
+        this.chartOptions2.labels = response.data.map(item => item.name);
+        this.series2 = response.data;
+
+        // Możesz również zaktualizować tytuł dla drugiego wykresu, jeśli jest inny.
+      } catch (error) {
+        console.error("Błąd podczas pobierania danych dla drugiego wykresu:", error);
       }
     },
   },

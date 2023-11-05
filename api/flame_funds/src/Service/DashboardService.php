@@ -174,5 +174,28 @@ class DashboardService
         return array_values($dataToReturn);
     }
 
+    public static function getMonthlyIncomesByYear(User $user, EntityManagerInterface $em, $year): array
+    {
+        $accountId = $user->getCurrentAccount();
 
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $incomes = $account->getIncomes();
+
+        $dataToReturn = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $dataToReturn[$month] = 0;
+        }
+
+        foreach ($incomes as $income) {
+            if (!$income->isIsDeleted() && $income->getDate()->format('Y') == $year) {
+                $month = $income->getDate()->format('n');
+                $dataToReturn[$month] += $income->getAmount();
+            }
+        }
+
+        return array_values($dataToReturn);
+    }
 }
