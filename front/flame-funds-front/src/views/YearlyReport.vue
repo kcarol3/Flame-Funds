@@ -1,6 +1,6 @@
 <template>
   <div class="mx-auto justify-content-center">
-    <icon-header :title="yearlyReportTitle" icon="bi bi-repeat" font-size="44px"></icon-header>
+    <icon-header :title="yearlyReportTitle" icon="bi bi-pie-chart-fill" font-size="44px"></icon-header>
   </div>
   <div id="chart" class="text-center">
     <apexchart :options="chartOptions" :series="series" type="pie" width="600"/>
