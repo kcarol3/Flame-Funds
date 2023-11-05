@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex border border-2 rounded-4 my-auto body" :style="maxWidthStyles">
     <div class="mx-auto my-auto">
-      <h2 class="flex-item lilita-one" style="color: rebeccapurple">
-        {{ financialGoal.name }}{{ isInactive ? ' - przedawniony' : '' }}
+      <h2 class="flex-item lilita-one" :style="{ color: isAchieved ? 'green' : 'rebeccapurple' }">
+        {{ financialGoal.name }}{{ isInactive ? ' - niezrealizowany' : '' }}{{ isAchieved ? ' - zrealizowany' : ''}}
       </h2>
       <h5>
         Aktualna kwota: {{ financialGoal.currentAmount }}zł
@@ -11,7 +11,7 @@
         Kwota docelowa: {{ financialGoal.goalAmount }}zł
       </h5>
       <h5>
-        Zostało dni: {{ financialGoal.daysRemaining }} dni
+        {{ isAchieved ? '' : (isInactive ? 'Zabrakło: ' + (financialGoal.goalAmount - financialGoal.currentAmount) + ' zł' : 'Zostało dni: ' + financialGoal.daysRemaining + ' dni') }}
       </h5>
     </div>
     <div class="mx-auto my-auto">
@@ -60,7 +60,7 @@
 
 <script setup>
 import axios from "axios";
-import {defineProps, ref, toRefs} from "vue";
+import {computed, defineProps, ref, toRefs} from "vue";
 import {createToast} from "mosha-vue-toastify";
 
 let delModalVisible = ref(false);
@@ -69,36 +69,6 @@ let infoModalVisible = ref(false);
 let currentAmount = ref("");
 const menu = ref();
 
-
-const items = ref([
-  {
-    label: 'Właściwości',
-    items: [
-      {
-        label: 'Dodaj kwotę',
-        icon: 'bi bi-plus-circle',
-        command: () => {
-          changeModalVisible.value = true;
-          currentAmount.value = ""; //financialGoal.value.currentAmount;
-        },
-      },
-      {
-        label: 'Usuń',
-        icon: 'bi bi-trash',
-        command: () => {
-          delModalVisible.value = true;
-        }
-      },
-      {
-        label: 'Informacje',
-        icon: 'bi bi-info-circle',
-        command: () => {
-          infoModalVisible.value = true;
-        }
-      },
-    ]
-  }
-]);
 const addCurrentAmount = () => {
   let token = sessionStorage.getItem("token");
   const config = {
@@ -170,10 +140,48 @@ financialGoal.value.daysRemaining = daysRemaining;
 const maxWidthStyles = {
   maxWidth: '450px',
   boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.66)',
-  backgroundColor: financialGoal.value.daysRemaining < 0 ? 'rgba(213, 184, 255)' : 'white',
+  backgroundColor: financialGoal.value.currentAmount >= financialGoal.value.goalAmount
+      ? 'rgb(152,251,152)'
+      : financialGoal.value.daysRemaining < 0
+          ? 'rgba(213, 184, 255)'
+          : 'white',
 };
 
+
 const isInactive = financialGoal.value.daysRemaining < 0;
+const isAchieved = computed(() => parseFloat(financialGoal.value.currentAmount) >= parseFloat(financialGoal.value.goalAmount));
+
+
+const items = ref([
+  {
+    label: 'Właściwości',
+    items: [
+      {
+        label: 'Dodaj kwotę',
+        icon: 'bi bi-plus-circle',
+        command: () => {
+          changeModalVisible.value = true;
+          currentAmount.value = ""; //financialGoal.value.currentAmount;
+        },
+        disabled: isAchieved.value || isInactive, // Disable the option when achieved or inactive
+      },
+      {
+        label: 'Usuń',
+        icon: 'bi bi-trash',
+        command: () => {
+          delModalVisible.value = true;
+        }
+      },
+      {
+        label: 'Informacje',
+        icon: 'bi bi-info-circle',
+        command: () => {
+          infoModalVisible.value = true;
+        }
+      },
+    ]
+  }
+]);
 
 const toggle = (event) => {
   menu.value.toggle(event);
