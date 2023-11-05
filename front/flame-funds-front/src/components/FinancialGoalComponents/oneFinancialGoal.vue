@@ -170,7 +170,7 @@ financialGoal.value.daysRemaining = daysRemaining;
 const maxWidthStyles = {
   maxWidth: '450px',
   boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.66)',
-  backgroundColor: financialGoal.value.daysRemaining < 0 ? 'purple' : 'white',
+  backgroundColor: financialGoal.value.daysRemaining < 0 ? 'rgba(213, 184, 255)' : 'white',
 };
 
 const isInactive = financialGoal.value.daysRemaining < 0;

@@ -1,9 +1,8 @@
 <template>
-  <div class="d-flex border border-2 rounded-4 my-auto body"
-       style="max-width: 400px;box-shadow: 0 0 10px 2px rgba(0,0,0,0.66);">
+  <div class="d-flex border border-2 rounded-4 my-auto body" :style="maxWidthStyles">
     <div class="mx-auto my-auto">
       <h2 class="flex-item lilita-one" style="color: rebeccapurple">
-        {{ periodic.name }}
+        {{ periodic.name }}{{ isInactive ? ' - zakończona' : '' }}
       </h2>
       <h5>
         Kwota: {{ periodic.amount }} zł
@@ -11,9 +10,10 @@
       <h5>
         Powtarzalność: co {{ periodic.days }} dni
       </h5>
-      <h5>
+      <h5 v-if="!isInactive">
         Pozostało płatności: {{ periodic.paymentsRemaining }}
       </h5>
+
     </div>
     <div class="mx-auto my-auto">
       <button class="button-primary" style="scale: 70%; border-radius: 200px" @click="toggle"><i class="bi bi-gear"/>
@@ -140,6 +140,14 @@ periodic.value.daysRemaining = daysRemaining;
 const daysBetweenPayments = periodic.value.days;
 const paymentsRemaining = Math.floor(daysRemaining / daysBetweenPayments);
 periodic.value.paymentsRemaining = paymentsRemaining;
+
+const isInactive = periodic.value.paymentsRemaining < 0;
+
+const maxWidthStyles = {
+  maxWidth: '450px',
+  boxShadow: '0 0 10px 2px rgba(0, 0, 0, 0.66)',
+  backgroundColor: periodic.value.daysRemaining < 0 ? 'rgba(213, 184, 255)' : 'white',
+};
 
 </script>
 
