@@ -45,7 +45,7 @@ export default {
         },
         {
           name: "Raport roczny",
-          icon: "bi bi-pie-chart",
+          icon: "bi bi-pie-chart-fill",
           link: "/yearlyReport"
         },
         {
