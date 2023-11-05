@@ -2,6 +2,7 @@
   <div class="mx-auto justify-content-center">
     <icon-header :title="yearlyReportTitle" icon="bi bi-pie-chart-fill" font-size="44px"></icon-header>
   </div>
+  <br><br>
   <div id="chart" class="text-center">
     <apexchart :options="chartOptions" :series="series" type="pie" width="600"/>
   </div>
@@ -38,7 +39,7 @@ export default {
           },
         }],
       },
-      yearlyReportTitle: "", // Dodaj pole na tytuł raportu rocznego
+      yearlyReportTitle: "",
     };
   },
   mounted() {
@@ -53,11 +54,9 @@ export default {
       try {
         const response = await axios.get("http://localhost:8741/api/yearlyReport", config);
 
-        // Aktualizuj etykiety w opcjach wykresu na podstawie danych z odpowiedzi
         this.chartOptions.labels = response.data.map(item => item.name);
         this.series = response.data;
 
-        // Aktualizuj tytuł raportu rocznego z rokiem
         const currentYear = new Date().getFullYear();
         this.yearlyReportTitle = `Roczny raport wydatków ${currentYear}`;
       } catch (error) {
