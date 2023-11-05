@@ -17,7 +17,7 @@
         </h2>
         <template #footer>
           <Button label="anuluj" icon="bi bi-times" @click="delModalVisible = false" text/>
-          <button type="button" class="button-primary" @click="deleteCategory" style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">
+          <button type="button" class="button-primary" @click="deleteTransaction" style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">
             Usuń
           </button>
         </template>
@@ -141,6 +141,31 @@ export default {
           .then(response => {
             console.log(response)
             this.categories = response.data
+          })
+          .catch(error => {
+            console.log(error)
+          })
+    },
+
+    deleteTransaction() {
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      axios.delete(`http://localhost:8741/api/transaction/${this.$route.params.type}/${this.$route.params.id}`,config)
+          .then(response => {
+            console.log(response)
+            createToast({
+                  title: 'Transakcja została usunięta',
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
+            this.$router.push('/history');
+            this.delModalVisible = false;
           })
           .catch(error => {
             console.log(error)
