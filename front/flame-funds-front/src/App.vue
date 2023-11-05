@@ -157,7 +157,7 @@ body {
   background-color: #9646e3;
 }
 .lilita-one {
-  font-family: 'Lilita One', sans-serif;
+  font-family: 'Playpen Sans', sans-serif, bold;
 }
 
 .button-primary {
