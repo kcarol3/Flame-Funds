@@ -49,7 +49,7 @@ export default {
           link: "/yearlyReport"
         },
         {
-          name: "Moje cele finansowe",
+          name: "Cele finansowe",
           icon: "bi bi-piggy-bank-fill",
           link: "/myfinancialGoals"
         },
@@ -59,7 +59,7 @@ export default {
           link: "/financialGoal"
         },
         {
-          name: "Moje płatności cykliczne",
+          name: "Płatności cykliczne",
           icon: "bi bi-repeat",
           link: "/myPeriodics"
         },

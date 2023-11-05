@@ -6,6 +6,7 @@ use App\Entity\Account;
 use App\Entity\AccountHistory;
 use App\Entity\Periodic;
 use App\Entity\ExpenseCategory;
+use App\Entity\PeriodicDetails;
 use App\Service\AccountService;
 use App\Service\DashboardService;
 use App\Service\TransactionsService;
@@ -159,21 +160,28 @@ class PeriodicController extends AbstractController
         $PeriodicRepository = $em->getRepository(Periodic::class);
         $periodic = $PeriodicRepository->findOneBy(["id" => $id]);
 
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->findOneBy(["id" => $accountId]);
+
         if (!$periodic) {
             return new JsonResponse("Płatność cykliczna nie została znaleziona", 404);
         }
 
         $periodic->setIsDeleted(true);
 
-        $accountRepository = $em->getRepository(Account::class);
-        $account = $accountRepository->findOneBy(["id" => $accountId]);
+        $periodicDetailsRepository = $em->getRepository(PeriodicDetails::class);
+        $periodicDetailsList = $periodicDetailsRepository->findBy(["periodic" => $periodic]);
+
+        foreach ($periodicDetailsList as $periodicDetails) {
+            $em->remove($periodicDetails);
+            $account->setBalance($account->getBalance() + $periodicDetails->getAmount());
+        }
 
         $account->setBalance($account->getBalance() + $periodic->getAmount());
 
-        // Zapisz zmiany w bazie danych
         $em->flush();
 
-        return new JsonResponse("Płatność cykliczna została usunięta", 200);
+        return new JsonResponse("Płatność cykliczna została usunięta razem z jej detalami", 200);
     }
 
 

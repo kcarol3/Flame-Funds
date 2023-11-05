@@ -69,6 +69,9 @@ class DashboardController extends AbstractController
         $dataToReturn = [];
 
         foreach ($periodics as $periodic) {
+            if ($periodic->getIsDeleted()) {
+                continue;
+            }
             $interval = new \DateInterval("P" . $periodic->getDays() . "D");
             $missingDate = clone $periodic->getDateStart();
             $missingDate->setTime(0, 0, 0);
