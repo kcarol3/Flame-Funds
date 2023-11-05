@@ -32,7 +32,7 @@
               <label for="catName">Nazwa konta</label>
       </span>
       <template #footer>
-        <Button label="anuluj" icon="bi bi-times" @click="this.delModalVisible = false" text/>
+        <Button label="anuluj" icon="bi bi-times" @click="this.changeModalVisible = false" text/>
         <button type="button" class="button-primary" @click="changeAccountName" style="font-size: 18px; font-family: Lato, Helvetica, sans-serif">Zapisz</button>
       </template>
     </Dialog>
