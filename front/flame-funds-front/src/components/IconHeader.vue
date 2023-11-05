@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="p-3 mx-auto w-75 shadow lilita-one rounded container-sm mt-2">
-      <div v-if="twoLines" :style="{'font-size': fontSize}">
+    <h1 :style="{'font-size': fontSize}" class="p-3 mx-auto w-75 shadow lilita-one rounded container-sm mt-2">
+      <div v-if="twoLines" >
         <i :class="icon"/>
         <div>
           {{ title }}
@@ -38,7 +38,6 @@ export default {
 <style scoped>
 h1 {
   color: #9646e3;
-  font-size: 48px;
   background-color: rgba(255, 255, 255, 0.8);
 }
 </style>

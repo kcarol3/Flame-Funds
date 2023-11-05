@@ -17,6 +17,7 @@
         </template>
       </Dialog>
     </div>
+
     <div class="container" style="width: 300px">
     <span class="p-float-label mt-4 mb-4">
       <InputText id="name" class="w-100" v-model="name"/>
@@ -157,7 +158,7 @@ export default {
           headers: {Authorization: `Bearer ${token}`}
         };
         this.date = this.date.toLocaleString("pl-PL", {timeZone: "Europe/Warsaw"})
-        axios.post("http://localhost:8741/api/income/add-income", {
+        axios.post("http://localhost:8741/api/transaction/income", {
           "name": this.name,
           "date": this.date,
           "amount": this.amount,

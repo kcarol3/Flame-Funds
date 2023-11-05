@@ -54,11 +54,14 @@ export default {
             autoSelected: 'zoom'
           }
         },
+        stroke: {
+          dashArray: 0
+        },
         dataLabels: {
           enabled: false
         },
         markers: {
-          size: 0,
+          size: 1,
         },
         title: {
           text: 'Ostatnie zmiany salda',

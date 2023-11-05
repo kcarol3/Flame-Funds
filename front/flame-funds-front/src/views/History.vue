@@ -8,25 +8,29 @@
       <div v-for="(transactions, date) in transactions" :key="date">
         <Panel :header=date>
           <div v-for="(transaction, index) in transactions" :key="transaction.name">
-            <div class="lilita-one" style="font-size: 24px; color: rebeccapurple">
-              {{ transaction.name }}
-            </div>
-            <div class="d-flex mx-auto mt-1">
-              <div class="w-75" style="text-align: left; font-size: 17px; color: grey">
-                {{ transaction.details }}
+            <div @click="showDetails(transaction.type, transaction.id)">
+              <div class="lilita-one" style="font-size: 24px; color: rebeccapurple">
+                {{ transaction.name }}
               </div>
-              <div class="numeric" :class=transaction.type>
-                <div v-if="transaction.type == 'expense'">-{{ transaction.amount }}</div>
-                <div v-else>{{ transaction.amount }}</div>
-              </div>
+              <div>
+                <div class="d-flex mx-auto mt-1">
+                  <div class="w-75" style="text-align: left; font-size: 17px; color: grey">
+                    {{ transaction.details }}
+                  </div>
+                  <div class="numeric" :class=transaction.type>
+                    <div v-if="transaction.type == 'expense'">-{{ transaction.amount }}</div>
+                    <div v-else>{{ transaction.amount }}</div>
+                  </div>
 
-              <div class="numeric" :class=transaction.type>
-                <div v-if="transaction.type == 'financialGoal'">-{{ transaction.currentAmount }}</div>
-                <div v-else>{{ transaction.currentAmount }}</div>
-              </div>
+                  <div class="numeric" :class=transaction.type>
+                    <div v-if="transaction.type == 'financialGoal'">-{{ transaction.currentAmount }}</div>
+                    <div v-else>{{ transaction.currentAmount }}</div>
+                  </div>
 
+                </div>
+              </div>
+              <Divider v-if="index < transactions.length - 1"/>
             </div>
-            <Divider v-if="index < transactions.length - 1"/>
           </div>
         </Panel>
       </div>
@@ -70,7 +74,11 @@ export default {
           .catch(error => {
             console.log(error)
           })
-    }
+    },
+
+    showDetails(type, id){
+      this.$router.push(`/history/${type}/${id}`);
+    },
   },
 
 }
