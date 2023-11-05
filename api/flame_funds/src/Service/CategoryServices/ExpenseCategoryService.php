@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace App\Service;
+namespace App\Service\CategoryServices;
 
 use App\Entity\ExpenseCategory;
 use App\Entity\User;
+use App\Service\Interfaces;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ExpenseCategoryService implements Interfaces\CategoryInterface
@@ -76,7 +77,7 @@ class ExpenseCategoryService implements Interfaces\CategoryInterface
         if($category->isIsDeleted()){
             return false;
         } else {
-            return ["name" => $category->getName(), "details" => $category->getDetails()];
+            return ["id" => $category->getId(), "name" => $category->getName(), "details" => $category->getDetails()];
         }
     }
 
