@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Account;
+use App\Entity\AccountHistory;
 use App\Entity\User;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,7 +44,14 @@ class AccountService
         $newAccount->setName($dataFromRequest['name']);
         $newAccount->setIsDeleted(false);
 
+        $accountHistory = new AccountHistory();
+        $accountHistory->setAccount($newAccount);
+        $accountHistory->setUser($this->user);
+        $accountHistory->setDate($currentDateTime);
+        $accountHistory->setPreviousBalance($dataFromRequest['balance']);
+
         $this->em->persist($newAccount);
+        $this->em->persist($accountHistory);
         $this->em->flush();
     }
 
@@ -68,16 +76,26 @@ class AccountService
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getBalance(){
+    public function getBalance(): ?array
+    {
         $accountRepository = $this->em->getRepository(Account::class);
         $account = $accountRepository->findOneBy(["id" => $this->user->getCurrentAccount()]);
+        if($account){
+            return ["balance" => $account->getBalance(), "name" => $account->getName()];
 
-        return ["balance" => $account->getBalance(), "name" => $account->getName()];
+        } else {
+            return null;
+        }
     }
 
-    public function deleteAccount($accountID){
+    /**
+     * @param $accountID
+     * @return void
+     */
+    public function deleteAccount($accountID): void
+    {
         $accountRepository = $this->em->getRepository(Account::class);
         $account = $accountRepository->find($accountID);
 
@@ -105,7 +123,8 @@ class AccountService
      * @param string $name
      * @return void
      */
-    public function changeAccountName(int $id, string $name){
+    public function changeAccountName(int $id, string $name): void
+    {
         $accountRepository = $this->em->getRepository(Account::class);
         $account = $accountRepository->find($id);
 

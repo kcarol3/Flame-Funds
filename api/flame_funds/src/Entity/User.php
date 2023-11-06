@@ -57,12 +57,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: IncomeCategory::class)]
     private Collection $incomeCategory;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: GoogleSheet::class)]
+    private Collection $googleSheets;
+
     public function __construct()
     {
         $this->accounts = new ArrayCollection();
         $this->accountHistories = new ArrayCollection();
         $this->expenseCategory = new ArrayCollection();
         $this->incomeCategory = new ArrayCollection();
+        $this->googleSheets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -297,6 +301,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($incomeCategory->getUser() === $this) {
                 $incomeCategory->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GoogleSheet>
+     */
+    public function getGoogleSheets(): Collection
+    {
+        return $this->googleSheets;
+    }
+
+    public function addGoogleSheet(GoogleSheet $googleSheet): static
+    {
+        if (!$this->googleSheets->contains($googleSheet)) {
+            $this->googleSheets->add($googleSheet);
+            $googleSheet->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoogleSheet(GoogleSheet $googleSheet): static
+    {
+        if ($this->googleSheets->removeElement($googleSheet)) {
+            // set the owning side to null (unless already changed)
+            if ($googleSheet->getUser() === $this) {
+                $googleSheet->setUser(null);
             }
         }
 

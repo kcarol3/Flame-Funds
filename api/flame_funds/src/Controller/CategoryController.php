@@ -2,12 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\ExpenseCategory;
-use App\Entity\IncomeCategory;
 use App\Service\Strategy\Category;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +77,7 @@ class CategoryController extends AbstractController
      * @return JsonResponse
      * @throws \Exception
      */
-    #[Route('/category/{type}', name: 'add_expense_category', methods: 'POST')]
+    #[Route('/category/{type}', name: 'add_category', methods: 'POST')]
     public function addCategory(Request $request, EntityManagerInterface $em, $type): JsonResponse
     {
         $content = $request->getContent();
@@ -90,5 +87,13 @@ class CategoryController extends AbstractController
         $this->category->add($type,$user, $data['name'], $data['details']);
 
         return new JsonResponse("Success saved category", 200);
+    }
+
+    #[Route('/category/{type}/{id}', name: 'delete_category', methods: 'DELETE')]
+    public function deleteCategory(Request $request, EntityManagerInterface $em, $type, $id): JsonResponse
+    {
+        $this->category->remove($type, $id);
+
+        return  new JsonResponse("Success deleted", 200);
     }
 }

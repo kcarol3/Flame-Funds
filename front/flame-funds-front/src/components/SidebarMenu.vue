@@ -44,6 +44,11 @@ export default {
           link: "/accounts"
         },
         {
+          name: "Twoje kategorie",
+          icon: "bi bi-tags-fill",
+          link: "/categories"
+        },
+        {
           name: "Raport roczny",
           icon: "bi bi-pie-chart-fill",
           link: "/yearlyReport"

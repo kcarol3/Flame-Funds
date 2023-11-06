@@ -20,11 +20,18 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Service\ExpenseCategoryService:
+    App\Service\CategoryServices\ExpenseCategoryService:
         tags: [ 'category_strategy' ]
 
-    App\Service\IncomeCategoryService:
+    App\Service\CategoryServices\IncomeCategoryService:
         tags: [ 'category_strategy' ]
+
+    App\Service\TransactionsServices\ExpenseService:
+        tags: [ 'transaction_strategy' ]
+
+    App\Service\TransactionsServices\IncomeService:
+        tags: [ 'transaction_strategy' ]
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 

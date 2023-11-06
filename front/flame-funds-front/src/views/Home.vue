@@ -2,9 +2,14 @@
   <div>
     <header-component title="Witaj!" class="mt-3"></header-component>
     <div @click="this.$router.push('/history')" class="mx-auto mt-4 py-3 lilita-one rounded border border-1 border-black shadow click-animation" style="width: 60%; background: #d9c5ed;color: gray;max-width: 400px">
-      <div style="color:black; font-size: 26px">{{accountName}}</div>
-      <div style="font-size: 18px">Saldo:</div>
-      <div style="font-size: 24px; color: dimgrey">{{balance}}zł</div>
+      <div v-if="this.accountExist">
+        <div style="color:black; font-size: 26px">{{accountName}}</div>
+        <div style="font-size: 18px">Saldo:</div>
+        <div style="font-size: 24px; color: dimgrey">{{balance}}zł</div>
+      </div>
+      <div v-else>
+        <div style="color:black; font-size: 26px">Musisz stworzyć konto</div>
+      </div>
     </div>
     <div class="container-fluid d-flex align-items-center tap-buttons pt-4 pb-3 align-self-end">
       <div class="mx-auto ">
@@ -34,6 +39,7 @@ export default {
     return {
       balance: 0.0,
       accountName: "",
+      accountExist: false,
     }
   },
 
@@ -49,8 +55,11 @@ export default {
       axios.get("http://localhost:8741/api/account-current",config)
           .then(response=>{
             console.log(response)
-            this.balance = response.data.balance
-            this.accountName = response.data.name
+            if(response.data){
+              this.balance = response.data.balance
+              this.accountName = response.data.name
+              this.accountExist = true
+            }
           })
           .catch(error =>{
             console.log(error)
@@ -61,6 +70,7 @@ export default {
 </script>
 
 <style scoped>
+
 .sh{
   box-shadow: 0 0 20px 20px rgba(255, 255, 255, 0.8);
   background-color: rgba(255, 255, 255, 0.8);

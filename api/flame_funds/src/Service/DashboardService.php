@@ -25,6 +25,7 @@ class DashboardService
         foreach ($expenses as $expense){
             if( !$expense->isIsDeleted()){
                 $oneExpense = [];
+                $oneExpense["id"] = $expense->getId();
                 $oneExpense["name"] = $expense->getName();
                 $oneExpense["amount"] = $expense->getAmount();
                 $oneExpense["details"] = $expense->getDetails() ?? "";
@@ -36,6 +37,7 @@ class DashboardService
         foreach ($incomes as $income){
             if( !$income->isIsDeleted()){
                 $oneIncome = [];
+                $oneIncome["id"] = $income->getId();
                 $oneIncome["name"] = $income->getName();
                 $oneIncome["amount"] = $income->getAmount();
                 $oneIncome["details"] = $income->getDetails() ?? "";

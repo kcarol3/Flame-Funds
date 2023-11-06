@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Account;
+use App\Entity\AccountHistory;
+use App\Entity\GoogleSheet;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -11,15 +13,21 @@ use Google_Service_Drive_Permission;
 use Google_Service_Sheets;
 use Google\Service\Sheets;
 use Google\Service\Drive;
+use Google_Service_Sheets_BatchUpdateSpreadsheetRequest;
+use Google_Service_Sheets_Request;
 use Google_Service_Sheets_ValueRange;
 
 
 class GoogleSheetsService
 {
     private $client;
-    private $service_Sheets;
+    private $sheetsService;
 
     private $entityManager;
+
+    public const TRANSACTION_SHEET_NAME = "Wydatki i przychody";
+    public const ACCOUNT_HISTORY_SHEET_NAME = "Historia konta";
+
 
     /**
      * @throws \Google\Exception
@@ -34,7 +42,7 @@ class GoogleSheetsService
         $client->setAccessType('offline');
         $client->setAuthConfig('../credentials.json');
 
-        $this->service_Sheets = new Google_Service_Sheets($client);
+        $this->sheetsService = new Google_Service_Sheets($client);
         $this->client = $client;
     }
 
@@ -43,7 +51,7 @@ class GoogleSheetsService
      * @param String $title
      * @return string
      */
-    public function createSheet(User $user, string $title, string $role, string $email)
+    public function createSpreadsheet(User $user, string $title, string $role, string $email)
     {
         $newPermission = new Google_Service_Drive_Permission();
 
@@ -56,15 +64,26 @@ class GoogleSheetsService
                 'title' => $title,
             ],
         ]);
-        $spreadsheet = $this->service_Sheets->spreadsheets->create($spreadsheet);
+        $spreadsheet = $this->sheetsService->spreadsheets->create($spreadsheet);
 
         $service = new Google_Service_Drive($this->client);
         $service->permissions->create($spreadsheet->spreadsheetId, $newPermission);
 
+        $newSpreadSheet = new GoogleSheet();
+        $newSpreadSheet->setSpreadSheetId($spreadsheet->spreadsheetId);
+        $newSpreadSheet->setSheetId(0);
+        $newSpreadSheet->setSheetName(self::TRANSACTION_SHEET_NAME);
+        $newSpreadSheet->setUser($user);
+        $this->entityManager->persist($newSpreadSheet);
+
         $user->setSheetId($spreadsheet->spreadsheetId);
         $this->entityManager->flush();
 
+        $this->changeSheetTitle($spreadsheet->spreadsheetId, 0, self::TRANSACTION_SHEET_NAME);
         $this->addTransactionsToSpreadsheet($user, $spreadsheet->spreadsheetId);
+
+        $this->createSheet($user, $spreadsheet->spreadsheetId, self::ACCOUNT_HISTORY_SHEET_NAME);
+        $this->addAccountHistoryDataToSpreadsheet($user, $spreadsheet->spreadsheetId);
 
         return $spreadsheet->spreadsheetId;
     }
@@ -76,15 +95,67 @@ class GoogleSheetsService
      */
     public function addTransactionsToSpreadsheet($user, $spreadsheetId)
     {
-        try{
-            $rows = $this->getTransactionsFromDatabase($user);
+        //dodanie transakcji do arkusza
+        $rows = $this->getTransactionsFromDatabase($user);
+        $range = self::TRANSACTION_SHEET_NAME . '!A:G';
 
-            $valueRange = new \Google_Service_Sheets_ValueRange();
-            $valueRange->setValues($rows);
-            $range = 'Sheet1'; // the service will detect the last row of this sheet
-            $options = ['valueInputOption' => 'USER_ENTERED'];
+        return $this->appendNewRows($rows, $spreadsheetId, $range);
+    }
 
-            $result = $this->service_Sheets->spreadsheets_values->append($spreadsheetId, $range, $valueRange, $options);
+    public function addAccountHistoryDataToSpreadsheet($user, $spreadsheetId)
+    {
+        $rows = $this->getAccountHistory($user);
+        $sheet = $this->entityManager->getRepository(GoogleSheet::class)->findBy(['user' => $user, 'sheetName' => self::ACCOUNT_HISTORY_SHEET_NAME]);
+
+        $range = self::ACCOUNT_HISTORY_SHEET_NAME . '!A:C';
+
+        return $this->appendNewRows($rows, $spreadsheetId, $range);
+    }
+
+    public function changeSheetTitle(string $spreadsheetId,string $sheetId, string $title){
+        try {
+            $body = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
+                [
+                'requests' => [
+                    'updateSheetProperties' => [
+                        'properties' => [
+                            'sheetId' => $sheetId,
+                            'title' => $title
+                            ],
+                        'fields' => 'title'
+                        ]
+                    ]
+                ]
+            );
+            return  $this->sheetsService->spreadsheets->batchUpdate($spreadsheetId,$body);
+        }
+        catch(Exception $e) {
+            echo 'Message: ' .$e->getMessage();
+        }
+    }
+
+    public function createSheet(User $user, string $spreadsheetId, string $title)
+    {
+        try {
+            $body = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest(array(
+                'requests' => array(
+                    'addSheet' => array(
+                        'properties' => array(
+                            'title' => $title
+                        )
+                    )
+                )
+            ));
+            $result = $this->sheetsService->spreadsheets->batchUpdate($spreadsheetId,$body);
+
+            $newGoogleSheet = new GoogleSheet();
+            $newGoogleSheet->setSpreadSheetId($spreadsheetId);
+            $newGoogleSheet->setSheetId($result->getReplies()[0]->getAddSheet()->getProperties()->getSheetId());
+            $newGoogleSheet->setSheetName($title);
+            $newGoogleSheet->setUser($user);
+
+            $this->entityManager->persist($newGoogleSheet);
+            $this->entityManager->flush();
 
             return $result;
         }
@@ -93,19 +164,65 @@ class GoogleSheetsService
         }
     }
 
+
+    public function appendNewRows(array $rows, string $spreadsheetId, string $range)
+    {
+        try {
+            $valueRange = new \Google_Service_Sheets_ValueRange();
+            $valueRange->setValues($rows);
+            $options = ['valueInputOption' => 'USER_ENTERED'];
+            return $this->sheetsService->spreadsheets_values->append($spreadsheetId, $range, $valueRange, $options);
+        } catch (Exception $e) {
+            echo 'Message: ' . $e->getMessage();
+        }
+    }
+
     /**
      * Pobiera dane z arkusza.
      * @param $spreadsheetId
      * @return array[]
      */
-    public function getTransactionsFromSheet($spreadsheetId){
-        if($spreadsheetId != ""){
-            $range = 'Sheet1';
-            $response = $this->service_Sheets->spreadsheets_values->get($spreadsheetId, $range);
+    public function getDataFromSpreadsheet(string $spreadsheetId, string $range)
+    {
+        if ($spreadsheetId != "") {
+            $response = $this->sheetsService->spreadsheets_values->get($spreadsheetId, $range);
             return $response->getValues();
-        }
-        else {
+        } else {
             return [];
+        }
+    }
+
+    public function getAccountHistory(User $user)
+    {
+        $accHistoryRepo = $this->entityManager->getRepository(AccountHistory::class);
+        $accountHistories = $user->getAccountHistories();
+
+        if ($accountHistories) {
+            $allAccountsData = [];
+            foreach ($accountHistories as $key => $accountHistory) {
+                $oneRow = [];
+                $oneRow[] = $accountHistory->getAccount()->getName();
+                $oneRow[] = $accountHistory->getDate()->format("Y-m-d H:i:s");
+                $oneRow[] = $accountHistory->getPreviousBalance();
+                $allAccountsData[] = $oneRow;
+            }
+
+            usort($allAccountsData, function ($a, $b) {
+                return strtotime($a[1]) - strtotime($b[1]);
+            });
+
+            $titles = [
+                "Nazwa konta",
+                "Data",
+                "Stan konta"
+            ];
+
+            array_unshift($allAccountsData, $titles);
+
+            return $allAccountsData;
+
+        } else {
+            return null;
         }
     }
 
@@ -119,7 +236,7 @@ class GoogleSheetsService
 
         $accounts = $accountRepository->findBy(["user" => $user]);
 
-        if(!$accounts){
+        if (!$accounts) {
             return [];
         }
         $dataToReturn = [];
@@ -155,7 +272,7 @@ class GoogleSheetsService
         }
 
         usort($dataToReturn, function ($a, $b) {
-            return strtotime($b[5]) - strtotime($a[5]);
+            return strtotime($a[5]) - strtotime($b[5]);
         });
 
         $titles = [

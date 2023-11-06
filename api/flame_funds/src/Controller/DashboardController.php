@@ -42,12 +42,12 @@ class DashboardController extends AbstractController
             ];
             $dataToReturn[] = $oneHistory;
         }
-
         usort($dataToReturn, function($a, $b) {
             return strtotime($a['x']) - strtotime($b['x']);
         });
 
-        return new JsonResponse($dataToReturn, 200);
+        $lastElements = array_slice($dataToReturn, -10);
+        return new JsonResponse($lastElements, 200);
     }
 
     #[Route('/endfinancialgoalcheck', name: 'get_endfinancialgoal_check', methods: 'POST')]

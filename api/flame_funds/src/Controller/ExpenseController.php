@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Service\TransactionsService;
+use App\Service\TransactionsServices\ExpenseService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -15,6 +17,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ExpenseController extends AbstractController
 {
+    private $em;
+    private ExpenseService $expenseService;
+
+    public function __construct(EntityManagerInterface $em, ExpenseService $transactionService)
+    {
+        $this->em = $em;
+        $this->expenseService = $transactionService;
+    }
 
     /**
      * @param Request $request
@@ -23,22 +33,19 @@ class ExpenseController extends AbstractController
      * @throws \Exception
      */
     #[Route('/expense/add-expense', name: 'add_expense', methods: 'POST')]
-    public function addExpense(Request $request, EntityManagerInterface $em){
-        $expenseService = new TransactionsService($em);
-
-        $user = UserService::getUserFromToken($request, $em);
+    public function addExpense(Request $request){
+        $user = UserService::getUserFromToken($request, $this->em);
         $accountId = $user->getCurrentAccount();
 
         $content = $request->getContent();
         $data = json_decode($content, true);
 
-        $date = new \DateTime($data['date']);
+        $data['date'] = new \DateTime($data['date']);
 
+        $this->expenseService->addTransaction($user, $data);
 
-        if ($expenseService->addExpense($accountId, $data['name'], $data['amount'], $date, $data['describe'], $data['category']['name'])){
-            return new JsonResponse("Success saved expense", 200);
-        } else {
-            return new JsonResponse("Server Error", 500);
-        }
+        return new JsonResponse("Success saved expense", 200);
     }
+
+
 }

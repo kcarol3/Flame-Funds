@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\CategoryServices;
 
-use App\Entity\ExpenseCategory;
 use App\Entity\IncomeCategory;
 use App\Entity\User;
-use App\Service\Interfaces\CategoryInterface;
+use App\Service\Interfaces;
 use Doctrine\ORM\EntityManagerInterface;
 
 class IncomeCategoryService implements Interfaces\CategoryInterface
@@ -57,7 +56,7 @@ class IncomeCategoryService implements Interfaces\CategoryInterface
         if($category->isIsDeleted()){
             return false;
         } else {
-            return ["name" => $category->getName(), "details" => $category->getDetails()];
+            return ["id" => $category->getId(), "name" => $category->getName(), "details" => $category->getDetails()];
         }
     }
 
@@ -70,6 +69,7 @@ class IncomeCategoryService implements Interfaces\CategoryInterface
         foreach ($categories as $key => $category){
             if(!$category->isIsDeleted()){
                 $oneRow = [];
+                $oneRow["id"] = $category->getId();
                 $oneRow["name"] = $category->getName();
                 $oneRow["details"] = $category->getDetails() ?? "";
                 $dataToReturn[] = $oneRow;

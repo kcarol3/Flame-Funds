@@ -6,7 +6,7 @@ import home from "@/views/Home.vue";
 import expense from "@/views/Expense.vue";
 import addAccountView from "@/views/AddAccountView.vue";
 import accountsView from "@/views/AccountsView.vue";
-import IncomeViews from "@/views/IncomeViews.vue";
+import IncomeViews from "@/views/Income.vue";
 import history from "@/views/History.vue";
 import sheetView from "@/views/SheetView.vue";
 import financialGoal from "@/views/FinancialGoal.vue";
@@ -18,6 +18,8 @@ import yearlyReport from "@/views/YearlyReport";
 import quarterReport from "@/views/QuarterReport";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
+import categories from "@/views/Categories.vue";
+import oneHistory from "@/components/History/oneHistory.vue";
 
 const routes = [
     {
@@ -27,9 +29,21 @@ const routes = [
         meta: { hideNavbar: true },
     },
     {
+      path: '/categories',
+      name: 'categories',
+      component: categories,
+      beforeEnter: authMiddleware,
+    },
+    {
         path: '/history',
         name: 'history',
         component: history,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/history/:type/:id',
+        name: 'history-details',
+        component: oneHistory,
         beforeEnter: authMiddleware,
     },
     {

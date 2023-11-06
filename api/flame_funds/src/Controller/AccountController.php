@@ -108,17 +108,22 @@ class AccountController extends AbstractController
      * Pobranie balansu z aktualnego konta użytkownika.
      * @param Request $request
      * @param EntityManagerInterface $em
-     * @return JsonResponse
+     * @return Response
      */
     #[Route('/account-current', name: 'get_current_account', methods: "GET")]
-    public function getCurrentBalance(Request $request, EntityManagerInterface $em): JsonResponse
+    public function getCurrentBalance(Request $request, EntityManagerInterface $em): Response
     {
         $user = UserService::getUserFromToken($request, $em);
 
         $accountService = new AccountService($em, $user);
         $dataToReturn = $accountService->getBalance();
 
-        return new JsonResponse($dataToReturn, 200);
+        if(isset($dataToReturn)){
+            return new JsonResponse($dataToReturn, 200);
+        }
+        else {
+            return new Response();
+        }
     }
 
     #[Route('/account/{id}', name: 'delete_account', methods: "DELETE")]
