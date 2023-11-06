@@ -7,8 +7,9 @@
       <div>
         <small-icon-header :title="`Kwartał ${index + 1}`"></small-icon-header>
       </div>
-      <div :id="`chart${index + 1}`" className="text-center">
-        <apexchart :options="quarterData.options" :series="quarterData.series" type="pie" width="80%" />
+      <div :id="`chart${index + 1}`" class="text-center">
+        <apexchart :options="quarterData.options" :series="quarterData.series" type="pie"
+                   :width="quarterData.options.chart.width"/>
       </div>
     </div>
   </div>
@@ -39,20 +40,24 @@ export default {
     async fetchQuarterlyData() {
       let token = sessionStorage.getItem("token");
       const config = {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {Authorization: `Bearer ${token}`},
       };
       try {
         const response = await axios.get("http://localhost:8741/api/quarterReport", config);
 
         const currentYear = new Date().getFullYear();
-        this.yearlyReportTitle = `Roczny raport finansowy ${currentYear}`;
+        this.yearlyReportTitle = `Kwartalny raport finansowy kategorii wydatków ${currentYear}`;
 
         // Przekształć dane z odpowiedzi na oczekiwany format
-        this.quarterlyData = Object.keys(response.data).map((quarterKey) => ({
+        this.quarterlyData = Object.keys(response.data).map((quarterKey, index) => ({
           series: Object.values(response.data[quarterKey]),
           options: {
+            chart: {
+              width: 450, // Zmniejsz szerokość wykresu
+            },
             labels: Object.keys(response.data[quarterKey]),
-            // Możesz dodać inne opcje konfiguracji wykresu tutaj
+            colors: ["#00b3e1", "#5da0d7", "#87bf54", "#f1969b", "#f08ab1", "#c78dbd", "#fee327",
+              "#fdca54", "#c0a0a0", "#f6a570", "#F8CEAB", "#B5D8D6",],
           },
         }));
       } catch (error) {
