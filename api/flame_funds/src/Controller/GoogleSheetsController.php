@@ -15,6 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class GoogleSheetsController extends AbstractController
 {
+    private $em;
+
+    private GoogleSheetsService $sheetsService;
+
+    public function __construct(EntityManagerInterface $em, GoogleSheetsService $sheetsService)
+    {
+        $this->em = $em;
+        $this->sheetsService = $sheetsService;
+    }
+
     /**
      * @param Request $request
      * @param EntityManagerInterface $em
@@ -22,18 +32,16 @@ class GoogleSheetsController extends AbstractController
      * @throws \Google\Exception
      */
     #[Route('/google/sheets', name: 'app_google_sheets', methods: 'POST')]
-    public function createSheet(Request $request, EntityManagerInterface $em): JsonResponse
+    public function createSheet(Request $request): JsonResponse
     {
         $content = $request->getContent();
         $data = json_decode($content, true);
 
-        $user = UserService::getUserFromToken($request, $em);
-
-        $googleSheet = new GoogleSheetsService($em);
+        $user = UserService::getUserFromToken($request, $this->em);
 
         $email = $data["defaultEmail"] ? $user->getEmail() : $data['email'];
 
-        $sheetID = $googleSheet->createSheet($user, $data["title"], $data["role"], $email);
+        $sheetID = $this->sheetsService->createSpreadsheet($user, $data["title"], $data["role"], $email);
 
         return new JsonResponse(['sheetId' => $sheetID], 200);
     }
@@ -59,15 +67,17 @@ class GoogleSheetsController extends AbstractController
      * @throws \Google\Exception
      */
     #[Route('/google/sheets', name: 'get_data_from_sheet', methods: 'GET')]
-    public function getDataFromSheet(Request $request, EntityManagerInterface $em):JsonResponse
+    public function getDataFromSheet(Request $request):JsonResponse
     {
-        $user = UserService::getUserFromToken($request, $em);
-
-        $googleSheet = new GoogleSheetsService($em);
-
+        $user = UserService::getUserFromToken($request, $this->em);
         $sheetId = $user->getSheetId() ?? "";
-        $transactions = $googleSheet->getTransactionsFromSheet($sheetId);
 
+//        $transactions = $this->sheetsService->getTransactionsFromSheet($sheetId);
+        $rows = $this->sheetsService->getAccountHistory($user);
+        //$transactions = $this->sheetsService->appendNewRows($rows, $user->getSheetId(), 'Sheet2');
+
+        $transactions = $this->sheetsService->createSheet($user->getSheetId(), "test");
+//        $transactions = $this->sheetsService->changeSheetTitle($sheetId, '0', GoogleSheetsService::TRANSACTION_SHEET_NAME);
         return new JsonResponse($transactions, 200);
     }
 }

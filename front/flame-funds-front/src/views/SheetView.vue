@@ -2,7 +2,7 @@
   <div>
       <icon-header title="Arkusze" icon="bi bi-file-earmark-spreadsheet-fill" class="mt-3"></icon-header>
     <div v-if="sheetsId===null" class="mt-4 sh" style="color: #606060;">
-      <header-component title="Stwórz arkusze" style="font-size: 24px"/>
+      <header-component title="Stwórz arkusz" style="font-size: 24px"/>
       <div class="form mx-auto">
         <span class="p-float-label mt-4 mb-4">
           <InputText id="title" class="w-100" v-model="title"/>
@@ -35,7 +35,7 @@
           <i class="bi bi-file-earmark-spreadsheet" style="color:green"></i>
         </a>
       </div>
-      <Card class="h-25 w-75 mx-auto">
+      <Card class="h-25 w-75 mx-auto mb-4">
         <template #title> Instrukcja</template>
         <template #content>
           <p>
@@ -45,7 +45,10 @@
         </template>
       </Card>
     </div>
-
+    <return-button link="/home"></return-button>
+    <div>
+      <progress-spinner v-if="isLoading" strokeWidth="6"/>
+    </div>
   </div>
 </template>
 <script>
@@ -53,17 +56,19 @@ import IconHeader from "@/components/IconHeader.vue";
 import axios from "axios";
 import HeaderComponent from "@/components/Header.vue";
 import {createToast} from "mosha-vue-toastify";
+import ReturnButton from "@/components/ReturnButton.vue";
 
 export default {
   name: "SheetView",
-  components: {HeaderComponent, IconHeader},
+  components: {ReturnButton, HeaderComponent, IconHeader},
   data() {
     return {
       sheetsId: null,
       title: '',
       isWriter: false,
       email:'',
-      defaultEmail: true
+      defaultEmail: true,
+      isLoading: false,
     }
   },
 
@@ -73,6 +78,7 @@ export default {
 
   methods: {
     async createSheet(){
+      this.isLoading = true;
       let token = sessionStorage.getItem("token");
       const config = {
         headers: {Authorization: `Bearer ${token}`}
@@ -90,6 +96,7 @@ export default {
         "role": role
       },config,)
           .then(response => {
+            this.isLoading = false;
             console.log(response);
             createToast({
                   title: 'Utworzono arkusz',
@@ -104,8 +111,10 @@ export default {
             this.sheetsId = response.data.sheetId
           })
           .catch(error => {
+            this.isLoading = false;
             console.log(error);
           })
+      this.isLoading = false;
     },
 
     async getSheetId() {
