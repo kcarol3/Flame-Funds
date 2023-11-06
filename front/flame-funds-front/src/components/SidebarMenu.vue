@@ -49,7 +49,17 @@ export default {
           link: "/categories"
         },
         {
-          name: "Moje cele finansowe",
+          name: "Raport roczny",
+          icon: "bi bi-pie-chart-fill",
+          link: "/yearlyReport"
+        },
+        {
+          name: "Raport kwartalny",
+          icon: "bi bi-pie-chart",
+          link: "/quarterReport"
+        },
+        {
+          name: "Cele finansowe",
           icon: "bi bi-piggy-bank-fill",
           link: "/myfinancialGoals"
         },
@@ -59,8 +69,13 @@ export default {
           link: "/financialGoal"
         },
         {
-          name: "Dodaj płatność cykliczną",
+          name: "Płatności cykliczne",
           icon: "bi bi-repeat",
+          link: "/myPeriodics"
+        },
+        {
+          name: "Dodaj płatność cykliczną",
+          icon: "bi bi-repeat-1",
           link: "/periodic"
         },
       ],

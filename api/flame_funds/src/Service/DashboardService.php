@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Account;
+use App\Entity\ExpenseCategory;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -56,14 +57,18 @@ class DashboardService
             }
         }
 
-        foreach ($periodics as $periodic){
-            if( !$periodic->getIsDeleted()){
-                $onePeriodic = [];
-                $onePeriodic["name"] = $periodic->getName();
-                $onePeriodic["amount"] = $periodic->getAmount();
-                $onePeriodic["details"] = $periodic->getDetails() ?? "";
-                $onePeriodic["type"] = "periodic";
-                $dataToReturn[$periodic->getDateStart()->format("Y-m-d")][] = $onePeriodic;
+        foreach ($periodics as $periodic) {
+            if (!$periodic->getIsDeleted()) {
+                foreach ($periodic->getPeriodicDetails() as $periodicDetail) {
+                    $onePeriodicDetail = [
+                        "name" => $periodic->getName(),
+                        "date" => $periodicDetail->getDate(),
+                        "amount" => $periodicDetail->getAmount(),
+                        "type" => "periodicDetail",
+                    ];
+
+                    $dataToReturn[$periodicDetail->getDate()->format("Y-m-d")][] = $onePeriodicDetail;
+                }
             }
         }
 
@@ -86,6 +91,7 @@ class DashboardService
         foreach ($financialGoals as $financialGoal){
             if( !$financialGoal->getIsDeleted()){
                 $oneFinancialGoal = [];
+                $oneFinancialGoal["id"] = $financialGoal->getId();
                 $oneFinancialGoal["name"] = $financialGoal->getName();
                 $oneFinancialGoal["currentAmount"] = $financialGoal->getCurrentAmount();
                 $oneFinancialGoal["details"] = $financialGoal->getDetails() ?? "";
@@ -98,4 +104,134 @@ class DashboardService
 
         return $dataToReturn;
     }
+
+    public static function getMyPeriodicsByDates(User $user, EntityManagerInterface $em): array{
+        $accountId = $user->getCurrentAccount();
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $periodics  = $account->getPeriodics();
+
+        $dataToReturn = [];
+
+
+        foreach ($periodics as $periodic){
+            if( !$periodic->getIsDeleted()){
+                $onePeriodic = [];
+                $onePeriodic["id"] = $periodic->getId();
+                $onePeriodic["name"] = $periodic->getName();
+                $onePeriodic["amount"] = $periodic->getAmount();
+                $onePeriodic["details"] = $periodic->getDetails() ?? "";
+                $onePeriodic["days"] = $periodic->getDays();
+                $onePeriodic["type"] = "periodic";
+                $dataToReturn[$periodic->getDateStart()->format("Y-m-d")][] = $onePeriodic;
+            }
+        }
+
+        krsort($dataToReturn);
+
+        return $dataToReturn;
+    }
+
+    public static function getMonthlyAmountsByYear(User $user, EntityManagerInterface $em, $year): array
+    {
+        $accountId = $user->getCurrentAccount();
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $expenses = $account->getExpenses();
+        $financialGoals = $account->getFinancialGoal();
+        $periodics = $account->getPeriodics();
+
+        $dataToReturn = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $dataToReturn[$month] = 0;
+        }
+
+        foreach ($expenses as $expense) {
+            if (!$expense->isIsDeleted() && $expense->getDate()->format('Y') == $year) {
+                $month = $expense->getDate()->format('n');
+                $dataToReturn[$month] += $expense->getAmount();
+            }
+        }
+
+        foreach ($financialGoals as $financialGoal) {
+            if (!$financialGoal->getIsDeleted() && $financialGoal->getDateStart()->format('Y') == $year) {
+                $month = $financialGoal->getDateStart()->format('n');
+                $dataToReturn[$month] += $financialGoal->getCurrentAmount();
+            }
+        }
+
+        foreach ($periodics as $periodic) {
+            if (!$periodic->getIsDeleted() && $periodic->getDateStart()->format('Y') == $year) {
+                foreach ($periodic->getPeriodicDetails() as $periodicDetail) {
+                    $month = $periodicDetail->getDate()->format('n');
+                    $dataToReturn[$month] += $periodicDetail->getAmount();
+                }
+            }
+        }
+
+        return array_values($dataToReturn);
+    }
+
+    public static function getMonthlyIncomesByYear(User $user, EntityManagerInterface $em, $year): array
+    {
+        $accountId = $user->getCurrentAccount();
+
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $incomes = $account->getIncomes();
+
+        $dataToReturn = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $dataToReturn[$month] = 0;
+        }
+
+        foreach ($incomes as $income) {
+            if (!$income->isIsDeleted() && $income->getDate()->format('Y') == $year) {
+                $month = $income->getDate()->format('n');
+                $dataToReturn[$month] += $income->getAmount();
+            }
+        }
+
+        return array_values($dataToReturn);
+    }
+
+    public static function getQuarterlyAmountsByCategory(User $user, EntityManagerInterface $em, $year): array
+    {
+        $accountId = $user->getCurrentAccount();
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $expenses = $account->getExpenses();
+        $categories = $em->getRepository(ExpenseCategory::class)->findAll(); // Załóżmy, że masz encję Category
+
+        $dataToReturn = [];
+
+        for ($quarter = 1; $quarter <= 4; $quarter++) {
+            $dataToReturn[$quarter] = [];
+
+            foreach ($categories as $category) {
+                $dataToReturn[$quarter][$category->getName()] = 0;
+            }
+        }
+
+        foreach ($expenses as $expense) {
+            if (!$expense->isIsDeleted() && $expense->getDate()->format('Y') == $year) {
+                $month = $expense->getDate()->format('n');
+                $quarter = ceil($month / 3);
+                $category = $expense->getCategory();
+                $dataToReturn[$quarter][$category->getName()] += $expense->getAmount();
+            }
+        }
+
+
+        return $dataToReturn;
+    }
+
 }

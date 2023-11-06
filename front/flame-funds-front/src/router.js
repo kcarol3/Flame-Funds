@@ -13,6 +13,9 @@ import financialGoal from "@/views/FinancialGoal.vue";
 import myFinancialGoals from "@/views/MyFinancialGoals.vue";
 import editFinancialGoal from "@/views/EditFinancialGoal.vue";
 import periodic from "@/views/Periodic";
+import myPeriodics from "@/views/MyPeriodics";
+import yearlyReport from "@/views/YearlyReport";
+import quarterReport from "@/views/QuarterReport";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
 import categories from "@/views/Categories.vue";
@@ -113,6 +116,24 @@ const routes = [
         path: '/periodic',
         name: 'periodic',
         component: periodic,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/myPeriodics',
+        name: 'myPeriodics',
+        component: myPeriodics,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/yearlyReport',
+        name: 'yearlyReport',
+        component: yearlyReport,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/quarterReport',
+        name: 'quarterReport',
+        component: quarterReport,
         beforeEnter: authMiddleware,
     },
 

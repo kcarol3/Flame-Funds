@@ -139,7 +139,7 @@ export default {
             .then(response => {
               createToast({
                     title: 'Dodano cel finansowy',
-                    description: 'Cele finansowe sprawdzisz w historii.'
+                    description: 'Cele finansowe sprawdzisz w "Moje cele finansowe".'
                   },
                   {
                     showIcon: 'true',

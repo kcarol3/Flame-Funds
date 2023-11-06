@@ -21,11 +21,11 @@
                     <div v-if="transaction.type == 'expense'">-{{ transaction.amount }}</div>
                     <div v-else>{{ transaction.amount }}</div>
                   </div>
+              <div class="numeric" :class=transaction.type>
+                <div v-if="transaction.type == 'financialGoal'">-{{ transaction.currentAmount }}</div>
+                <div v-else>{{ transaction.currentAmount }}</div>
 
-                  <div class="numeric" :class=transaction.type>
-                    <div v-if="transaction.type == 'financialGoal'">-{{ transaction.currentAmount }}</div>
-                    <div v-else>{{ transaction.currentAmount }}</div>
-                  </div>
+              </div>
 
                 </div>
               </div>
@@ -41,6 +41,7 @@
     <return-button link="/home" class="m-auto  mt-4"></return-button>
   </div>
 </template>
+
 <script>
 import IconHeader from "@/components/IconHeader.vue";
 import axios from "axios";
@@ -99,12 +100,12 @@ export default {
 }
 
 .expense {
-  color: #ff5a5a;
+  color: #ff0000;
   /* Dodaj inne style dla typu 'expense' */
 }
 
-.periodic {
-  color: #f19e9e;
+.periodicDetail {
+  color: #0000ff;
   /* Dodaj inne style dla typu 'periodic' */
 }
 

@@ -46,6 +46,14 @@ class Periodic
     #[ORM\JoinColumn(nullable: false)]
     private ?ExpenseCategory $category = null;
 
+    #[ORM\OneToMany(mappedBy: 'periodic', targetEntity: PeriodicDetails::class)]
+    private Collection $periodicDetails;
+
+    public function __construct()
+    {
+        $this->periodicDetails = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -154,6 +162,36 @@ class Periodic
     public function setCategory(?ExpenseCategory $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, PeriodicDetails>
+     */
+    public function getPeriodicDetails(): Collection
+    {
+        return $this->periodicDetails;
+    }
+
+    public function addPeriodicDetail(PeriodicDetails $periodicDetail): static
+    {
+        if (!$this->periodicDetails->contains($periodicDetail)) {
+            $this->periodicDetails->add($periodicDetail);
+            $periodicDetail->setPeriodic($this);
+        }
+
+        return $this;
+    }
+
+    public function removePeriodicDetail(PeriodicDetails $periodicDetail): static
+    {
+        if ($this->periodicDetails->removeElement($periodicDetail)) {
+            // set the owning side to null (unless already changed)
+            if ($periodicDetail->getPeriodic() === $this) {
+                $periodicDetail->setPeriodic(null);
+            }
+        }
 
         return $this;
     }
