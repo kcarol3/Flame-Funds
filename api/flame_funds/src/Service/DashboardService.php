@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Account;
+use App\Entity\ExpenseCategory;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -198,4 +199,37 @@ class DashboardService
 
         return array_values($dataToReturn);
     }
+
+    public static function getQuarterlyAmountsByCategory(User $user, EntityManagerInterface $em, $year): array
+    {
+        $accountId = $user->getCurrentAccount();
+        $accountRepository = $em->getRepository(Account::class);
+        $account = $accountRepository->find($accountId);
+
+        $expenses = $account->getExpenses();
+        $categories = $em->getRepository(ExpenseCategory::class)->findAll(); // Załóżmy, że masz encję Category
+
+        $dataToReturn = [];
+
+        for ($quarter = 1; $quarter <= 4; $quarter++) {
+            $dataToReturn[$quarter] = [];
+
+            foreach ($categories as $category) {
+                $dataToReturn[$quarter][$category->getName()] = 0;
+            }
+        }
+
+        foreach ($expenses as $expense) {
+            if (!$expense->isIsDeleted() && $expense->getDate()->format('Y') == $year) {
+                $month = $expense->getDate()->format('n');
+                $quarter = ceil($month / 3);
+                $category = $expense->getCategory();
+                $dataToReturn[$quarter][$category->getName()] += $expense->getAmount();
+            }
+        }
+
+
+        return $dataToReturn;
+    }
+
 }

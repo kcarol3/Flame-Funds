@@ -49,6 +49,11 @@ export default {
           link: "/yearlyReport"
         },
         {
+          name: "Raport kwartalny",
+          icon: "bi bi-pie-chart",
+          link: "/quarterReport"
+        },
+        {
           name: "Cele finansowe",
           icon: "bi bi-piggy-bank-fill",
           link: "/myfinancialGoals"
