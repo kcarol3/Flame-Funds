@@ -49,8 +49,8 @@ export default {
           "#fdca54", // Sierpień
           "#c0a0a0", // Wrzesień
           "#f6a570", // Październik
-          "#ffd27f", // Listopad
-          "#65bda5", // Grudzień
+          "#F8CEAB", // Listopad
+          "#B5D8D6", // Grudzień
         ],
         labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
         responsive: [{
@@ -80,8 +80,8 @@ export default {
           "#fdca54", // Sierpień
           "#c0a0a0", // Wrzesień
           "#f6a570", // Październik
-          "#ffd27f", // Listopad
-          "#65bda5", // Grudzień
+          "#F8CEAB", // Listopad
+          "#B5D8D6", // Grudzień
         ],
         labels: ['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'],
         responsive: [{
