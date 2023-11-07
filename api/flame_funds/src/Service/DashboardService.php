@@ -209,7 +209,7 @@ class DashboardService
         $account = $accountRepository->find($accountId);
 
         $expenses = $account->getExpenses();
-        $categories = $em->getRepository(ExpenseCategory::class)->findAll(); // Załóżmy, że masz encję Category
+        $categories = $em->getRepository(ExpenseCategory::class)->findAll();
 
         $dataToReturn = [];
 
