@@ -36,6 +36,18 @@ class Validation{
     }
 
     /**
+     * Sprawdza czy wprowadzona liczba jest większa od 0.
+     * @param number
+     * @returns {Validation}
+     */
+    differentFromZero(number) {
+        if (number <= 0) {
+            this.errors.push(`Minimalna wartość to 1`);
+        }
+        return this;
+    }
+
+    /**
      * Sprawdza czy tekst ma minimalną podaną ilość znaków.
      * @param length
      * @returns {Validation}

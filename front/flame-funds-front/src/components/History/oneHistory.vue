@@ -13,7 +13,7 @@
       <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
       <Dialog v-model:visible="delModalVisible" modal header="Potwierdzenie" :style="{ width: '350px' }">
         <h2>
-          Czy chcesz usunąć tą transakcję?
+          Czy chcesz usunąć tę transakcję?
         </h2>
         <template #footer>
           <Button label="anuluj" icon="bi bi-times" @click="delModalVisible = false" text/>

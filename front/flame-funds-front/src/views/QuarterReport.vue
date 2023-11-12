@@ -49,7 +49,7 @@ export default {
         this.yearlyReportTitle = `Kwartalny raport finansowy kategorii wydatków ${currentYear}`;
 
         // Przekształć dane z odpowiedzi na oczekiwany format
-        this.quarterlyData = Object.keys(response.data).map((quarterKey, index) => ({
+        this.quarterlyData = Object.keys(response.data).map((quarterKey) => ({
           series: Object.values(response.data[quarterKey]),
           options: {
             chart: {

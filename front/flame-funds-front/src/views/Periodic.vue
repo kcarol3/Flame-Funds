@@ -31,7 +31,7 @@
       <div class="mb-4">
         <label for="amount">Kwota płatności:</label>
         <span class="p-float-label mb-4">
-          <InputNumber id="amount" v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=0 :step="10" />
+          <InputNumber id="amount" v-model="amount" inputId="stacked-buttons" showButtons mode="currency" currency="PLN" :min=1 :step="10" />
         </span>
       </div>   
 
@@ -142,10 +142,10 @@ export default {
       const categoryValidator = new Validation(this.category, "category", "kategoria")
 
       nameValidator.required().specialChars().check();
-      amountValidator.required().check();
+      amountValidator.required().differentFromZero(this.amount).check();
       dateStartValidator.required().check();
       dateEndValidator.required().check();
-      daysValidator.required().check();
+      daysValidator.required().differentFromZero(this.days).check();
       textValidator.specialChars().check();
       categoryValidator.required().check();
 

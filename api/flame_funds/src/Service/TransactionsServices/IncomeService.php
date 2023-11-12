@@ -95,6 +95,7 @@ class IncomeService extends Transaction
     {
         $incomeRepository = $this->em->getRepository(Income::class);
         $income = $incomeRepository->find($id);
+        $income->setIsDeleted(true);
 
         $accHisRepo = $this->em->getRepository(AccountHistory::class);
         $accountHistories = $accHisRepo->findBy(['account' => $income->getAccount(), 'user' => $income->getAccount()->getUser()], ['date' => 'ASC']);

@@ -22,7 +22,7 @@
     </div>
     <Dialog v-model:visible="delModalVisible" modal header="Potwierdzenie" :style="{ width: '350px' }">
       <h2>
-        Czy chcesz usunąć tą płatność cykliczną?
+        Czy chcesz usunąć tę płatność cykliczną?
       </h2>
       <template #footer>
         <Button label="anuluj" icon="bi bi-times" @click="delModalVisible = false" text/>
