@@ -4,7 +4,10 @@ namespace App\Service;
 
 use App\Entity\Account;
 use App\Entity\AccountHistory;
+use App\Entity\FinancialGoal;
 use App\Entity\GoogleSheet;
+use App\Entity\Periodic;
+use App\Entity\PeriodicDetails;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -27,6 +30,9 @@ class GoogleSheetsService
 
     public const TRANSACTION_SHEET_NAME = "Wydatki i przychody";
     public const ACCOUNT_HISTORY_SHEET_NAME = "Historia konta";
+    public const PERIODIC_SHEET_NAME = "Transakcje cykliczne";
+    public const PERIODIC_DETAILS_SHEET_NAME = "Pojedyncze transakcje cykliczne";
+    public const FINANCIAL_GOALS_SHEET_NAME = "Cele finansowe";
 
 
     /**
@@ -85,8 +91,18 @@ class GoogleSheetsService
         $this->createSheet($user, $spreadsheet->spreadsheetId, self::ACCOUNT_HISTORY_SHEET_NAME);
         $this->addAccountHistoryDataToSpreadsheet($user, $spreadsheet->spreadsheetId);
 
+        $this->createSheet($user, $spreadsheet->spreadsheetId, self::FINANCIAL_GOALS_SHEET_NAME);
+        $this->appendNewRows($this->getFinancialGoalsFromDatabase($user), $spreadsheet->spreadsheetId, self::FINANCIAL_GOALS_SHEET_NAME);
+
+        $this->createSheet($user, $spreadsheet->spreadsheetId, self::PERIODIC_SHEET_NAME);
+        $this->appendNewRows($this->getPeriodicsFromDatabase($user), $spreadsheet->spreadsheetId, self::PERIODIC_SHEET_NAME);
+
+        $this->createSheet($user, $spreadsheet->spreadsheetId, self::PERIODIC_DETAILS_SHEET_NAME);
+        $this->appendNewRows($this->getPeriodicDetailsFromDatabase($user), $spreadsheet->spreadsheetId, self::PERIODIC_DETAILS_SHEET_NAME);
+
         return $spreadsheet->spreadsheetId;
     }
+
 
     /**
      * Dodaje dane transakcji z bazy danych do arkusza użytkownika.
@@ -112,25 +128,58 @@ class GoogleSheetsService
         return $this->appendNewRows($rows, $spreadsheetId, $range);
     }
 
-    public function changeSheetTitle(string $spreadsheetId,string $sheetId, string $title){
+    public function clearSpreadsheet(User $user, array $ranges)
+    {
+        try {
+            $body = new \Google_Service_Sheets_BatchClearValuesRequest([
+                    'ranges' => $ranges
+                ]
+
+            );
+            return $this->sheetsService->spreadsheets_values->batchClear($user->getSheetId(), $body);
+        } catch (Exception $e) {
+            echo 'Message: ' . $e->getMessage();
+        }
+    }
+
+    public function updateSpreadsheet(User $user){
+        $ranges = [
+          self::TRANSACTION_SHEET_NAME,
+          self::FINANCIAL_GOALS_SHEET_NAME,
+          self::ACCOUNT_HISTORY_SHEET_NAME,
+          self::PERIODIC_SHEET_NAME,
+          self::PERIODIC_DETAILS_SHEET_NAME
+        ];
+
+        $this->clearSpreadsheet($user, $ranges);
+
+        $spreadsheetId = $user->getSheetId();
+        $this->addTransactionsToSpreadsheet($user, $spreadsheetId);
+        $this->addAccountHistoryDataToSpreadsheet($user, $spreadsheetId);
+        $this->appendNewRows($this->getFinancialGoalsFromDatabase($user), $spreadsheetId, self::FINANCIAL_GOALS_SHEET_NAME);
+        $this->appendNewRows($this->getPeriodicsFromDatabase($user), $spreadsheetId, self::PERIODIC_SHEET_NAME);
+        $this->appendNewRows($this->getPeriodicDetailsFromDatabase($user), $spreadsheetId, self::PERIODIC_DETAILS_SHEET_NAME);
+    }
+
+    public function changeSheetTitle(string $spreadsheetId, string $sheetId, string $title)
+    {
         try {
             $body = new Google_Service_Sheets_BatchUpdateSpreadsheetRequest(
                 [
-                'requests' => [
-                    'updateSheetProperties' => [
-                        'properties' => [
-                            'sheetId' => $sheetId,
-                            'title' => $title
+                    'requests' => [
+                        'updateSheetProperties' => [
+                            'properties' => [
+                                'sheetId' => $sheetId,
+                                'title' => $title
                             ],
-                        'fields' => 'title'
+                            'fields' => 'title'
                         ]
                     ]
                 ]
             );
-            return  $this->sheetsService->spreadsheets->batchUpdate($spreadsheetId,$body);
-        }
-        catch(Exception $e) {
-            echo 'Message: ' .$e->getMessage();
+            return $this->sheetsService->spreadsheets->batchUpdate($spreadsheetId, $body);
+        } catch (Exception $e) {
+            echo 'Message: ' . $e->getMessage();
         }
     }
 
@@ -146,7 +195,7 @@ class GoogleSheetsService
                     )
                 )
             ));
-            $result = $this->sheetsService->spreadsheets->batchUpdate($spreadsheetId,$body);
+            $result = $this->sheetsService->spreadsheets->batchUpdate($spreadsheetId, $body);
 
             $newGoogleSheet = new GoogleSheet();
             $newGoogleSheet->setSpreadSheetId($spreadsheetId);
@@ -158,9 +207,8 @@ class GoogleSheetsService
             $this->entityManager->flush();
 
             return $result;
-        }
-        catch(Exception $e) {
-            echo 'Message: ' .$e->getMessage();
+        } catch (Exception $e) {
+            echo 'Message: ' . $e->getMessage();
         }
     }
 
@@ -191,6 +239,133 @@ class GoogleSheetsService
             return [];
         }
     }
+
+    public function getFinancialGoalsFromDatabase(User $user)
+    {
+        $accounts = $this->entityManager->getRepository(Account::class)->findBy(["user" => $user]);
+
+        if (!$accounts) {
+            return [];
+        }
+        $allData = [];
+
+        foreach ($accounts as $account) {
+            foreach ($account->getFinancialGoal() as $key => $financialGoal) {
+                $oneRow = [];
+                $oneRow[] = $financialGoal->getAccount()->getName();
+                $oneRow[] = $financialGoal->getName();
+                $oneRow[] = $financialGoal->getDateStart()->format("Y-m-d H:i:s");
+                $oneRow[] = $financialGoal->getDateEnd()->format("Y-m-d H:i:s");
+                $oneRow[] = $financialGoal->getGoalAmount();
+                $oneRow[] = $financialGoal->getCurrentAmount();
+                $oneRow[] = $financialGoal->getDetails();
+
+                $allData[] = $oneRow;
+            }
+        }
+
+        usort($allData, function ($a, $b) {
+            return strtotime($a[2]) - strtotime($b[2]);
+        });
+
+        $titles = [
+            "Nazwa konta",
+            "Nazwa",
+            "Data rozpoczęcia",
+            "Data zakończenia",
+            "Kwota celu",
+            "Aktualna kwota",
+            "Szczegóły"
+        ];
+        array_unshift($allData, $titles);
+
+        return $allData;
+    }
+
+    public function getPeriodicDetailsFromDatabase(User $user)
+    {
+        $accounts = $this->entityManager->getRepository(Account::class)->findBy(["user" => $user]);
+
+        if (!$accounts) {
+            return [];
+        }
+        $allData = [];
+
+        foreach ($accounts as $account) {
+            foreach ($account->getPeriodics() as $key => $periodic) {
+                foreach ($periodic->getPeriodicDetails() as $index => $periodicDetail) {
+                    $oneRow = [];
+                    $oneRow[] = $periodicDetail->getPeriodic()->getAccount()->getName();
+                    $oneRow[] = $periodicDetail->getPeriodic()->getName();
+                    $oneRow[] = $periodicDetail->getDate()->format("Y-m-d H:i:s");
+                    $oneRow[] = $periodicDetail->getAmount();
+
+                    $allData[] = $oneRow;
+                }
+            }
+        }
+
+        usort($allData, function ($a, $b) {
+            return strtotime($a[2]) - strtotime($b[2]);
+        });
+
+        $titles = [
+            "Nazwa konta",
+            "Nazwa",
+            "Data",
+            "Kwota"
+        ];
+
+        array_unshift($allData, $titles);
+
+        return $allData;
+    }
+
+    public function getPeriodicsFromDatabase(User $user)
+    {
+        $accounts = $this->entityManager->getRepository(Account::class)->findBy(["user" => $user]);
+
+        if (!$accounts) {
+            return [];
+        }
+        $allData = [];
+
+        foreach ($accounts as $account) {
+            foreach ($account->getPeriodics() as $key => $periodic) {
+                $oneRow = [];
+                $oneRow[] = $periodic->getAccount()->getName();
+                $oneRow[] = $periodic->getCategory()->getName();
+                $oneRow[] = $periodic->getName();
+                $oneRow[] = $periodic->getAmount();
+                $oneRow[] = $periodic->getDateStart()->format("Y-m-d H:i:s");
+                $oneRow[] = $periodic->getDateEnd()->format("Y-m-d H:i:s");
+                $oneRow[] = $periodic->getDays();
+                $oneRow[] = $periodic->getDetails();
+
+                $allData[] = $oneRow;
+            }
+        }
+
+        usort($allData, function ($a, $b) {
+            return strtotime($a[4]) - strtotime($b[4]);
+        });
+
+        $titles = [
+            "Nazwa konta",
+            "Nazwa kategorii",
+            "Nazwa",
+            "Kwota",
+            "Data rozpoczęcia",
+            "Data zakończenia",
+            "Liczba dni",
+            "Szczegóły"
+        ];
+
+        array_unshift($allData, $titles);
+
+        return $allData;
+    }
+
 
     public function getAccountHistory(User $user)
     {

@@ -75,9 +75,18 @@ class GoogleSheetsController extends AbstractController
 //        $transactions = $this->sheetsService->getTransactionsFromSheet($sheetId);
         $rows = $this->sheetsService->getAccountHistory($user);
         //$transactions = $this->sheetsService->appendNewRows($rows, $user->getSheetId(), 'Sheet2');
-
-        $transactions = $this->sheetsService->createSheet($user->getSheetId(), "test");
-//        $transactions = $this->sheetsService->changeSheetTitle($sheetId, '0', GoogleSheetsService::TRANSACTION_SHEET_NAME);
+//            $transactions = $this->sheetsService->crea
+        //$transactions = $this->sheetsService->createSheet($user->getSheetId(), "test");
+        $transactions = $this->sheetsService->getPeriodicsFromDatabase($user);
         return new JsonResponse($transactions, 200);
+    }
+
+    #[Route('/google/update', name: 'update_spreadsheet', methods: 'PUT')]
+    public function updateSheet(Request $request):JsonResponse{
+        $user = UserService::getUserFromToken($request, $this->em);
+
+        $this->sheetsService->updateSpreadsheet($user);
+
+        return new JsonResponse("Success update", 200);
     }
 }
