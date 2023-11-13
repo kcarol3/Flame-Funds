@@ -40,14 +40,16 @@
         <template #content>
           <p>
             Pamiętaj aby nie naruszać poprawności danych w arkuszu!
+            <br/>
             Możesz tworzyć dodatkowe zestawienia, jednak pierwotne dane nie powinny być zmieniane.
           </p>
         </template>
       </Card>
+      <button @click="this.updateSheet" class="button-primary mt-2 mb-3" style="font-size: 34px"><i class="bi bi-arrow-repeat"></i></button>
     </div>
     <return-button link="/home"></return-button>
     <div>
-      <progress-spinner v-if="isLoading" strokeWidth="6"/>
+      <progress-spinner  v-if="isLoading" strokeWidth="6"/>
     </div>
   </div>
 </template>
@@ -115,6 +117,33 @@ export default {
             console.log(error);
           })
       this.isLoading = false;
+    },
+
+    async updateSheet(){
+      this.isLoading = true;
+      let token = sessionStorage.getItem("token");
+      const config = {
+        headers: {Authorization: `Bearer ${token}`}
+      };
+      await axios.put("http://localhost:8741/api/google/update",{}, config)
+          .then(response => {
+            console.log(response)
+            this.isLoading = false;
+            createToast({
+                  title: 'Zaktualizowano dane w arkuszu',
+                  description: 'W Twoim arkuszu zostały zaktualizowane dane'
+                },
+                {
+                  showIcon: 'true',
+                  position: 'top-center',
+                  type: 'success',
+                  transition: 'zoom',
+                })
+          })
+          .catch(error => {
+            this.isLoading = false;
+            console.log(error)
+          })
     },
 
     async getSheetId() {
