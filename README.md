@@ -15,7 +15,7 @@ Harmonogram
 
 - 07.11.2023   Integracja projektu z Google Workspace (Google Sheets oraz Google Drive)
 
-- 14.11.2023	 Dodanie funkcjonalności celów finansowych oraz planów finansowych oraz transakcji cyklicznych.
+- 14.11.2023	 Dodanie funkcjonalności celów finansowych oraz płatności cyklicznych.
 
 - 21.11.2023	 Dodanie mechaniki raportowania
 
