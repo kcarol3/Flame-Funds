@@ -182,7 +182,6 @@ class DashboardService
         $accountId = $user->getCurrentAccount();
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->find($accountId);
-
         $incomes = $account->getIncomes();
 
         $dataToReturn = [];
