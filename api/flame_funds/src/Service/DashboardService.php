@@ -180,7 +180,6 @@ class DashboardService
     public static function getMonthlyIncomesByYear(User $user, EntityManagerInterface $em, $year): array
     {
         $accountId = $user->getCurrentAccount();
-
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->find($accountId);
 
@@ -198,7 +197,6 @@ class DashboardService
                 $dataToReturn[$month] += $income->getAmount();
             }
         }
-
         return array_values($dataToReturn);
     }
 
