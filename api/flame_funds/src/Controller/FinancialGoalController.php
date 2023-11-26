@@ -177,7 +177,7 @@ class FinancialGoalController extends AbstractController
     }
 
     #[Route('/financialGoal/addCurrentAmount/{id}', name: 'add_current_amount', methods: "PUT")]
-    public function addCurrentAmount(Request $request, EntityManagerInterface $em, $id): JsonResponse|Response
+    public function addCurrentAmount(Request $request, EntityManagerInterface $em, $id): JsonResponse
     {
         $user = UserService::getUserFromToken($request, $em);
         $accountId = $user->getCurrentAccount();
@@ -197,7 +197,7 @@ class FinancialGoalController extends AbstractController
         $account->setBalance($account->getBalance() - $jsonData["currentAmount"]);
         $em->flush();
 
-        return new Response("Success add", 200);
+        return new JsonResponse("Success add", 200);
     }
 
     #[Route('/myfinancialgoals', name: 'get_myfinancialgoals_data', methods: 'GET')]
