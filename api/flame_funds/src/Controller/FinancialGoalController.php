@@ -7,6 +7,7 @@ use App\Entity\Account;
 use App\Entity\AccountHistory;
 use App\Entity\User;
 use App\Service\AccountService;
+use App\Service\DashboardService;
 use App\Service\TransactionsService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -152,11 +153,10 @@ class FinancialGoalController extends AbstractController
      * @throws \Exception
      */
     #[Route('/financialGoal/delete-financialGoal/{id}', name: 'delete_financialGoal', methods: 'DELETE')]
-    public function deleteFinancialGoal(Request $request, EntityManagerInterface $em, int $id)
+    public function deleteFinancialGoal(Request $request, EntityManagerInterface $em, int $id) : JsonResponse
     {
         $user = UserService::getUserFromToken($request, $em);
         $accountId = $user->getCurrentAccount();
-
         $financialGoalRepository = $em->getRepository(FinancialGoal::class);
         $financialGoal = $financialGoalRepository->findOneBy(["id" => $id]);
 
@@ -165,12 +165,9 @@ class FinancialGoalController extends AbstractController
         }
 
         $financialGoal->setIsDeleted(true);
-
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->findOneBy(["id" => $accountId]);
-
         $account->setBalance($account->getBalance() + $financialGoal->getCurrentAmount());
-
         $em->flush();
 
         return new JsonResponse("Cel finansowy został usunięty", 200);
