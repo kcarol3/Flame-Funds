@@ -77,16 +77,13 @@ class DashboardService
         return $dataToReturn;
     }
 
-    public static function getMyFinancialGoalsByDates(User $user, EntityManagerInterface $em): array{
+    public static function getMyFinancialGoalsByDates(User $user, EntityManagerInterface $em): array
+    {
         $accountId = $user->getCurrentAccount();
-
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->find($accountId);
-
         $financialGoals  = $account->getFinancialGoal();
-
         $dataToReturn = [];
-
 
         foreach ($financialGoals as $financialGoal){
             if( !$financialGoal->getIsDeleted()){
@@ -99,9 +96,7 @@ class DashboardService
                 $dataToReturn[$financialGoal->getDateStart()->format("Y-m-d")][] = $oneFinancialGoal;
             }
         }
-
         krsort($dataToReturn);
-
         return $dataToReturn;
     }
 
