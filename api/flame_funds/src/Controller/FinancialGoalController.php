@@ -157,7 +157,6 @@ class FinancialGoalController extends AbstractController
         $user = UserService::getUserFromToken($request, $em);
         $accountId = $user->getCurrentAccount();
 
-        // Znajdź cel finansowy na podstawie przekazanego identyfikatora
         $financialGoalRepository = $em->getRepository(FinancialGoal::class);
         $financialGoal = $financialGoalRepository->findOneBy(["id" => $id]);
 
@@ -165,7 +164,6 @@ class FinancialGoalController extends AbstractController
             return new JsonResponse("Cel finansowy nie został znaleziony", 404);
         }
 
-        // Oznacz cel finansowy jako usunięty (ustaw flagę isDeleted na true)
         $financialGoal->setIsDeleted(true);
 
         $accountRepository = $em->getRepository(Account::class);
@@ -173,20 +171,18 @@ class FinancialGoalController extends AbstractController
 
         $account->setBalance($account->getBalance() + $financialGoal->getCurrentAmount());
 
-        // Zapisz zmiany w bazie danych
         $em->flush();
 
         return new JsonResponse("Cel finansowy został usunięty", 200);
     }
 
     #[Route('/financialGoal/addCurrentAmount/{id}', name: 'add_current_amount', methods: "PUT")]
-    public function addCurrentAmount(Request $request, EntityManagerInterface $em, $id)
+    public function addCurrentAmount(Request $request, EntityManagerInterface $em, $id): JsonResponse|Response
     {
         $user = UserService::getUserFromToken($request, $em);
         $accountId = $user->getCurrentAccount();
         $content = $request->getContent();
         $jsonData = json_decode($content, true);
-
         $financialGoalRepository = $em->getRepository(FinancialGoal::class);
         $financialGoal = $financialGoalRepository->find($id);
 
@@ -196,12 +192,9 @@ class FinancialGoalController extends AbstractController
 
         $beforeAddAmount = $financialGoal->getCurrentAmount();
         $financialGoal->setCurrentAmount($beforeAddAmount + $jsonData["currentAmount"]);
-
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->findOneBy(["id" => $accountId]);
-
         $account->setBalance($account->getBalance() - $jsonData["currentAmount"]);
-
         $em->flush();
 
         return new Response("Success add", 200);
