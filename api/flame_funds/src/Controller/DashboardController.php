@@ -165,7 +165,7 @@ class DashboardController extends AbstractController
 
 
     #[Route('/generatePdf', name: 'generate_pdf', methods: 'GET')]
-    public function generatePdf(Request $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): Response
+    public function generatePdf(Request $request, EntityManagerInterface $em): Response
     {
         $user = UserService::getUserFromToken($request, $em);
         $currentYear = date('Y');
@@ -174,7 +174,6 @@ class DashboardController extends AbstractController
         $dataFinancialGoals = DashboardService::getMyFinancialGoalsByDates($user, $em);
 
         $header = "Roczne podsumowanie finansowe $currentYear";
-
         $html = $this->generateHtml($header, $data, $dataIncomes, $dataFinancialGoals);
 
         $dompdf = new Dompdf();
