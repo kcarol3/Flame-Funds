@@ -178,7 +178,7 @@ class DashboardController extends AbstractController
             'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
         ];
 
-        $header = "Roczne posumowanie finansowe $currentYear";
+        $header = "Roczne podsumowanie finansowe $currentYear";
 
         //expense
         $resultExp = DashboardService::findMaxAndMinMonth($data, $months);
@@ -215,7 +215,7 @@ class DashboardController extends AbstractController
         $realizedFinancialGoalsTable .= '<tr><th>Cel</th><th>Zebrana kwota</th></tr>';
 
         foreach ($realizedFinancialGoals as $realizedGoal) {
-            $realizedFinancialGoalsTable .= "<tr><td>{$realizedGoal['name']}</td><td>{$realizedGoal['currentAmount']} zl</td></tr>";
+            $realizedFinancialGoalsTable .= "<tr><td>{$realizedGoal['name']}</td><td>{$realizedGoal['currentAmount']} zł</td></tr>";
         }
 
         $realizedFinancialGoalsTable .= '</table>';
@@ -264,11 +264,11 @@ class DashboardController extends AbstractController
                 <th>Wydano</th>
             </tr>
             <tr>
-                <td>$earnedYear zl</td>
-                <td>$spentYear zl</td>
+                <td>$earnedYear zł</td>
+                <td>$spentYear zł</td>
             </tr>
         </table>
-        <h4>Graniczne kwoty:</h4>
+        <h4>Kwoty graniczne:</h4>
         <table>
             <tr>
                 <th></th>

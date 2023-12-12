@@ -246,4 +246,28 @@ class DashboardService
             'min' => ['month' => $monthWithMinAmount, 'amount' => $minAmount],
         ];
     }
+
+    public static function getEarnedAmountYear(array $data): float
+    {
+        $amount = 0.0;
+
+        foreach($data as $month)
+        {
+            $amount += $month;
+        }
+
+        return $amount;
+    }
+
+    public static function getSpentAmountYear(array $data): float
+    {
+        $amount = 0.0;
+
+        foreach($data as $month)
+        {
+            $amount += $month;
+        }
+
+        return $amount;
+    }
 }
