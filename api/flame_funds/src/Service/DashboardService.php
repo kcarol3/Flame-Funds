@@ -250,12 +250,10 @@ class DashboardService
     public static function getAmountYear(array $data): float
     {
         $amount = 0.0;
-
         foreach($data as $month)
         {
             $amount += $month;
         }
-
         return $amount;
     }
 
