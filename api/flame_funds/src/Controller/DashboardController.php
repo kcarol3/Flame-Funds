@@ -271,12 +271,10 @@ class DashboardController extends AbstractController
     private function getRealizedFinancialGoals($dataFinancialGoals): string
     {
         $realizedFinancialGoals = [];
-
         foreach ($dataFinancialGoals as $financialGoals) {
             foreach ($financialGoals as $financialGoal) {
                 $currentAmount = floatval($financialGoal['currentAmount']);
                 $goalAmount = floatval($financialGoal['goalAmount']);
-
                 if ($currentAmount >= $goalAmount) {
                     $realizedFinancialGoals[] = [
                         'name' => $financialGoal['name'],
@@ -294,7 +292,6 @@ class DashboardController extends AbstractController
         }
 
         $realizedFinancialGoalsTable .= '</table>';
-
         return $realizedFinancialGoalsTable;
     }
 
