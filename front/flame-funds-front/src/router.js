@@ -16,6 +16,7 @@ import periodic from "@/views/Periodic";
 import myPeriodics from "@/views/MyPeriodics";
 import yearlyReport from "@/views/YearlyReport";
 import quarterReport from "@/views/QuarterReport";
+import generatePdf from "@/views/PdfGenerator";
 import {createToast, withProps} from "mosha-vue-toastify";
 import RefreshTokenDialog from "@/components/RefreshTokenDialog.vue";
 import categories from "@/views/Categories.vue";
@@ -134,6 +135,12 @@ const routes = [
         path: '/quarterReport',
         name: 'quarterReport',
         component: quarterReport,
+        beforeEnter: authMiddleware,
+    },
+    {
+        path: '/generatePdf',
+        name: 'generatePdf',
+        component: generatePdf,
         beforeEnter: authMiddleware,
     },
 
