@@ -194,8 +194,8 @@ class DashboardController extends AbstractController
             'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
         ];
 
-        $earnedYear = DashboardService::getEarnedAmountYear($dataIncomes);
-        $spentYear = DashboardService::getSpentAmountYear($data);
+        $earnedYear = DashboardService::getAmountYear($dataIncomes);
+        $spentYear = DashboardService::getAmountYear($data);
         $maxResultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months)['max'];
         $minResultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months)['min'];
         $maxResultExp = DashboardService::findMaxAndMinMonth($data, $months)['max'];
