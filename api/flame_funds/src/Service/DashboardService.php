@@ -199,20 +199,16 @@ class DashboardService
         $accountId = $user->getCurrentAccount();
         $accountRepository = $em->getRepository(Account::class);
         $account = $accountRepository->find($accountId);
-
         $expenses = $account->getExpenses();
         $categories = $em->getRepository(ExpenseCategory::class)->findAll();
-
         $dataToReturn = [];
 
         for ($quarter = 1; $quarter <= 4; $quarter++) {
             $dataToReturn[$quarter] = [];
-
             foreach ($categories as $category) {
                 $dataToReturn[$quarter][$category->getName()] = 0;
             }
         }
-
         foreach ($expenses as $expense) {
             if (!$expense->isIsDeleted() && $expense->getDate()->format('Y') == $year) {
                 $month = $expense->getDate()->format('n');
@@ -221,8 +217,6 @@ class DashboardService
                 $dataToReturn[$quarter][$category->getName()] += $expense->getAmount();
             }
         }
-
-
         return $dataToReturn;
     }
 
