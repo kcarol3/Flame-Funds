@@ -45,6 +45,11 @@ const items = ref([
     to: '/sheets'
   },
   {
+    label: 'Roczne posumowanie',
+    icon: 'bi bi-calendar2-heart',
+    to: '/generatePdf'
+  },
+  {
     label: 'Wyloguj',
     icon: 'bi bi-box-arrow-right',
     command: () => {
