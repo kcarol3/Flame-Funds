@@ -224,7 +224,7 @@ class DashboardService
     {
         $maxAmount = 0;
         $monthWithMaxAmount = '';
-        $minAmount = PHP_INT_MAX; // Ustawiamy na maksymalną wartość dla integera, aby znaleźć rzeczywiste minimum.
+        $minAmount = PHP_INT_MAX;
         $monthWithMinAmount = '';
 
         foreach ($data as $index => $amount) {
@@ -247,7 +247,7 @@ class DashboardService
         ];
     }
 
-    public static function getEarnedAmountYear(array $data): float
+    public static function getAmountYear(array $data): float
     {
         $amount = 0.0;
 
@@ -259,15 +259,4 @@ class DashboardService
         return $amount;
     }
 
-    public static function getSpentAmountYear(array $data): float
-    {
-        $amount = 0.0;
-
-        foreach($data as $month)
-        {
-            $amount += $month;
-        }
-
-        return $amount;
-    }
 }
