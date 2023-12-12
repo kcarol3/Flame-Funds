@@ -11,11 +11,15 @@ use App\Entity\PeriodicDetails;
 use App\Service\DashboardService;
 use App\Service\UserService;
 use Doctrine\ORM\EntityManagerInterface;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+
 
 /**
  * @Route("/api", name="api_")
@@ -75,13 +79,11 @@ class DashboardController extends AbstractController
             $interval = new \DateInterval("P" . $periodic->getDays() . "D");
             $missingDate = clone $periodic->getDateStart();
             $missingDate->setTime(0, 0, 0);
-
             while ($missingDate <= $today && $missingDate <= $periodic->getDateEnd()) {
                 $existingDetails = $periodicDetailsRepository->findOneBy([
                     "date" => $missingDate,
                     "periodic" => $periodic->getId(),
                 ]);
-
                 if (!$existingDetails) {
                     $em->beginTransaction();
                     try {
@@ -89,13 +91,10 @@ class DashboardController extends AbstractController
                         $periodicDetails->setDate($missingDate);
                         $periodicDetails->setAmount($periodic->getAmount());
                         $periodicDetails->setPeriodic($periodic);
-
                         $em->persist($periodicDetails);
                         $em->flush();
                         $em->commit();
                         $account->setBalance($account->getBalance() - $periodic->getAmount());
-
-
                         $dataToReturn[] = $periodicDetails;
                     } catch (\Exception $e) {
                         $em->rollback();
@@ -163,4 +162,128 @@ class DashboardController extends AbstractController
         $data = DashboardService::getQuarterlyAmountsByCategory($user, $em, $currentYear);
         return new JsonResponse($data, 200);
     }
+
+
+    #[Route('/generatePdf', name: 'generate_pdf', methods: 'GET')]
+    public function generatePdf(Request $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator)
+    {
+        $user = UserService::getUserFromToken($request, $em);
+        $currentYear = date('Y');
+        $data = DashboardService::getMonthlyAmountsByYear($user, $em, $currentYear);
+        $dataIncomes = DashboardService::getMonthlyIncomesByYear($user, $em, $currentYear);
+        $dataFinancialGoals = DashboardService::getMyFinancialGoalsByDates($user, $em);
+
+        $months = [
+            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
+        ];
+
+        $header = "Roczne posumowanie finansowe $currentYear";
+
+        //expense
+        $resultExp = DashboardService::findMaxAndMinMonth($data, $months);
+        $maxResultExp = $resultExp['max'];
+        $minResultExp = $resultExp['min'];
+
+        //income
+        $resultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months);
+        $maxResultInc = $resultInc['max'];
+        $minResultInc = $resultInc['min'];
+
+        //financialgoal
+        $realizedFinancialGoals = [];
+
+        foreach ($dataFinancialGoals as $financialGoals) {
+            foreach ($financialGoals as $financialGoal) {
+                $currentAmount = floatval($financialGoal['currentAmount']);
+                $goalAmount = floatval($financialGoal['goalAmount']);
+
+                if ($currentAmount >= $goalAmount) {
+                    $realizedFinancialGoals[] = [
+                        'name' => $financialGoal['name'],
+                        'goalAmount' => $goalAmount,
+                        'currentAmount' => $currentAmount,
+                    ];
+                }
+            }
+        }
+
+        $realizedFinancialGoalsText = '';
+
+        foreach ($realizedFinancialGoals as $realizedGoal) {
+            $realizedFinancialGoalsText .= "Nazwa celu: {$realizedGoal['name']}, Kwota Docelowa: {$realizedGoal['goalAmount']} zł, Kwota Zrealizowana: {$realizedGoal['currentAmount']} zł\n";
+        }
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isPhpEnabled', true);
+
+        $dompdf = new Dompdf($options);
+
+        $html = "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <title>PDF Generator</title>
+        <style>
+            body {
+                font-family: 'liberation-sans', sans-serif;
+                font-size: 26px; 
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            th, td {
+                border: 1px solid black;
+                padding: 8px;
+                text-align: left;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <h1>$header</h1>
+        </header>
+        <br>
+        <table>
+            <tr>
+                <th></th>
+                <th>MAX</th>
+                <th>MIN</th>
+            </tr>
+            <tr>
+                <td>Przychód</td>
+                <td>{$maxResultInc['month']}: {$maxResultInc['amount']} zl </td>
+                <td>{$minResultInc['month']}: {$minResultInc['amount']} zl </td>
+            </tr>
+            <tr>
+                <td>Wydatek</td>
+                <td>{$maxResultExp['month']}: {$maxResultExp['amount']} zl</td>
+                <td>{$minResultExp['month']}: {$minResultExp['amount']} zl</td>
+            </tr>
+        </table>
+        <br>
+        <p>Zrealizowane cele fiannsowe:</p>
+        <p>$realizedFinancialGoalsText</p>
+    </body>
+    </html>
+";
+
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $response = new Response($dompdf->output());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="raport.pdf"');
+        return $response;
+    }
+
+
 }

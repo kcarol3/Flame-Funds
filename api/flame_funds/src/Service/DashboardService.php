@@ -91,6 +91,7 @@ class DashboardService
                 $oneFinancialGoal["id"] = $financialGoal->getId();
                 $oneFinancialGoal["name"] = $financialGoal->getName();
                 $oneFinancialGoal["currentAmount"] = $financialGoal->getCurrentAmount();
+                $oneFinancialGoal["goalAmount"] = $financialGoal->getGoalAmount();
                 $oneFinancialGoal["details"] = $financialGoal->getDetails() ?? "";
                 $oneFinancialGoal["type"] = "financialGoal";
                 $dataToReturn[$financialGoal->getDateStart()->format("Y-m-d")][] = $oneFinancialGoal;
@@ -219,5 +220,30 @@ class DashboardService
         }
         return $dataToReturn;
     }
+    public static function findMaxAndMinMonth(array $data, array $months): array
+    {
+        $maxAmount = 0;
+        $monthWithMaxAmount = '';
+        $minAmount = PHP_INT_MAX; // Ustawiamy na maksymalną wartość dla integera, aby znaleźć rzeczywiste minimum.
+        $monthWithMinAmount = '';
 
+        foreach ($data as $index => $amount) {
+            $month = $months[$index];
+
+            if ($amount > $maxAmount) {
+                $maxAmount = $amount;
+                $monthWithMaxAmount = $month;
+            }
+
+            if ($amount < $minAmount) {
+                $minAmount = $amount;
+                $monthWithMinAmount = $month;
+            }
+        }
+
+        return [
+            'max' => ['month' => $monthWithMaxAmount, 'amount' => $maxAmount],
+            'min' => ['month' => $monthWithMinAmount, 'amount' => $minAmount],
+        ];
+    }
 }
