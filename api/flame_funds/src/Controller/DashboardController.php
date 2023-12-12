@@ -184,11 +184,14 @@ class DashboardController extends AbstractController
         $resultExp = DashboardService::findMaxAndMinMonth($data, $months);
         $maxResultExp = $resultExp['max'];
         $minResultExp = $resultExp['min'];
+        $spentYear = DashboardService::getSpentAmountYear($data);
+
 
         //income
         $resultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months);
         $maxResultInc = $resultInc['max'];
         $minResultInc = $resultInc['min'];
+        $earnedYear = DashboardService::getEarnedAmountYear($dataIncomes);
 
         //financialgoal
         $realizedFinancialGoals = [];
@@ -208,11 +211,15 @@ class DashboardController extends AbstractController
             }
         }
 
-        $realizedFinancialGoalsText = '';
+        $realizedFinancialGoalsTable = '<table>';
+        $realizedFinancialGoalsTable .= '<tr><th>Cel</th><th>Zebrana kwota</th></tr>';
 
         foreach ($realizedFinancialGoals as $realizedGoal) {
-            $realizedFinancialGoalsText .= "Nazwa celu: {$realizedGoal['name']}, Kwota Docelowa: {$realizedGoal['goalAmount']} zł, Kwota Zrealizowana: {$realizedGoal['currentAmount']} zł\n";
+            $realizedFinancialGoalsTable .= "<tr><td>{$realizedGoal['name']}</td><td>{$realizedGoal['currentAmount']} zl</td></tr>";
         }
+
+        $realizedFinancialGoalsTable .= '</table>';
+
 
         $options = new Options();
         $options->set('isHtml5ParserEnabled', true);
@@ -253,24 +260,34 @@ class DashboardController extends AbstractController
         <br>
         <table>
             <tr>
+                <th>Zarobiono</th>
+                <th>Wydano</th>
+            </tr>
+            <tr>
+                <td>$earnedYear zl</td>
+                <td>$spentYear zl</td>
+            </tr>
+        </table>
+        <h4>Graniczne kwoty:</h4>
+        <table>
+            <tr>
                 <th></th>
                 <th>MAX</th>
                 <th>MIN</th>
             </tr>
             <tr>
                 <td>Przychód</td>
-                <td>{$maxResultInc['month']}: {$maxResultInc['amount']} zl </td>
-                <td>{$minResultInc['month']}: {$minResultInc['amount']} zl </td>
+                <td>{$maxResultInc['month']}: {$maxResultInc['amount']} zł </td>
+                <td>{$minResultInc['month']}: {$minResultInc['amount']} zł </td>
             </tr>
             <tr>
                 <td>Wydatek</td>
-                <td>{$maxResultExp['month']}: {$maxResultExp['amount']} zl</td>
-                <td>{$minResultExp['month']}: {$minResultExp['amount']} zl</td>
+                <td>{$maxResultExp['month']}: {$maxResultExp['amount']} zł</td>
+                <td>{$minResultExp['month']}: {$minResultExp['amount']} zł</td>
             </tr>
         </table>
-        <br>
-        <p>Zrealizowane cele fiannsowe:</p>
-        <p>$realizedFinancialGoalsText</p>
+        <h4>Zrealizowane cele finansowe:</h4>
+        $realizedFinancialGoalsTable
     </body>
     </html>
 ";
