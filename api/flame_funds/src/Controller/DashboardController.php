@@ -165,7 +165,7 @@ class DashboardController extends AbstractController
 
 
     #[Route('/generatePdf', name: 'generate_pdf', methods: 'GET')]
-    public function generatePdf(Request $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator)
+    public function generatePdf(Request $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator): Response
     {
         $user = UserService::getUserFromToken($request, $em);
         $currentYear = date('Y');
@@ -173,61 +173,37 @@ class DashboardController extends AbstractController
         $dataIncomes = DashboardService::getMonthlyIncomesByYear($user, $em, $currentYear);
         $dataFinancialGoals = DashboardService::getMyFinancialGoalsByDates($user, $em);
 
+        $header = "Roczne podsumowanie finansowe $currentYear";
+
+        $html = $this->generateHtml($header, $data, $dataIncomes, $dataFinancialGoals);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $response = new Response($dompdf->output());
+        $response->headers->set('Content-Type', 'application/pdf');
+        $response->headers->set('Content-Disposition', 'inline; filename="raport.pdf"');
+        return $response;
+    }
+
+    private function generateHtml($header, $data, $dataIncomes, $dataFinancialGoals): string
+    {
         $months = [
             'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
             'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
         ];
 
-        $header = "Roczne podsumowanie finansowe $currentYear";
-
-        //expense
-        $resultExp = DashboardService::findMaxAndMinMonth($data, $months);
-        $maxResultExp = $resultExp['max'];
-        $minResultExp = $resultExp['min'];
-        $spentYear = DashboardService::getSpentAmountYear($data);
-
-
-        //income
-        $resultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months);
-        $maxResultInc = $resultInc['max'];
-        $minResultInc = $resultInc['min'];
         $earnedYear = DashboardService::getEarnedAmountYear($dataIncomes);
+        $spentYear = DashboardService::getSpentAmountYear($data);
+        $maxResultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months)['max'];
+        $minResultInc = DashboardService::findMaxAndMinMonth($dataIncomes, $months)['min'];
+        $maxResultExp = DashboardService::findMaxAndMinMonth($data, $months)['max'];
+        $minResultExp = DashboardService::findMaxAndMinMonth($data, $months)['min'];
+        $realizedFinancialGoals = $this->getRealizedFinancialGoals($dataFinancialGoals);
 
-        //financialgoal
-        $realizedFinancialGoals = [];
-
-        foreach ($dataFinancialGoals as $financialGoals) {
-            foreach ($financialGoals as $financialGoal) {
-                $currentAmount = floatval($financialGoal['currentAmount']);
-                $goalAmount = floatval($financialGoal['goalAmount']);
-
-                if ($currentAmount >= $goalAmount) {
-                    $realizedFinancialGoals[] = [
-                        'name' => $financialGoal['name'],
-                        'goalAmount' => $goalAmount,
-                        'currentAmount' => $currentAmount,
-                    ];
-                }
-            }
-        }
-
-        $realizedFinancialGoalsTable = '<table>';
-        $realizedFinancialGoalsTable .= '<tr><th>Cel</th><th>Zebrana kwota</th></tr>';
-
-        foreach ($realizedFinancialGoals as $realizedGoal) {
-            $realizedFinancialGoalsTable .= "<tr><td>{$realizedGoal['name']}</td><td>{$realizedGoal['currentAmount']} zł</td></tr>";
-        }
-
-        $realizedFinancialGoalsTable .= '</table>';
-
-
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isPhpEnabled', true);
-
-        $dompdf = new Dompdf($options);
-
-        $html = "
+        return <<<HTML
     <!DOCTYPE html>
     <html>
     <head>
@@ -236,7 +212,7 @@ class DashboardController extends AbstractController
         <style>
             body {
                 font-family: 'liberation-sans', sans-serif;
-                font-size: 26px; 
+                font-size: 26px;
             }
             table {
                 width: 100%;
@@ -287,20 +263,42 @@ class DashboardController extends AbstractController
             </tr>
         </table>
         <h4>Zrealizowane cele finansowe:</h4>
-        $realizedFinancialGoalsTable
+        {$realizedFinancialGoals}
     </body>
     </html>
-";
-
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
-        $response = new Response($dompdf->output());
-        $response->headers->set('Content-Type', 'application/pdf');
-        $response->headers->set('Content-Disposition', 'inline; filename="raport.pdf"');
-        return $response;
+    HTML;
     }
+
+    private function getRealizedFinancialGoals($dataFinancialGoals): string
+    {
+        $realizedFinancialGoals = [];
+
+        foreach ($dataFinancialGoals as $financialGoals) {
+            foreach ($financialGoals as $financialGoal) {
+                $currentAmount = floatval($financialGoal['currentAmount']);
+                $goalAmount = floatval($financialGoal['goalAmount']);
+
+                if ($currentAmount >= $goalAmount) {
+                    $realizedFinancialGoals[] = [
+                        'name' => $financialGoal['name'],
+                        'currentAmount' => $currentAmount,
+                    ];
+                }
+            }
+        }
+
+        $realizedFinancialGoalsTable = '<table>';
+        $realizedFinancialGoalsTable .= '<tr><th>Cel</th><th>Zebrana kwota</th></tr>';
+
+        foreach ($realizedFinancialGoals as $realizedGoal) {
+            $realizedFinancialGoalsTable .= "<tr><td>{$realizedGoal['name']}</td><td>{$realizedGoal['currentAmount']} zł</td></tr>";
+        }
+
+        $realizedFinancialGoalsTable .= '</table>';
+
+        return $realizedFinancialGoalsTable;
+    }
+
 
 
 }
