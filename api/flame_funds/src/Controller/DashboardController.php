@@ -169,12 +169,12 @@ class DashboardController extends AbstractController
     {
         $user = UserService::getUserFromToken($request, $em);
         $currentYear = date('Y');
-        $data = DashboardService::getMonthlyAmountsByYear($user, $em, $currentYear);
+        $dataExpenses = DashboardService::getMonthlyAmountsByYear($user, $em, $currentYear);
         $dataIncomes = DashboardService::getMonthlyIncomesByYear($user, $em, $currentYear);
         $dataFinancialGoals = DashboardService::getMyFinancialGoalsByDates($user, $em);
 
         $header = "Roczne podsumowanie finansowe $currentYear";
-        $html = $this->generateHtml($header, $data, $dataIncomes, $dataFinancialGoals);
+        $html = $this->generateHtml($header, $dataExpenses, $dataIncomes, $dataFinancialGoals);
 
         $dompdf = new Dompdf();
         $dompdf->loadHtml($html);
