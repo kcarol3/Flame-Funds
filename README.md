@@ -1,6 +1,8 @@
 # Flame-Funds: Engineering thesis
 # PHP (Symfony), JavaScript (Vue.js), SQL, Docker, Git
 
+![FlameFuns](images/flamefunds.png)
+
 Amidst soaring prices and inflation, effective personal finance management is pivotal for achieving stability. As digitization surges, demand for innovative financial planning tools rises. This calls for modern solutions that are convenient, accessible, and reliable across devices and locations. 
 This project aimed to design and implement a household budget management app to aid financial decision-making. Technologies like PHP with Symfony, and JavaScript with Vue.js were chosen for their popularity and coherence.
 Key modules include transaction input, periodic payments, financial goals, accounts, report generation, Google Sheets integration, and transaction history access, ensuring comprehensive financial management.
@@ -61,6 +63,25 @@ Functional requirements are a key part of an information system specification. T
   - support for the Polish language and the Polish zloty currency,
   - extensive notifications about actions occurring in the application.
 
+
+## Register
+
+The application's registration and login modules play a key role in ensuring security and access to individual features for registered users. In order to access all features of the application, an account must be created. The registration process involves providing a username, email address, password and its confirmation. When data validation is successfully completed, a new user is registered, enrolled in the database and a message is displayed indicating success. On the other hand, when the validation is unsuccessful, a pop-up notification asks to correct the entered data.
+
+![Register](images/register.png)
+![Register](images/registervalidation.png)
+
+
+
+## Login
+
+To log in to the created account, you need to enter your e-mail address and password. If the correct information stored in the database is provided, you are redirected to the application's main screen.
+
+![Register](images/login.png)
+
+## Main Screen
+
+![Register](images/mainscreen.png)
 
 
 
