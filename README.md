@@ -1,4 +1,4 @@
-# Flame-Funds: Engineering thesis
+# Flame-Funds: Engineering thesis - joint project
 # PHP (Symfony), JavaScript (Vue.js), SQL, Docker, Git
 
 ![FlameFuns](images/flamefunds.png)
