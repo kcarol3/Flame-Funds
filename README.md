@@ -9,6 +9,8 @@ This project aimed to design and implement a household budget management app to 
 Key modules include transaction input, periodic payments, financial goals, accounts, report generation, Google Sheets integration, and transaction history access, ensuring comprehensive financial management.
 Security measures include server and client-side form validation, hashed passwords, and JWT token authentication. Unit tests were conducted to ensure system accuracy.
 
+The application is responsive. Screenshots from both mobile and computer screens have been provided.
+
 
 ## Functional requirements
 
