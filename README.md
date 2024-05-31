@@ -1,7 +1,7 @@
 # Flame-Funds: Engineering thesis - joint project
 # PHP (Symfony), JavaScript (Vue.js), SQL, Docker, Git
 
-<img src="images/flamefunds.png" alt="flamefunds" width="1000">
+![FlameFunds](images/flamefunds.png)
 
 
 Amidst soaring prices and inflation, effective personal finance management is pivotal for achieving stability. As digitization surges, demand for innovative financial planning tools rises. This calls for modern solutions that are convenient, accessible, and reliable across devices and locations. 
@@ -96,7 +96,8 @@ The application allows adding new income and expense.
 
 The transaction history module is an important component, allowing users to track and analyze their finances in detail over time. Within this module, the user can view a chronological list of all transactions, both income, expenses, as well as financial goals and recurring payments.
 
-![History](images/history.png)
+![History](images/historyN.png)
+
 
 ## Financial goals
 
@@ -122,7 +123,15 @@ The introduction of the annual and quarterly reports module in the application i
 This module is dedicated to the annual summary of expenses, income and financial goals. When the user clicks the visible button and receives a response from the server containing the binary data of the PDF file, it is transformed into a URL. A link is created and the file name is set. The prepared address is added to the document body. A simulated click and download of the report follows. The entire sequence of actions is implemented to allow the user to conveniently download the annual financial summary as a PDF file. 
 
 ![Report](images/report.png)
-<img src="images/pdf.png" alt="PDF" width="500">
+<img src="images/pdf.png" alt="PDF" width="400">
+
+## Google Sheets module
+
+The Google Sheets module is not only a financial management tool, but also a key component that allows the user to focus on variousaspects of the personal financial situation. Its versatility allows you to track both daily expenses as well as long-term financial goals. With a holistic breakdown of financial transactions, the user can quickly assess where most of user's resources is allocated and make responsible budgeting decisions.
+
+![Sheet](images/sheet.png)
+![Excel](images/excel.png)
+
 
 
 Harmonogram	
